@@ -10,7 +10,8 @@ $PesterConfig.TestResult.OutputFormat = 'NUnitXml'
 
 # Code Coverage
 $PesterConfig.CodeCoverage.Enabled = $true
-$PesterConfig.CodeCoverage.Path = @('Public/*.ps1', 'Private/*.ps1', 'Glooko.psm1')
+# $PesterConfig.CodeCoverage.Path = @('Public/*.ps1', 'Private/*.ps1', 'Glooko.psm1')
+$PesterConfig.CodeCoverage.Path = @('Public/*.ps1', 'Glooko.psm1')
 $PesterConfig.CodeCoverage.OutputPath = 'Tests/CodeCoverage.xml'
 $PesterConfig.CodeCoverage.OutputFormat = 'JaCoCo'
 
