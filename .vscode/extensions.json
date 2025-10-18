@@ -2,7 +2,6 @@
     "recommendations": [
         // PowerShell development - essential
         "ms-vscode.powershell",
-        
         // JSON support for module manifests
         "ms-vscode.vscode-json"
     ]
