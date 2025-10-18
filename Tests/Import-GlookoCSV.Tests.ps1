@@ -142,12 +142,11 @@ Describe 'Import-GlookoCSV' {
     Context 'Verbose output' {
         
         It 'Should provide verbose output when requested' {
-            $verboseOutput = @()
-            $result = Import-GlookoCSV -Path $Script:TestCSV1 -Verbose 4>&1
+            $verboseMessages = @()
+            $result = Import-GlookoCSV -Path $Script:TestCSV1 -Verbose -VerboseVariable verboseMessages
             
-            $verboseMessages = $result | Where-Object { $_ -is [System.Management.Automation.VerboseRecord] }
             $verboseMessages | Should -HaveCount -GreaterThan 0
-            $verboseMessages[0].Message | Should -Match "*Starting Import-GlookoCSV*"
+            $verboseMessages[0] | Should -Match "Starting Import-GlookoCSV"
         }
     }
     
