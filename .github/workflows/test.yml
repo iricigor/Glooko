@@ -1,0 +1,76 @@
+name: Run Pester Tests
+
+on:
+  pull_request:
+    branches: [ main, master ]
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup PowerShell modules
+      shell: pwsh
+      run: |
+        # Install Pester if not available or update to latest version
+        if (Get-Module -ListAvailable -Name Pester | Where-Object {$_.Version -ge '5.0.0'}) {
+          Write-Host "Pester 5.x is already installed"
+        } else {
+          Write-Host "Installing Pester 5.x"
+          Install-Module -Name Pester -Force -SkipPublisherCheck -MinimumVersion 5.0.0
+        }
+        
+        # Import Pester
+        Import-Module Pester -Force
+        
+        # Display Pester version
+        Get-Module Pester | Select-Object Name, Version
+    
+    - name: Run Pester Tests
+      shell: pwsh
+      run: |
+        # Change to the repository root
+        Set-Location $env:GITHUB_WORKSPACE
+        
+        # Run tests using the PesterConfig.ps1
+        ./Tests/PesterConfig.ps1
+        
+        # Check if tests passed
+        if ($LASTEXITCODE -ne 0) {
+          Write-Error "Tests failed with exit code $LASTEXITCODE"
+          exit $LASTEXITCODE
+        }
+    
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results
+        path: |
+          Tests/TestResults.xml
+          Tests/CodeCoverage.xml
+        retention-days: 30
+    
+    - name: Publish Test Results
+      uses: dorny/test-reporter@v1
+      if: always()
+      with:
+        name: Pester Test Results
+        path: Tests/TestResults.xml
+        reporter: java-junit
+        fail-on-error: true
+    
+    - name: Add Coverage Comment
+      if: github.event_name == 'pull_request'
+      uses: 5monkeys/cobertura-action@master
+      with:
+        path: Tests/CodeCoverage.xml
+        minimum_coverage: 75
+        fail_below_threshold: false
+        show_missing: true
