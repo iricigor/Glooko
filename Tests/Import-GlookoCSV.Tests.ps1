@@ -114,7 +114,7 @@ Describe 'Import-GlookoCSV' {
             $result = Import-GlookoCSV -Path $singleLineFile -WarningVariable warnings
             
             $warnings | Should -HaveCount 1
-            $warnings[0] | Should -Match "*fewer than 2 lines*"
+            $warnings[0] | Should -Match "fewer than 2 lines"
             $result | Should -BeNullOrEmpty
             
             Remove-Item $singleLineFile -Force
