@@ -44,8 +44,11 @@ Glooko/
 ├── README.md            # This documentation
 ├── Glooko.psd1          # Module manifest
 ├── Glooko.psm1          # Module loader
-└── Public/              # Public functions
-    └── Import-GlookoCSV.ps1
+├── Public/              # Public functions
+│   └── Import-GlookoCSV.ps1
+└── Tests/               # Pester tests
+    ├── Import-GlookoCSV.Tests.ps1
+    └── PesterConfig.ps1
 ```
 
 ## Import-GlookoCSV Function
@@ -101,3 +104,48 @@ $data = Import-GlookoCSV -Path "C:\data\sales.csv" -Header "Product","Quantity",
 ```powershell
 $data = Import-GlookoCSV -Path "C:\data\european.csv" -Delimiter ";"
 ```
+
+## Testing
+
+This module includes comprehensive Pester 5.x tests to ensure reliability and functionality.
+
+### Prerequisites
+
+```powershell
+# Install Pester 5.x (if not already installed)
+Install-Module -Name Pester -MinimumVersion 5.0.0 -Force -SkipPublisherCheck
+```
+
+### Running Tests
+
+```powershell
+# Run all tests
+Invoke-Pester -Path .\Tests\
+
+# Run tests with detailed output
+Invoke-Pester -Path .\Tests\ -Output Detailed
+
+# Run with code coverage
+.\Tests\PesterConfig.ps1
+
+# Run specific test file
+Invoke-Pester -Path .\Tests\Import-GlookoCSV.Tests.ps1
+```
+
+### Test Coverage
+
+The test suite covers:
+- ✅ Basic CSV import functionality
+- ✅ First row skipping behavior
+- ✅ Custom header support
+- ✅ Different delimiters (comma, semicolon)
+- ✅ Various file encodings
+- ✅ Pipeline input support
+- ✅ Error handling for invalid files
+- ✅ Edge cases (empty files, single rows)
+- ✅ Special characters in data
+- ✅ Verbose output verification
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
