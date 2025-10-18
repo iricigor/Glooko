@@ -1,33 +1,9 @@
 {
     "recommendations": [
-        // PowerShell development
+        // PowerShell development - essential
         "ms-vscode.powershell",
         
-        // Code quality and formatting
-        "ms-vscode.vscode-json",
-        "redhat.vscode-yaml",
-        "davidanson.vscode-markdownlint",
-        "streetsidesoftware.code-spell-checker",
-        
-        // Git and GitHub integration
-        "github.vscode-pull-request-github",
-        "github.copilot",
-        "github.copilot-chat",
-        "eamodio.gitlens",
-        
-        // Collaboration
-        "ms-vsliveshare.vsliveshare",
-        
-        // Development utilities
-        "ms-vscode.vscode-typescript-next",
-        "bradlc.vscode-tailwindcss",
-        "christian-kohler.path-intellisense",
-        "formulahendry.auto-rename-tag",
-        "ms-vscode.vscode-file-watcher"
-    ],
-    "unwantedRecommendations": [
-        // Extensions that might conflict with PowerShell development
-        "ms-python.python",
-        "ms-dotnettools.csharp"
+        // JSON support for module manifests
+        "ms-vscode.vscode-json"
     ]
 }
