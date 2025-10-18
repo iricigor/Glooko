@@ -1,6 +1,6 @@
 {
 	"name": "PowerShell Development Environment",
-	"image": "mcr.microsoft.com/devcontainers/powershell:1-7.4-ubuntu-22.04",
+	"image": "mcr.microsoft.com/devcontainers/powershell:latest",
 	
 	// Features to add to the dev container. More info: https://containers.dev/features
 	"features": {
@@ -68,4 +68,5 @@
 	"mounts": [
 		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
 	]
+
 }
