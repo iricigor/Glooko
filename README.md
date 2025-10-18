@@ -2,6 +2,37 @@
 
 A PowerShell module for CSV data processing utilities, specifically designed for handling CSV files that require first-row skipping functionality.
 
+## 🚀 Quick Start with GitHub Codespaces
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=iricigor/Glooko)
+
+The fastest way to get started is using GitHub Codespaces:
+
+1. **Click the badge above** or go to the repository and click "Code" → "Create codespace on main"
+2. **Wait for setup** (~2-3 minutes) - PowerShell, Pester, and all tools will be automatically installed
+3. **Start developing** - The module will be pre-loaded and ready to use
+
+### What You Get with Codespaces
+- ✅ **PowerShell 7.4** with optimized settings
+- ✅ **Pester 5.x** for testing
+- ✅ **PSScriptAnalyzer** for code quality
+- ✅ **VS Code** with PowerShell extensions
+- ✅ **Pre-configured tasks** for build, test, and analysis
+- ✅ **Debug configurations** ready to use
+- ✅ **Sample data** for testing
+
+### Quick Test in Codespaces
+```powershell
+# The module is auto-loaded, try it immediately:
+Import-GlookoCSV -Path "sample-data.csv" -Verbose
+
+# Run tests
+Test-Module
+
+# Build and validate everything
+Build-Module
+```
+
 ## Installation
 
 ### From GitHub
@@ -40,15 +71,29 @@ Get-Command -Module Glooko
 
 ```
 Glooko/
-├── LICENSE              # MIT License
-├── README.md            # This documentation
-├── Glooko.psd1          # Module manifest
-├── Glooko.psm1          # Module loader
-├── Public/              # Public functions
+├── LICENSE                     # MIT License
+├── README.md                   # This documentation
+├── Glooko.psd1                 # Module manifest
+├── Glooko.psm1                 # Module loader
+├── sample-data.csv             # Sample CSV for testing
+├── Public/                     # Public functions
 │   └── Import-GlookoCSV.ps1
-└── Tests/               # Pester tests
-    ├── Import-GlookoCSV.Tests.ps1
-    └── PesterConfig.ps1
+├── Tests/                      # Pester tests
+│   ├── Import-GlookoCSV.Tests.ps1
+│   └── PesterConfig.ps1
+├── .devcontainer/              # GitHub Codespaces configuration
+│   ├── devcontainer.json       # Container definition
+│   ├── setup.ps1              # Development environment setup
+│   └── README.md              # Codespaces documentation
+├── .vscode/                    # VS Code workspace settings
+│   ├── settings.json          # Editor configuration
+│   ├── tasks.json             # Build/test tasks
+│   ├── launch.json            # Debug configurations
+│   ├── extensions.json        # Recommended extensions
+│   └── PSScriptAnalyzerSettings.psd1  # Code quality rules
+└── .github/                    # GitHub automation
+    └── workflows/
+        └── ci-cd.yml          # Continuous integration
 ```
 
 ## Import-GlookoCSV Function
