@@ -1,5 +1,53 @@
 # Glooko
 
+A PowerShell module for CSV data processing utilities, specifically designed for handling CSV files that require first-row skipping functionality.
+
+## Installation
+
+### From GitHub
+
+1. Clone the repository:
+```powershell
+git clone https://github.com/iricigor/Glooko.git
+```
+
+2. Import the module:
+```powershell
+# Navigate to the module directory
+cd Glooko
+
+# Import the module
+Import-Module .\Glooko.psd1
+
+# Verify the module is loaded
+Get-Module Glooko
+```
+
+### Alternative Import Methods
+
+```powershell
+# Import directly from path
+Import-Module "C:\Path\To\Glooko\Glooko.psd1"
+
+# Import with force to reload if already loaded
+Import-Module .\Glooko.psd1 -Force
+
+# Check available commands
+Get-Command -Module Glooko
+```
+
+## Module Structure
+
+```
+Glooko/
+├── LICENSE              # MIT License
+├── README.md            # This documentation
+├── Glooko.psd1          # Module manifest
+├── Glooko.psm1          # Module loader
+└── Public/              # Public functions
+    └── Import-GlookoCSV.ps1
+```
+
 ## Import-GlookoCSV Function
 
 The `Import-GlookoCSV` function is a PowerShell advanced function that imports data from CSV files while automatically skipping the first row. This is particularly useful when working with CSV files where the first row contains metadata, comments, or headers that differ from the actual column structure.
