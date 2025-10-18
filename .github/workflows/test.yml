@@ -77,19 +77,22 @@ jobs:
       run: |
         if (Test-Path "Tests/CodeCoverage.xml") {
           [xml]$coverage = Get-Content "Tests/CodeCoverage.xml"
-          $report = $coverage.report
-          $lineRate = [math]::Round([double]$report.counter | Where-Object {$_.type -eq "LINE"} | Select-Object -ExpandProperty covered) / [double]($report.counter | Where-Object {$_.type -eq "LINE"} | Select-Object -ExpandProperty missed + $report.counter | Where-Object {$_.type -eq "LINE"} | Select-Object -ExpandProperty covered) * 100, 2)
+          $lineCounter = $coverage.report.counter | Where-Object {$_.type -eq "LINE"}
           
-          $comment = @"
-        ## 📊 Code Coverage Report
-        
-        **Line Coverage:** $lineRate%
-        
-        Coverage report is available in the [test artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}).
-        "@
-          
-          Write-Host "Code Coverage: $lineRate%"
-          Write-Host $comment
+          if ($lineCounter) {
+            $covered = [int]$lineCounter.covered
+            $missed = [int]$lineCounter.missed
+            $total = $covered + $missed
+            
+            if ($total -gt 0) {
+              $lineRate = [math]::Round(($covered / $total) * 100, 2)
+              Write-Host "📊 Code Coverage: $lineRate% ($covered/$total lines covered)"
+            } else {
+              Write-Host "📊 No coverage data available"
+            }
+          } else {
+            Write-Host "📊 No line coverage data found in report"
+          }
         } else {
-          Write-Host "No coverage file found"
+          Write-Host "❌ No coverage file found"
         }
