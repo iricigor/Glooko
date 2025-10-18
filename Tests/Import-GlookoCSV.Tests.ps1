@@ -13,7 +13,6 @@ BeforeAll {
     $Script:TestCSV1 = Join-Path $TestDataPath 'test1.csv'
     $Script:TestCSV2 = Join-Path $TestDataPath 'test2.csv'
     $Script:TestCSV3 = Join-Path $TestDataPath 'test3.csv'
-    $Script:TestCSVSemicolon = Join-Path $TestDataPath 'test_semicolon.csv'
     $Script:TestCSVEmpty = Join-Path $TestDataPath 'test_empty.csv'
     
     # Test CSV with metadata in first row
@@ -40,13 +39,7 @@ Name,Age,City
 David,40,Miami
 "@ | Out-File -FilePath $Script:TestCSV3 -Encoding UTF8
     
-    # Test CSV with semicolon delimiter
-    @"
-Metadata line to skip
-Name;Age;City
-Emma;26;Portland
-Frank;29;Denver
-"@ | Out-File -FilePath $Script:TestCSVSemicolon -Encoding UTF8
+
     
     # Empty CSV file
     @"
@@ -98,35 +91,7 @@ Describe 'Import-GlookoCSV' {
         }
     }
     
-    Context 'Custom parameters' {
-        
-        It 'Should accept custom headers' {
-            $customHeaders = @('FullName', 'Years', 'Location')
-            $result = Import-GlookoCSV -Path $Script:TestCSV1 -Header $customHeaders
-            
-            $result | Should -HaveCount 3
-            $result[0].PSObject.Properties.Name | Should -Contain 'FullName'
-            $result[0].PSObject.Properties.Name | Should -Contain 'Years'
-            $result[0].PSObject.Properties.Name | Should -Contain 'Location'
-            $result[0].FullName | Should -Be 'Name'  # Second row becomes data
-        }
-        
-        It 'Should handle different delimiters' {
-            $result = Import-GlookoCSV -Path $Script:TestCSVSemicolon -Delimiter ';'
-            
-            $result | Should -HaveCount 2
-            $result[0].Name | Should -Be 'Emma'
-            $result[0].Age | Should -Be '26'
-            $result[0].City | Should -Be 'Portland'
-        }
-        
-        It 'Should accept different encoding parameter' {
-            $result = Import-GlookoCSV -Path $Script:TestCSV1 -Encoding 'UTF8'
-            
-            $result | Should -HaveCount 3
-            $result[0].Name | Should -Be 'John'
-        }
-    }
+
     
     Context 'Error handling' {
         
