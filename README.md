@@ -58,9 +58,9 @@ The `Import-GlookoCSV` function is a PowerShell advanced function that imports d
 ### Features
 
 - **Skip First Row**: Automatically skips the first line of the CSV file
-- **Flexible Headers**: Use the second row as headers or provide custom column names
-- **Multiple Delimiters**: Support for comma, semicolon, or any custom delimiter
-- **Encoding Support**: Configurable file encoding (default: UTF8)
+- **Automatic Headers**: Uses the second row as column headers
+- **Fixed Delimiter**: Uses comma as delimiter
+- **UTF8 Encoding**: Fixed UTF8 encoding for file reading
 - **Pipeline Support**: Accepts pipeline input for batch processing
 - **Error Handling**: Comprehensive validation and error reporting
 - **Verbose Logging**: Detailed progress information when using `-Verbose`
@@ -71,22 +71,16 @@ The `Import-GlookoCSV` function is a PowerShell advanced function that imports d
 # Basic usage - skip first row, use second row as headers
 Import-GlookoCSV -Path "data.csv"
 
-# Use custom headers
-Import-GlookoCSV -Path "data.csv" -Header "Name","Age","City"
-
-# Different delimiter and encoding
-Import-GlookoCSV -Path "data.csv" -Delimiter ";" -Encoding UTF8
-
 # Pipeline usage
 Get-ChildItem *.csv | Import-GlookoCSV
+
+# With verbose output
+Import-GlookoCSV -Path "data.csv" -Verbose
 ```
 
 ### Parameters
 
-- **Path** (Mandatory): The path to the CSV file to import
-- **Delimiter** (Optional): The delimiter used in the CSV file (default: ",")
-- **Encoding** (Optional): The encoding of the CSV file (default: "UTF8")
-- **Header** (Optional): Custom header names for the columns
+- **Path** (Mandatory): The path to the CSV file to import. Supports pipeline input and validation.
 
 ### Examples
 
@@ -95,14 +89,14 @@ Get-ChildItem *.csv | Import-GlookoCSV
 $data = Import-GlookoCSV -Path "C:\data\sales.csv"
 ```
 
-**Example 2**: Import with custom headers
+**Example 2**: Pipeline processing of multiple CSV files
 ```powershell
-$data = Import-GlookoCSV -Path "C:\data\sales.csv" -Header "Product","Quantity","Revenue"
+$allData = Get-ChildItem "C:\data\*.csv" | Import-GlookoCSV
 ```
 
-**Example 3**: Import semicolon-delimited file
+**Example 3**: Import with verbose output for troubleshooting
 ```powershell
-$data = Import-GlookoCSV -Path "C:\data\european.csv" -Delimiter ";"
+$data = Import-GlookoCSV -Path "C:\data\sales.csv" -Verbose
 ```
 
 ## Testing
@@ -137,9 +131,9 @@ Invoke-Pester -Path .\Tests\Import-GlookoCSV.Tests.ps1
 The test suite covers:
 - ✅ Basic CSV import functionality
 - ✅ First row skipping behavior
-- ✅ Custom header support
-- ✅ Different delimiters (comma, semicolon)
-- ✅ Various file encodings
+- ✅ Automatic header detection from second row
+- ✅ Comma delimiter processing
+- ✅ UTF8 encoding support
 - ✅ Pipeline input support
 - ✅ Error handling for invalid files
 - ✅ Edge cases (empty files, single rows)
