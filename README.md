@@ -196,6 +196,16 @@ The repository includes a GitHub Actions workflow that automatically runs Pester
 
 The workflow uses [dorny/test-reporter](https://github.com/dorny/test-reporter) to parse JUnit XML test results and create detailed check runs in GitHub.
 
+#### Viewing Test Results
+
+To view detailed test results for a pull request:
+
+1. Navigate to the **Checks** tab in the pull request
+2. Click on the **Pester Test Results** check run in the left sidebar
+3. View individual test cases with their pass/fail status and execution times
+
+The test reporter creates detailed check runs similar to the examples shown at the [Test Reporter marketplace page](https://github.com/marketplace/actions/test-reporter).
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
