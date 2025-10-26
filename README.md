@@ -1,7 +1,8 @@
 # Glooko
 
-[![Linux-PowerShell7](https://github.com/iricigor/Glooko/actions/workflows/test.yml/badge.svg?job=test-linux-pwsh7)](https://github.com/iricigor/Glooko/actions/workflows/test.yml)
-[![Windows-PowerShell7](https://github.com/iricigor/Glooko/actions/workflows/test.yml/badge.svg?job=test-windows-pwsh7)](https://github.com/iricigor/Glooko/actions/workflows/test.yml)
+[![Run Pester Tests](https://github.com/iricigor/Glooko/actions/workflows/test.yml/badge.svg)](https://github.com/iricigor/Glooko/actions/workflows/test.yml)
+[![Linux Tests](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/iricigor/7d87b86e6e187d46c3d1da7b851e3207/raw/glooko-linux-tests.json)](https://github.com/iricigor/Glooko/actions/workflows/test.yml)
+[![Windows Tests](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/iricigor/7d87b86e6e187d46c3d1da7b851e3207/raw/glooko-windows-tests.json)](https://github.com/iricigor/Glooko/actions/workflows/test.yml)
 
 A PowerShell module for CSV data processing utilities, specifically designed for handling CSV files that require first-row skipping functionality.
 

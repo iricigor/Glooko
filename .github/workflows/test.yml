@@ -54,6 +54,35 @@ jobs:
           exit $LASTEXITCODE
         }
     
+    - name: Extract Test Statistics
+      shell: pwsh
+      run: |
+        if (Test-Path "Tests/TestResults.xml") {
+          [xml]$results = Get-Content "Tests/TestResults.xml"
+          $total = [int]$results.testsuites.tests
+          $failures = [int]$results.testsuites.failures
+          $errors = [int]$results.testsuites.errors
+          $passed = $total - $failures - $errors
+          
+          Write-Host "::notice::Linux Tests: $passed/$total passed"
+          
+          # Set outputs for badge
+          "TESTS_TOTAL=$total" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "TESTS_PASSED=$passed" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "TESTS_FAILED=$($failures + $errors)" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        }
+    
+    - name: Update Linux Test Badge
+      uses: schneegans/dynamic-badges-action@v1.7.0
+      if: github.ref == 'refs/heads/main' && always()
+      with:
+        auth: ${{ secrets.GIST_TOKEN }}
+        gistID: 7d87b86e6e187d46c3d1da7b851e3207
+        filename: glooko-linux-tests.json
+        label: Linux tests
+        message: ${{ env.TESTS_PASSED }}/${{ env.TESTS_TOTAL }} passed
+        color: ${{ env.TESTS_FAILED == '0' && 'success' || 'critical' }}
+    
     - name: Upload test results
       uses: actions/upload-artifact@v4
       if: always()
@@ -138,6 +167,35 @@ jobs:
           Write-Error "Tests failed with exit code $LASTEXITCODE"
           exit $LASTEXITCODE
         }
+    
+    - name: Extract Test Statistics
+      shell: pwsh
+      run: |
+        if (Test-Path "Tests/TestResults.xml") {
+          [xml]$results = Get-Content "Tests/TestResults.xml"
+          $total = [int]$results.testsuites.tests
+          $failures = [int]$results.testsuites.failures
+          $errors = [int]$results.testsuites.errors
+          $passed = $total - $failures - $errors
+          
+          Write-Host "::notice::Windows Tests: $passed/$total passed"
+          
+          # Set outputs for badge
+          "TESTS_TOTAL=$total" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "TESTS_PASSED=$passed" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "TESTS_FAILED=$($failures + $errors)" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        }
+    
+    - name: Update Windows Test Badge
+      uses: schneegans/dynamic-badges-action@v1.7.0
+      if: github.ref == 'refs/heads/main' && always()
+      with:
+        auth: ${{ secrets.GIST_TOKEN }}
+        gistID: 7d87b86e6e187d46c3d1da7b851e3207
+        filename: glooko-windows-tests.json
+        label: Windows tests
+        message: ${{ env.TESTS_PASSED }}/${{ env.TESTS_TOTAL }} passed
+        color: ${{ env.TESTS_FAILED == '0' && 'success' || 'critical' }}
     
     - name: Upload test results
       uses: actions/upload-artifact@v4
