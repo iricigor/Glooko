@@ -114,7 +114,7 @@ Invoke-Pester -Configuration $PesterConfig
 3. Export function in `Glooko.psd1` FunctionsToExport array
 4. Create corresponding test file in `Tests/` with `.Tests.ps1` suffix
 5. Ensure all tests pass and coverage meets minimum threshold
-6. Update documentation if needed
+6. Create a documentation file in `docs/` directory (e.g., `docs/functionname-function.md`) - see `docs/import-glookocsv-function.md` as an example
 
 ### Adding a New Private Function
 1. Create function file in `Private/` directory
