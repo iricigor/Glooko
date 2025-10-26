@@ -7,7 +7,7 @@ BeforeAll {
     . (Join-Path $PSScriptRoot 'TestHelpers.ps1')
     
     # Import Private functions for direct testing
-    . (Join-Path $PSScriptRoot '..' 'Private' 'ConvertTo-ExtendedMetadata.ps1')
+    . (Join-Path $PSScriptRoot '..' 'Private' 'Expand-GlookoMetadata.ps1')
     
     # Fixtures path for static test data
     $FixturesPath = Join-Path $PSScriptRoot 'Fixtures'

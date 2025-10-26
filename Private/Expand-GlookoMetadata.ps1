@@ -1,6 +1,6 @@
 # Private helper functions for metadata parsing
 
-function ConvertTo-ExtendedMetadata {
+function Expand-GlookoMetadata {
     <#
     .SYNOPSIS
         Converts filename and first line content into extended metadata object.

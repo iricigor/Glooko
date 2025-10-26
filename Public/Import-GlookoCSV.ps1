@@ -54,7 +54,7 @@ function Import-GlookoCSV {
                 $fileName = Split-Path -Path $Path -Leaf
                 
                 return [PSCustomObject]@{
-                    Metadata = ConvertTo-ExtendedMetadata -FileName $fileName -FirstLine $firstLine
+                    Metadata = Expand-GlookoMetadata -FileName $fileName -FirstLine $firstLine
                     Data     = @()
                 }
             }
@@ -68,7 +68,7 @@ function Import-GlookoCSV {
             
             # Create extended metadata using helper function
             $fileName = Split-Path -Path $Path -Leaf
-            $metadata = ConvertTo-ExtendedMetadata -FileName $fileName -FirstLine $firstLine
+            $metadata = Expand-GlookoMetadata -FileName $fileName -FirstLine $firstLine
             
             # Create temporary file content with remaining lines (second row becomes headers)
             $tempFile = [System.IO.Path]::GetTempFileName()
