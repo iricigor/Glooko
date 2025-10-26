@@ -4,7 +4,7 @@
 [![Linux Tests](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/iricigor/7d87b86e6e187d46c3d1da7b851e3207/raw/glooko-linux-tests.json)](https://github.com/iricigor/Glooko/actions/workflows/test.yml)
 [![Windows Tests](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/iricigor/7d87b86e6e187d46c3d1da7b851e3207/raw/glooko-windows-tests.json)](https://github.com/iricigor/Glooko/actions/workflows/test.yml)
 
-A PowerShell module for processing Glooko exports data. Not related to [Glooko.com](https://glooko.com/about/)
+A PowerShell module for processing Glooko exports data. Not affiliated to [Glooko.com](https://glooko.com/about/)
 
 ## Installation
 
@@ -55,3 +55,4 @@ This module includes comprehensive Pester 5.x tests. For detailed testing inform
 
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
