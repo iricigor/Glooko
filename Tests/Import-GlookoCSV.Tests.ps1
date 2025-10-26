@@ -14,6 +14,7 @@ BeforeAll {
     $Script:TestCSV2 = Join-Path $TestDataPath 'test2.csv'
     $Script:TestCSV3 = Join-Path $TestDataPath 'test3.csv'
     $Script:TestCSVEmpty = Join-Path $TestDataPath 'test_empty.csv'
+    $Script:TestData01 = Join-Path $PSScriptRoot 'test-data01.csv'
     
     # Test CSV with metadata in first row
     @"
@@ -88,6 +89,22 @@ Describe 'Import-GlookoCSV' {
             $result[0].Name | Should -Be 'David'
             $result[0].Age | Should -Be '40'
             $result[0].City | Should -Be 'Miami'
+        }
+        
+        It 'Should import alarm/event data from test-data01.csv' {
+            $result = Import-GlookoCSV -Path $Script:TestData01
+            
+            $result | Should -HaveCount 2
+            $result[0] | Should -BeOfType [PSCustomObject]
+            $result[0].PSObject.Properties.Name | Should -Contain 'Timestamp'
+            $result[0].PSObject.Properties.Name | Should -Contain 'Alarm/Event'
+            $result[0].PSObject.Properties.Name | Should -Contain 'Serial Number'
+            $result[0].Timestamp | Should -Be '8/17/2025 0:15'
+            $result[0].'Alarm/Event' | Should -Be 'tandem_control_low'
+            $result[0].'Serial Number' | Should -Be '1266847'
+            $result[1].Timestamp | Should -Be '8/16/2025 22:35'
+            $result[1].'Alarm/Event' | Should -Be 'tandem_control_low'
+            $result[1].'Serial Number' | Should -Be '1266847'
         }
     }
     
