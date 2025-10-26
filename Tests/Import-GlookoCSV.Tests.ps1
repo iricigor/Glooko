@@ -1,4 +1,4 @@
-BeforeAll {
+﻿BeforeAll {
     # Import the module being tested
     $ModulePath = Join-Path (Join-Path $PSScriptRoot '..') -ChildPath 'Glooko.psd1'
     Import-Module $ModulePath -Force
