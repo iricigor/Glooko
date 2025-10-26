@@ -145,7 +145,9 @@ Describe 'Import-GlookoZip' {
         
         It 'Should clean up temporary folder after successful import' {
             # Count temp folders before
-            $tempPath = [System.IO.Path]::GetTempPath()
+            $tempFile = New-TemporaryFile
+            $tempPath = Split-Path $tempFile.FullName
+            Remove-Item $tempFile -Force
             $tempFoldersBefore = (Get-ChildItem -Path $tempPath -Directory).Count
             
             $results = Import-GlookoZip -Path $Script:TestZipFiles.SingleFileZip

@@ -54,7 +54,9 @@ function Import-GlookoZip {
             Write-Verbose "Resolved path: $zipPath"
             
             # Create temporary folder for extraction
-            $tempFolder = Join-Path -Path ([System.IO.Path]::GetTempPath()) -ChildPath ([System.Guid]::NewGuid().ToString())
+            $tempFile = New-TemporaryFile
+            $tempFolder = Join-Path -Path (Split-Path $tempFile.FullName) -ChildPath (New-Guid).ToString()
+            Remove-Item $tempFile -Force
             New-Item -Path $tempFolder -ItemType Directory -Force | Out-Null
             Write-Verbose "Created temporary folder: $tempFolder"
             
