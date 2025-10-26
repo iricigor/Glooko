@@ -5,6 +5,8 @@ The `Import-GlookoFolder` function is a PowerShell advanced function that import
 ## Features
 
 - **Batch Processing**: Automatically processes all CSV files in a folder
+- **Dataset Consolidation**: Automatically merges datasets with matching `Dataset` and `OriginalFirstLine` metadata
+- **Order-Based Merging**: Consolidates data in ascending Order (e.g., file_data_1.csv, file_data_2.csv, etc.)
 - **Consistent Processing**: Uses `Import-GlookoCSV` for each file, ensuring consistent handling
 - **Pipeline Support**: Accepts pipeline input for flexible usage
 - **Error Handling**: Comprehensive validation and error reporting
@@ -45,11 +47,25 @@ $allData = "C:\data\exports" | Import-GlookoFolder
 $results = Import-GlookoFolder -Path "C:\data\exports" -Verbose
 ```
 
-**Example 4**: Process each file's data individually
+**Example 4**: Working with consolidated datasets
 ```powershell
 $results = Import-GlookoFolder -Path "C:\data\exports"
-foreach ($fileResult in $results) {
-    Write-Host "Processing file with metadata: $($fileResult.Metadata.FirstLine)"
+foreach ($dataset in $results) {
+    Write-Host "Dataset: $($dataset.Metadata.Dataset)"
+    Write-Host "  Files: $($dataset.Metadata.FullName) (Order: $($dataset.Metadata.Order))"
+    Write-Host "  Total rows: $($dataset.Data.Count)"
+    # Process $dataset.Data
+}
+```
+
+**Example 5**: Process each file's data individually (before consolidation)
+```powershell
+# If you need to process files individually without consolidation,
+# use Get-ChildItem and Import-GlookoCSV directly
+$csvFiles = Get-ChildItem -Path "C:\data\exports" -Filter "*.csv"
+foreach ($file in $csvFiles) {
+    $fileResult = Import-GlookoCSV -Path $file.FullName
+    Write-Host "Processing file: $($file.Name)"
     # Process $fileResult.Data
 }
 ```
@@ -59,6 +75,24 @@ foreach ($fileResult in $results) {
 Returns an array of objects, where each object contains:
 - **Metadata**: Information about the source file (from `Import-GlookoCSV`)
 - **Data**: The CSV data from the file (from `Import-GlookoCSV`)
+
+### Dataset Consolidation
+
+When multiple CSV files have matching `Dataset` and `OriginalFirstLine` metadata values, they are automatically consolidated:
+- Data is merged in ascending `Order` (based on filename pattern like `dataset_data_1.csv`, `dataset_data_2.csv`, etc.)
+- Metadata is taken from the file with the lowest `Order` value
+- Files with different `Dataset` or `OriginalFirstLine` values remain separate
+
+**Example**: If a folder contains:
+- `cgm_data_1.csv` (3 rows)
+- `cgm_data_2.csv` (2 rows)  
+- `cgm_data_3.csv` (2 rows)
+
+All with the same first line: `Name:John Doe, Date Range:2025-01-01 - 2025-01-31`
+
+The result will be a single object with:
+- Metadata from `cgm_data_1.csv` (Order=1)
+- Combined Data array with 7 rows (3 from file 1, 2 from file 2, 2 from file 3)
 
 ## Related Functions
 
