@@ -19,7 +19,7 @@ Describe 'Import-GlookoFolder' {
     
     BeforeEach {
         # Create test folder structures in TestDrive for each test
-        $Script:TestFolders = New-TestFolders
+        $Script:TestFolders = New-TestFolder
     }
     
     Context 'Basic functionality' {
