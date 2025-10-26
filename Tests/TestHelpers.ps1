@@ -57,6 +57,15 @@ Test,"Data with, comma",123
 Quote,"Data with ""quotes""",456
 "@ | Out-File -FilePath $specialCharFile -Encoding UTF8
 
+    # CSV file matching the alarms_data_1.csv pattern
+    $alarmsDataFile = 'TestDrive:\alarms_data_1.csv'
+    @"
+Name:Igor Irić, Date Range:2025-05-31 - 2025-08-17
+Timestamp,Alarm/Event,Serial Number
+8/17/2025 0:15,tandem_control_low,1266847
+8/16/2025 22:35,tandem_control_low,1266847
+"@ | Out-File -FilePath $alarmsDataFile -Encoding UTF8
+
     # Return hashtable with all file paths
     return @{
         TestCSV1 = $testCSV1
@@ -65,6 +74,7 @@ Quote,"Data with ""quotes""",456
         TestCSVEmpty = $testCSVEmpty
         SingleLineFile = $singleLineFile
         SpecialCharFile = $specialCharFile
+        AlarmsDataFile = $alarmsDataFile
         NonExistentFile = 'TestDrive:\nonexistent.csv'
     }
 }

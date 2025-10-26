@@ -6,6 +6,9 @@ BeforeAll {
     # Import test helpers
     . (Join-Path $PSScriptRoot 'TestHelpers.ps1')
     
+    # Import Private functions for direct testing
+    . (Join-Path $PSScriptRoot '..' 'Private' 'ConvertTo-ExtendedMetadata.ps1')
+    
     # Fixtures path for static test data
     $FixturesPath = Join-Path $PSScriptRoot 'Fixtures'
     if (-not (Test-Path $FixturesPath)) {
@@ -34,7 +37,9 @@ Describe 'Import-GlookoCSV' {
         It 'Should import CSV data and skip the first row' {
             $result = Import-GlookoCSV -Path $Script:TestFiles.TestCSV1
             
-            $result.Metadata | Should -Be 'Metadata: Export from system on 2025-10-18'
+            $result.Metadata.OriginalFirstLine | Should -Be 'Metadata: Export from system on 2025-10-18'
+            $result.Metadata.FullName | Should -Be 'test1.csv'
+            $result.Metadata.Dataset | Should -BeNullOrEmpty  # Doesn't match pattern
             $result.Data | Should -HaveCount 3
             $result.Data[0].Name | Should -Be 'John'
             $result.Data[0].Age | Should -Be '25'
@@ -45,7 +50,8 @@ Describe 'Import-GlookoCSV' {
         It 'Should use second row as headers when first row is skipped' {
             $result = Import-GlookoCSV -Path $Script:TestFiles.TestCSV2
             
-            $result.Metadata | Should -Be 'OldName,OldAge,OldCity'
+            $result.Metadata.OriginalFirstLine | Should -Be 'OldName,OldAge,OldCity'
+            $result.Metadata.FullName | Should -Be 'test2.csv'
             $result.Data | Should -HaveCount 2
             $result.Data[0] | Should -BeOfType [PSCustomObject]
             $result.Data[0].PSObject.Properties.Name | Should -Contain 'Name'
@@ -56,7 +62,8 @@ Describe 'Import-GlookoCSV' {
         It 'Should work with single data row' {
             $result = Import-GlookoCSV -Path $Script:TestFiles.TestCSV3
             
-            $result.Metadata | Should -Be 'Skip this line'
+            $result.Metadata.OriginalFirstLine | Should -Be 'Skip this line'
+            $result.Metadata.FullName | Should -Be 'test3.csv'
             $result.Data | Should -HaveCount 1
             $result.Data[0].Name | Should -Be 'David'
             $result.Data[0].Age | Should -Be '40'
@@ -66,7 +73,17 @@ Describe 'Import-GlookoCSV' {
         It 'Should import alarm/event data from test-data01.csv' {
             $result = Import-GlookoCSV -Path $Script:TestData01
             
-            $result.Metadata | Should -Be 'Name:Igor Irić, Date Range:2025-05-31 - 2025-08-17'
+            # Test extended metadata
+            $result.Metadata.FullName | Should -Be 'test-data01.csv'
+            $result.Metadata.Dataset | Should -BeNullOrEmpty  # Doesn't match pattern
+            $result.Metadata.Order | Should -BeNullOrEmpty
+            $result.Metadata.Name | Should -Be 'Igor Irić'
+            $result.Metadata.DateRange | Should -Be '2025-05-31 - 2025-08-17'
+            $result.Metadata.StartDate | Should -Be '2025-05-31'
+            $result.Metadata.EndDate | Should -Be '2025-08-17'
+            $result.Metadata.OriginalFirstLine | Should -Be 'Name:Igor Irić, Date Range:2025-05-31 - 2025-08-17'
+            
+            # Test data
             $result.Data | Should -HaveCount 2
             $result.Data[0] | Should -BeOfType [PSCustomObject]
             $result.Data[0].PSObject.Properties.Name | Should -Contain 'Timestamp'
@@ -78,6 +95,24 @@ Describe 'Import-GlookoCSV' {
             $result.Data[1].Timestamp | Should -Be '8/16/2025 22:35'
             $result.Data[1].'Alarm/Event' | Should -Be 'tandem_control_low'
             $result.Data[1].'Serial Number' | Should -Be '1266847'
+        }
+        
+        It 'Should parse filename with dataset pattern (alarms_data_1.csv)' {
+            $result = Import-GlookoCSV -Path $Script:TestFiles.AlarmsDataFile
+            
+            # Test filename parsing
+            $result.Metadata.FullName | Should -Be 'alarms_data_1.csv'
+            $result.Metadata.Dataset | Should -Be 'alarms'
+            $result.Metadata.Order | Should -Be 1
+            
+            # Test first line parsing
+            $result.Metadata.Name | Should -Be 'Igor Irić'
+            $result.Metadata.DateRange | Should -Be '2025-05-31 - 2025-08-17'
+            $result.Metadata.StartDate | Should -Be '2025-05-31'
+            $result.Metadata.EndDate | Should -Be '2025-08-17'
+            
+            # Test data
+            $result.Data | Should -HaveCount 2
         }
     }
     
@@ -95,7 +130,15 @@ Describe 'Import-GlookoCSV' {
             '' | Out-File -FilePath $testCSVEmpty            
             $result = Import-GlookoCSV -Path $testCSVEmpty -WarningAction SilentlyContinue
             
-            $result.Metadata | Should -Be ''
+            # Test extended metadata structure for empty file
+            $result.Metadata.FullName | Should -Be 'test_empty.csv'
+            $result.Metadata.Dataset | Should -BeNullOrEmpty
+            $result.Metadata.Order | Should -BeNullOrEmpty
+            $result.Metadata.Name | Should -BeNullOrEmpty
+            $result.Metadata.DateRange | Should -BeNullOrEmpty
+            $result.Metadata.StartDate | Should -BeNullOrEmpty
+            $result.Metadata.EndDate | Should -BeNullOrEmpty
+            $result.Metadata.OriginalFirstLine | Should -Be ''
             $result.Data | Should -BeNullOrEmpty
         }
         
@@ -105,7 +148,8 @@ Describe 'Import-GlookoCSV' {
             
             $warnings | Should -HaveCount 1
             $warnings[0] | Should -Match "fewer than 2 lines"
-            $result.Metadata | Should -Be 'Only one line'
+            $result.Metadata.OriginalFirstLine | Should -Be 'Only one line'
+            $result.Metadata.FullName | Should -Be 'single_line.csv'
             $result.Data | Should -BeNullOrEmpty
         }
     }

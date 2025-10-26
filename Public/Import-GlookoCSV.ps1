@@ -21,7 +21,7 @@ function Import-GlookoCSV {
     
     .OUTPUTS
         PSCustomObject
-        Returns an object with Metadata (first row as string) and Data (array of CSV objects) properties.
+        Returns an object with Metadata (extended metadata object with parsed filename and first row info) and Data (array of CSV objects) properties.
     #>
     
     [CmdletBinding()]
@@ -50,18 +50,25 @@ function Import-GlookoCSV {
             
             if ($allLines.Count -lt 2) {
                 Write-Warning "File contains fewer than 2 lines. At least 2 lines are required (one to skip, one for data)."
+                $firstLine = if ($allLines) { $allLines | Select-Object -First 1 } else { '' }
+                $fileName = Split-Path -Path $Path -Leaf
+                
                 return [PSCustomObject]@{
-                    Metadata = if ($allLines) { $allLines | Select-Object -First 1 } else { '' }
+                    Metadata = ConvertTo-ExtendedMetadata -FileName $fileName -FirstLine $firstLine
                     Data     = @()
                 }
             }
             
             # Capture metadata (first line) and data lines
-            $metadata = $allLines[0]
+            $firstLine = $allLines[0]
             $dataLines = $allLines[1..($allLines.Count - 1)]
             
-            Write-Verbose "Captured metadata: $metadata"
+            Write-Verbose "Captured first line: $firstLine"
             Write-Verbose "Processing $($dataLines.Count) remaining lines."
+            
+            # Create extended metadata using helper function
+            $fileName = Split-Path -Path $Path -Leaf
+            $metadata = ConvertTo-ExtendedMetadata -FileName $fileName -FirstLine $firstLine
             
             # Create temporary file content with remaining lines (second row becomes headers)
             $tempFile = [System.IO.Path]::GetTempFileName()
