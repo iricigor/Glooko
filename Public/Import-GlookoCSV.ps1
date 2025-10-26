@@ -75,7 +75,7 @@ function Import-GlookoCSV {
             
             try {
                 $dataLines | Out-File -FilePath $tempFile -Encoding UTF8
-                $data = Import-Csv -Path $tempFile
+                $data = Import-Csv -Path $tempFile -Encoding UTF8
             }
             finally {
                 if (Test-Path $tempFile) {
