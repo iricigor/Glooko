@@ -4,7 +4,7 @@ BeforeAll {
     Import-Module $ModulePath -Force
     
     # Import test helpers
-    . (Join-Path $PSScriptRoot 'TestHelpers.ps1')
+    . (Join-Path $PSScriptRoot 'Helpers' 'TestHelpers.ps1')
     
     # Import Private functions for direct testing
     . (Join-Path $PSScriptRoot '..' 'Private' 'Expand-GlookoMetadata.ps1')
@@ -29,7 +29,7 @@ Describe 'Import-GlookoCSV' {
     
     BeforeEach {
         # Create test files in TestDrive for each test
-        $Script:TestFiles = New-TestCSVFiles
+        $Script:TestFiles = New-TestCSVFile
     }
     
     Context 'Basic functionality' {

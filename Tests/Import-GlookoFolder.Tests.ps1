@@ -4,7 +4,7 @@ BeforeAll {
     Import-Module $ModulePath -Force
     
     # Import test helpers
-    . (Join-Path $PSScriptRoot 'TestHelpers.ps1')
+    . (Join-Path $PSScriptRoot 'Helpers' 'TestHelpers.ps1')
     
     # Import Private functions for direct testing
     . (Join-Path $PSScriptRoot '..' 'Private' 'Expand-GlookoMetadata.ps1')
@@ -19,7 +19,7 @@ Describe 'Import-GlookoFolder' {
     
     BeforeEach {
         # Create test folder structures in TestDrive for each test
-        $Script:TestFolders = New-TestFolders
+        $Script:TestFolders = New-TestFolder
     }
     
     Context 'Basic functionality' {
