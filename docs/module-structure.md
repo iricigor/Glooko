@@ -25,7 +25,7 @@ Glooko/
 │   └── testing.md
 ├── .github/                    # GitHub automation
 │   └── workflows/
-│       └── ci-cd.yml          # Continuous integration
+│       └── test.yml           # Continuous integration
 ├── .gitignore                  # Git ignore patterns
 └── PesterConfig.ps1            # Pester configuration for code coverage
 ```
