@@ -77,7 +77,7 @@ jobs:
       if: github.ref == 'refs/heads/main' && always()
       with:
         auth: ${{ secrets.GIST_TOKEN }}
-        gistID: ${{ secrets.GIST_ID }}
+        gistID: 7d87b86e6e187d46c3d1da7b851e3207
         filename: glooko-linux-tests.json
         label: Linux tests
         message: ${{ env.TESTS_PASSED }}/${{ env.TESTS_TOTAL }} passed
@@ -191,7 +191,7 @@ jobs:
       if: github.ref == 'refs/heads/main' && always()
       with:
         auth: ${{ secrets.GIST_TOKEN }}
-        gistID: ${{ secrets.GIST_ID }}
+        gistID: 7d87b86e6e187d46c3d1da7b851e3207
         filename: glooko-windows-tests.json
         label: Windows tests
         message: ${{ env.TESTS_PASSED }}/${{ env.TESTS_TOTAL }} passed

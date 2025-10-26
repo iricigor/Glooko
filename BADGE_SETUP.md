@@ -4,15 +4,15 @@ This guide explains how to set up the dynamic test count badges for the Glooko r
 
 ## Prerequisites
 
-You need to create two GitHub secrets for the badge system to work:
+You only need to create a GitHub Personal Access Token (PAT) for updating the badge Gist.
 
-### 1. Create a GitHub Gist
+### 1. Verify the Gist Exists
 
-1. Go to https://gist.github.com/
-2. Create a new **public** gist with any filename (e.g., `badges.md`)
-3. Add any content (it will be overwritten)
-4. Click "Create public gist"
-5. Copy the Gist ID from the URL (e.g., `https://gist.github.com/iricigor/XXXXXXXX` - the `XXXXXXXX` part)
+The badge data is stored in this public Gist: https://gist.github.com/iricigor/7d87b86e6e187d46c3d1da7b851e3207
+
+This Gist should contain two files that will be auto-created by the workflow:
+- `glooko-linux-tests.json`
+- `glooko-windows-tests.json`
 
 ### 2. Create a Personal Access Token (PAT)
 
@@ -23,35 +23,27 @@ You need to create two GitHub secrets for the badge system to work:
 5. Click "Generate token"
 6. Copy the token (you won't be able to see it again!)
 
-### 3. Add Secrets to Repository
+### 3. Add Secret to Repository
 
 1. Go to your repository Settings → Secrets and variables → Actions
 2. Click "New repository secret"
-3. Add two secrets:
+3. Add one secret:
    - Name: `GIST_TOKEN`, Value: the PAT you created
-   - Name: `GIST_ID`, Value: the Gist ID you copied
 
-### 4. Update README.md
-
-Replace `YOUR_GIST_ID` in the badge URLs with your actual Gist ID:
-
-```markdown
-[![Linux Tests](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/iricigor/YOUR_GIST_ID/raw/glooko-linux-tests.json)](https://github.com/iricigor/Glooko/actions/workflows/test.yml)
-[![Windows Tests](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/iricigor/YOUR_GIST_ID/raw/glooko-windows-tests.json)](https://github.com/iricigor/Glooko/actions/workflows/test.yml)
-```
+That's it! The Gist ID is already configured in the workflow and README files.
 
 ## How It Works
 
 1. When tests run on the main branch, the workflow extracts test statistics from JUnit XML
-2. The `dynamic-badges-action` updates JSON files in your Gist
+2. The `dynamic-badges-action` updates JSON files in the Gist using the token
 3. Shields.io reads from these JSON files to display the badges
 4. The badges update automatically within a few minutes
 
 ## Badge URLs
 
-After setup, your badges will be available at:
-- Linux: `https://gist.githubusercontent.com/iricigor/YOUR_GIST_ID/raw/glooko-linux-tests.json`
-- Windows: `https://gist.githubusercontent.com/iricigor/YOUR_GIST_ID/raw/glooko-windows-tests.json`
+The badges are available at:
+- Linux: `https://gist.githubusercontent.com/iricigor/7d87b86e6e187d46c3d1da7b851e3207/raw/glooko-linux-tests.json`
+- Windows: `https://gist.githubusercontent.com/iricigor/7d87b86e6e187d46c3d1da7b851e3207/raw/glooko-windows-tests.json`
 
 ## Benefits Over Previous Implementation
 
@@ -60,3 +52,4 @@ After setup, your badges will be available at:
 ✅ **Industry standard** - Uses widely-adopted `dynamic-badges-action`
 ✅ **Less maintenance** - No complex git operations
 ✅ **Faster updates** - Badge data updates immediately after tests complete
+✅ **Only one secret needed** - Gist ID is public and hardcoded in the workflow
