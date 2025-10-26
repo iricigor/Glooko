@@ -64,18 +64,7 @@ jobs:
           $errors = [int]$results.testsuites.errors
           $passed = $total - $failures - $errors
           
-          Write-Host "::notice::Tests: $passed/$total passed"
-          
-          # Create badge JSON
-          $badgeData = @{
-            schemaVersion = 1
-            label = "tests"
-            message = "$passed/$total passed"
-            color = if ($failures -eq 0 -and $errors -eq 0) { "success" } else { "critical" }
-          }
-          
-          # Save badge data
-          $badgeData | ConvertTo-Json | Out-File "Tests/badge-linux.json" -Encoding utf8
+          Write-Host "::notice::Linux Tests: $passed/$total passed"
         }
     
     - name: Upload test results
@@ -86,7 +75,6 @@ jobs:
         path: |
           Tests/TestResults.xml
           Tests/CodeCoverage.xml
-          Tests/badge-linux.json
         retention-days: 30
     
     - name: Publish Test Results
@@ -174,18 +162,7 @@ jobs:
           $errors = [int]$results.testsuites.errors
           $passed = $total - $failures - $errors
           
-          Write-Host "::notice::Tests: $passed/$total passed"
-          
-          # Create badge JSON
-          $badgeData = @{
-            schemaVersion = 1
-            label = "tests"
-            message = "$passed/$total passed"
-            color = if ($failures -eq 0 -and $errors -eq 0) { "success" } else { "critical" }
-          }
-          
-          # Save badge data
-          $badgeData | ConvertTo-Json | Out-File "Tests/badge-windows.json" -Encoding utf8
+          Write-Host "::notice::Windows Tests: $passed/$total passed"
         }
     
     - name: Upload test results
@@ -196,7 +173,6 @@ jobs:
         path: |
           Tests/TestResults.xml
           Tests/CodeCoverage.xml
-          Tests/badge-windows.json
         retention-days: 30
     
     - name: Publish Test Results
@@ -329,7 +305,7 @@ jobs:
           echo "No changes to commit"
         else
           git commit -m "Update test badges - $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
-          git push --force origin badges
+          git push --force-with-lease origin badges
         fi
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
