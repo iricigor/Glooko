@@ -24,7 +24,7 @@
     PowerShellVersion = '5.1'
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry
-    FunctionsToExport = @('Import-GlookoCSV')
+    FunctionsToExport = @('Import-GlookoCSV', 'Import-GlookoFolder')
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry
     CmdletsToExport = @()

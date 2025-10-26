@@ -4,11 +4,7 @@
 [![Linux Tests](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/iricigor/7d87b86e6e187d46c3d1da7b851e3207/raw/glooko-linux-tests.json)](https://github.com/iricigor/Glooko/actions/workflows/test.yml)
 [![Windows Tests](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/iricigor/7d87b86e6e187d46c3d1da7b851e3207/raw/glooko-windows-tests.json)](https://github.com/iricigor/Glooko/actions/workflows/test.yml)
 
-A PowerShell module for CSV data processing utilities, specifically designed for handling CSV files that require first-row skipping functionality.
-
-## 🚀 Quick Start
-
-For the fastest way to get started, see the [Quick Start with GitHub Codespaces](docs/quick-start-codespaces.md) guide.
+A PowerShell module for processing Glooko exports data. Not related to [Glooko.com](https://glooko.com/about/)
 
 ## Installation
 
@@ -35,15 +31,22 @@ For more import options including using Install-GitModule, see [Alternative Impo
 
 ## Usage
 
-The main function provided by this module is `Import-GlookoCSV`, which imports CSV data while skipping the first row.
+This module provides the following functions:
 
-For detailed documentation about the function, see [Import-GlookoCSV Function](docs/import-glookocsv-function.md).
+- **`Import-GlookoCSV`** - Imports CSV data while skipping the first row. For detailed documentation, see [Import-GlookoCSV Function](docs/import-glookocsv-function.md).
+- **`Import-GlookoFolder`** - Imports all CSV files from a specified folder using Import-GlookoCSV.
 
-## Module Structure
+## Development
+
+### 🚀 Quick Start
+
+For the fastest way to get started, see the [Quick Start with GitHub Codespaces](docs/quick-start-codespaces.md) guide.
+
+### Module Structure
 
 For information about the module's organization and components, see [Module Structure](docs/module-structure.md).
 
-## Testing
+### Testing
 
 This module includes comprehensive Pester 5.x tests. For detailed testing information, see [Testing](docs/testing.md).
 
