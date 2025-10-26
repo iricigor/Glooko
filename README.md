@@ -33,8 +33,8 @@ For more import options including using Install-GitModule, see [Alternative Impo
 
 This module provides the following functions:
 
-- **`Import-GlookoCSV`** - Imports CSV data while skipping the first row, see [detailed documentation](docs/import-glookocsv-function.md).
-- **`Import-GlookoFolder`** - Imports all CSV files from a specified folder using Import-GlookoCSV, see [detailed documentation](docs/import-glookofolder-function.md).
+- **`Import-GlookoCSV`** - Imports CSV data while skipping the first row, see [detailed documentation](docs/functions/import-glookocsv.md).
+- **`Import-GlookoFolder`** - Imports all CSV files from a specified folder using Import-GlookoCSV, see [detailed documentation](docs/functions/import-glookofolder.md).
 
 ## Development
 

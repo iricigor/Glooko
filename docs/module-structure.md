@@ -21,8 +21,10 @@ Glooko/
 │   ├── quick-start-codespaces.md
 │   ├── alternative-import-methods.md
 │   ├── module-structure.md
-│   ├── import-glookocsv-function.md
-│   └── testing.md
+│   ├── testing.md
+│   └── functions/             # Function documentation
+│       ├── import-glookocsv.md
+│       └── import-glookofolder.md
 ├── .github/                    # GitHub automation
 │   └── workflows/
 │       └── test.yml           # Continuous integration

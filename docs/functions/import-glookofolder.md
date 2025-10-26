@@ -62,4 +62,4 @@ Returns an array of objects, where each object contains:
 
 ## Related Functions
 
-- **Import-GlookoCSV**: Used internally to process individual CSV files. See [Import-GlookoCSV documentation](import-glookocsv-function.md) for details on how individual files are processed.
+- **Import-GlookoCSV**: Used internally to process individual CSV files. See [Import-GlookoCSV documentation](import-glookocsv.md) for details on how individual files are processed.
