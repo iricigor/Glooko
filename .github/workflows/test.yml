@@ -15,14 +15,28 @@ permissions:
 
 jobs:
   test:
-    runs-on: windows-latest
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            shell: pwsh
+            name: Linux-PowerShell7
+          - os: windows-latest
+            shell: pwsh
+            name: Windows-PowerShell7
+          - os: windows-latest
+            shell: powershell
+            name: Windows-PowerShell5
+    
+    runs-on: ${{ matrix.os }}
+    name: Test on ${{ matrix.name }}
     
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
       
     - name: Setup PowerShell modules
-      shell: pwsh
+      shell: ${{ matrix.shell }}
       run: |
         # Install Pester if not available or update to latest version
         if (Get-Module -ListAvailable -Name Pester | Where-Object {$_.Version -ge '5.0.0'}) {
@@ -39,7 +53,7 @@ jobs:
         Get-Module Pester | Select-Object Name, Version
     
     - name: Run Pester Tests
-      shell: pwsh
+      shell: ${{ matrix.shell }}
       run: |
         # Change to the repository root
         Set-Location $env:GITHUB_WORKSPACE
@@ -57,7 +71,7 @@ jobs:
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: test-results
+        name: test-results-${{ matrix.name }}
         path: |
           Tests/TestResults.xml
           Tests/CodeCoverage.xml
@@ -67,14 +81,14 @@ jobs:
       uses: dorny/test-reporter@v1
       if: always()
       with:
-        name: Pester Test Results
+        name: Pester Test Results (${{ matrix.name }})
         path: Tests/TestResults.xml
         reporter: java-junit
         fail-on-error: false
     
     - name: Add Coverage Comment
       if: github.event_name == 'pull_request'
-      shell: pwsh
+      shell: ${{ matrix.shell }}
       run: |
         if (Test-Path "Tests/CodeCoverage.xml") {
           [xml]$coverage = Get-Content "Tests/CodeCoverage.xml"
@@ -87,7 +101,7 @@ jobs:
             
             if ($total -gt 0) {
               $lineRate = [math]::Round(($covered / $total) * 100, 2)
-              Write-Host "📊 Code Coverage: $lineRate% ($covered/$total lines covered)"
+              Write-Host "📊 Code Coverage (${{ matrix.name }}): $lineRate% ($covered/$total lines covered)"
             } else {
               Write-Host "📊 No coverage data available"
             }
