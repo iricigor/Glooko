@@ -6,6 +6,9 @@ function Import-GlookoFolder {
     .DESCRIPTION
         This function imports all CSV files from a folder using Import-GlookoCSV,
         returning an array of imported objects with metadata and data from each file.
+        
+        Files with the same Dataset and OriginalFirstLine metadata values are automatically
+        consolidated into a single dataset, with data merged in ascending Order.
     
     .PARAMETER Path
         The path to the folder containing CSV files to import.
@@ -21,6 +24,7 @@ function Import-GlookoFolder {
     .OUTPUTS
         Array of PSCustomObject
         Returns an array of objects, each with Metadata and Data properties from Import-GlookoCSV.
+        Multiple files with matching Dataset and OriginalFirstLine are consolidated into single objects.
     #>
     
     [CmdletBinding()]
@@ -62,7 +66,12 @@ function Import-GlookoFolder {
             
             Write-Verbose "Successfully imported $($results.Count) file(s)"
             
-            return $results
+            # Consolidate datasets with matching Dataset and OriginalFirstLine
+            $consolidated = Merge-GlookoDatasets -ImportedData $results
+            
+            Write-Verbose "After consolidation: $($consolidated.Count) dataset(s)"
+            
+            return $consolidated
         }
         catch {
             Write-Error "Error processing folder: $($_.Exception.Message)"
