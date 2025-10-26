@@ -24,7 +24,7 @@ The fastest way to get started is using GitHub Codespaces:
 ### Quick Test in Codespaces
 ```powershell
 # The module is auto-loaded, try it immediately:
-Import-GlookoCSV -Path "sample-data.csv" -Verbose
+Import-GlookoCSV -Path "Tests/sample-data.csv" -Verbose
 
 # Run tests
 Test-Module
@@ -75,12 +75,12 @@ Glooko/
 ├── README.md                   # This documentation
 ├── Glooko.psd1                 # Module manifest
 ├── Glooko.psm1                 # Module loader
-├── sample-data.csv             # Sample CSV for testing
 ├── Public/                     # Public functions
 │   └── Import-GlookoCSV.ps1
 ├── Tests/                      # Pester tests
 │   ├── Import-GlookoCSV.Tests.ps1
-│   └── PesterConfig.ps1
+│   ├── PesterConfig.ps1
+│   └── sample-data.csv         # Sample CSV for testing
 ├── .devcontainer/              # GitHub Codespaces configuration
 │   ├── devcontainer.json       # Container definition
 │   ├── setup.ps1              # Development environment setup
