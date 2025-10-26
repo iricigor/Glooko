@@ -185,6 +185,17 @@ The test suite covers:
 - ✅ Special characters in data
 - ✅ Verbose output verification
 
+### Continuous Integration
+
+The repository includes a GitHub Actions workflow that automatically runs Pester tests on every pull request and push to the main/master branch. Test results are displayed directly in the PR checks tab, showing:
+
+- ✅ Individual test case results with pass/fail status
+- ✅ Detailed test names and execution times
+- ✅ Code coverage metrics
+- ✅ Test artifacts for download
+
+The workflow uses [dorny/test-reporter](https://github.com/dorny/test-reporter) to parse JUnit XML test results and create detailed check runs in GitHub.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
