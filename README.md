@@ -36,6 +36,18 @@ This module provides the following functions:
 - **`Import-GlookoCSV`** - Imports CSV data while skipping the first row, see [detailed documentation](docs/functions/import-glookocsv.md).
 - **`Import-GlookoFolder`** - Imports all CSV files from a specified folder using Import-GlookoCSV, see [detailed documentation](docs/functions/import-glookofolder.md).
 - **`Import-GlookoZip`** - Imports data from a Glooko zip file by extracting and processing CSV files, see [detailed documentation](docs/functions/import-glookozip.md).
+- **`Export-GlookoZipToXlsx`** - Converts a Glooko zip file to an Excel (XLSX) file with each dataset in a separate worksheet, see [detailed documentation](docs/functions/export-glookozip-to-xlsx.md).
+
+### Quick Example
+
+```powershell
+# Import a Glooko zip file
+$data = Import-GlookoZip -Path "C:\data\export.zip"
+
+# Or convert directly to Excel
+Export-GlookoZipToXlsx -Path "C:\data\export.zip"
+# Creates C:\data\export.xlsx with each dataset in a separate worksheet
+```
 
 ## Development
 
