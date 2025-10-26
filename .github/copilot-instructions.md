@@ -78,7 +78,7 @@ Invoke-Pester -Configuration $PesterConfig
    - Use meaningful variable names
    - Add comments for complex logic only
    - Keep functions focused and single-purpose
-   - **Prefer PowerShell cmdlets over .NET calls**: Use native PowerShell commands instead of .NET classes when possible (e.g., use `New-Guid` instead of `[System.Guid]::NewGuid()`, use `New-TemporaryFile` with `Split-Path` to get temp directory instead of `[System.IO.Path]::GetTempPath()`)
+   - **Prefer PowerShell cmdlets over .NET calls**: Use native PowerShell commands instead of .NET classes when possible (e.g., use `New-Guid` instead of `[System.Guid]::NewGuid()`). For cross-platform temp directory access, use `New-TemporaryFile` with `Split-Path` as it works reliably on all platforms without depending on environment variables that may not be set.
 
 5. **Verbose Output**:
    - Add Write-Verbose statements for debugging and tracing
