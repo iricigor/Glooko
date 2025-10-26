@@ -40,7 +40,8 @@ Invoke-Pester -Configuration $PesterConfig
 - Tests are located in the `Tests/` directory
 - Test results are output to `Tests/TestResults.xml` (JUnit format)
 - Code coverage reports are generated in `Tests/CodeCoverage.xml` (JaCoCo format)
-- Target coverage: 75% minimum, currently achieving 92%+
+- Code coverage is tracked for `Public/*.ps1` and `Glooko.psm1` files (see PesterConfig.ps1)
+- Target coverage: 75% minimum
 - All tests should pass before submitting changes
 
 ### CI/CD
