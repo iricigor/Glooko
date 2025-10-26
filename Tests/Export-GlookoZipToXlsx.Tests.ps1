@@ -240,49 +240,21 @@ Describe 'Export-GlookoZipToXlsx' {
         }
         
         It 'Should handle worksheet names longer than 31 characters' {
-            # Create a zip with a long dataset name
-            $testFolder = 'TestDrive:\long_name_test'
-            New-Item -Path $testFolder -ItemType Directory -Force | Out-Null
+            $zipPath = $Script:TestZipFiles.LongNameZip
+            $outputPath = [System.IO.Path]::ChangeExtension($zipPath, '.xlsx')
             
-            $testCSV = Join-Path $testFolder 'very_long_dataset_name_that_exceeds_limit_data_1.csv'
-            @"
-Name:Test User, Date Range:2025-01-01 - 2025-01-31
-Value,Unit
-100,mg/dL
-"@ | Out-File -FilePath $testCSV -Encoding UTF8
-            
-            $longNameZip = 'TestDrive:\long_name.zip'
-            Compress-Archive -Path "$testFolder\*" -DestinationPath $longNameZip -Force
-            Remove-Item $testFolder -Recurse -Force
-            
-            $outputPath = [System.IO.Path]::ChangeExtension($longNameZip, '.xlsx')
-            Export-GlookoZipToXlsx -Path $longNameZip
+            Export-GlookoZipToXlsx -Path $zipPath
             
             $worksheets = Get-ExcelSheetInfo -Path $outputPath
             $worksheets[0].Name.Length | Should -BeLessOrEqual 31
         }
         
         It 'Should sanitize invalid worksheet name characters' {
-            # Create a zip with invalid characters in dataset name
-            $testFolder = 'TestDrive:\invalid_chars_test'
-            New-Item -Path $testFolder -ItemType Directory -Force | Out-Null
-            
-            # Note: The filename pattern won't match this, but we're testing the sanitization
-            $testCSV = Join-Path $testFolder 'test.csv'
-            @"
-Name:Test User, Date Range:2025-01-01 - 2025-01-31
-Value,Unit
-100,mg/dL
-"@ | Out-File -FilePath $testCSV -Encoding UTF8
-            
-            $invalidCharsZip = 'TestDrive:\invalid_chars.zip'
-            Compress-Archive -Path "$testFolder\*" -DestinationPath $invalidCharsZip -Force
-            Remove-Item $testFolder -Recurse -Force
-            
-            $outputPath = [System.IO.Path]::ChangeExtension($invalidCharsZip, '.xlsx')
+            $zipPath = $Script:TestZipFiles.InvalidCharsZip
+            $outputPath = [System.IO.Path]::ChangeExtension($zipPath, '.xlsx')
             
             # Should not throw even if dataset name has invalid characters
-            { Export-GlookoZipToXlsx -Path $invalidCharsZip } | Should -Not -Throw
+            { Export-GlookoZipToXlsx -Path $zipPath } | Should -Not -Throw
         }
     }
 }

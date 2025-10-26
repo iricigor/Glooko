@@ -133,6 +133,36 @@ Timestamp,Value,Unit
     Compress-Archive -Path "$consolidateFolder\*" -DestinationPath $consolidateZip -Force
     Remove-Item $consolidateFolder -Recurse -Force
     
+    # Test zip with long dataset name (for worksheet name testing)
+    $longNameFolder = 'TestDrive:\long_name_test'
+    New-Item -Path $longNameFolder -ItemType Directory -Force | Out-Null
+    
+    $longNameCSV = Join-Path $longNameFolder 'very_long_dataset_name_that_exceeds_limit_data_1.csv'
+    @"
+Name:Test User, Date Range:2025-01-01 - 2025-01-31
+Value,Unit
+100,mg/dL
+"@ | Out-File -FilePath $longNameCSV -Encoding UTF8
+    
+    $longNameZip = 'TestDrive:\long_name.zip'
+    Compress-Archive -Path "$longNameFolder\*" -DestinationPath $longNameZip -Force
+    Remove-Item $longNameFolder -Recurse -Force
+    
+    # Test zip with simple CSV (for invalid character testing)
+    $invalidCharsFolder = 'TestDrive:\invalid_chars_test'
+    New-Item -Path $invalidCharsFolder -ItemType Directory -Force | Out-Null
+    
+    $invalidCharsCSV = Join-Path $invalidCharsFolder 'test.csv'
+    @"
+Name:Test User, Date Range:2025-01-01 - 2025-01-31
+Value,Unit
+100,mg/dL
+"@ | Out-File -FilePath $invalidCharsCSV -Encoding UTF8
+    
+    $invalidCharsZip = 'TestDrive:\invalid_chars.zip'
+    Compress-Archive -Path "$invalidCharsFolder\*" -DestinationPath $invalidCharsZip -Force
+    Remove-Item $invalidCharsFolder -Recurse -Force
+    
     # Return hashtable with all zip file paths
     return @{
         MultiFileZip = $multiFileZip
@@ -142,6 +172,8 @@ Timestamp,Value,Unit
         MetadataZip = $metadataZip
         SpecialZip = $specialZip
         ConsolidateZip = $consolidateZip
+        LongNameZip = $longNameZip
+        InvalidCharsZip = $invalidCharsZip
         NonExistentZip = 'TestDrive:\nonexistent.zip'
         NotAZipFile = 'TestDrive:\notazip.txt'
         FolderNotFile = 'TestDrive:\afolder'
