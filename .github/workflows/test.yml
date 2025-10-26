@@ -14,29 +14,16 @@ permissions:
   pull-requests: write
 
 jobs:
-  test:
-    strategy:
-      matrix:
-        include:
-          - os: ubuntu-latest
-            shell: pwsh
-            name: Linux-PowerShell7
-          - os: windows-latest
-            shell: pwsh
-            name: Windows-PowerShell7
-          - os: windows-latest
-            shell: powershell
-            name: Windows-PowerShell5
-    
-    runs-on: ${{ matrix.os }}
-    name: Test on ${{ matrix.name }}
+  test-linux-pwsh7:
+    runs-on: ubuntu-latest
+    name: Test on Linux-PowerShell7
     
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
       
     - name: Setup PowerShell modules
-      shell: ${{ matrix.shell }}
+      shell: pwsh
       run: |
         # Install Pester if not available or update to latest version
         if (Get-Module -ListAvailable -Name Pester | Where-Object {$_.Version -ge '5.0.0'}) {
@@ -53,7 +40,7 @@ jobs:
         Get-Module Pester | Select-Object Name, Version
     
     - name: Run Pester Tests
-      shell: ${{ matrix.shell }}
+      shell: pwsh
       run: |
         # Change to the repository root
         Set-Location $env:GITHUB_WORKSPACE
@@ -71,7 +58,7 @@ jobs:
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: test-results-${{ matrix.name }}
+        name: test-results-Linux-PowerShell7
         path: |
           Tests/TestResults.xml
           Tests/CodeCoverage.xml
@@ -81,14 +68,14 @@ jobs:
       uses: dorny/test-reporter@v1
       if: always()
       with:
-        name: Pester Test Results (${{ matrix.name }})
+        name: Pester Test Results (Linux-PowerShell7)
         path: Tests/TestResults.xml
         reporter: java-junit
         fail-on-error: false
     
     - name: Add Coverage Comment
       if: github.event_name == 'pull_request'
-      shell: ${{ matrix.shell }}
+      shell: pwsh
       run: |
         if (Test-Path "Tests/CodeCoverage.xml") {
           [xml]$coverage = Get-Content "Tests/CodeCoverage.xml"
@@ -101,7 +88,177 @@ jobs:
             
             if ($total -gt 0) {
               $lineRate = [math]::Round(($covered / $total) * 100, 2)
-              Write-Host "📊 Code Coverage (${{ matrix.name }}): $lineRate% ($covered/$total lines covered)"
+              Write-Host "📊 Code Coverage (Linux-PowerShell7): $lineRate% ($covered/$total lines covered)"
+            } else {
+              Write-Host "📊 No coverage data available"
+            }
+          } else {
+            Write-Host "📊 No line coverage data found in report"
+          }
+        } else {
+          Write-Host "❌ No coverage file found"
+        }
+
+  test-windows-pwsh7:
+    runs-on: windows-latest
+    name: Test on Windows-PowerShell7
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup PowerShell modules
+      shell: pwsh
+      run: |
+        # Install Pester if not available or update to latest version
+        if (Get-Module -ListAvailable -Name Pester | Where-Object {$_.Version -ge '5.0.0'}) {
+          Write-Host "Pester 5.x is already installed"
+        } else {
+          Write-Host "Installing Pester 5.x"
+          Install-Module -Name Pester -Force -SkipPublisherCheck -MinimumVersion 5.0.0
+        }
+        
+        # Import Pester
+        Import-Module Pester -Force
+        
+        # Display Pester version
+        Get-Module Pester | Select-Object Name, Version
+    
+    - name: Run Pester Tests
+      shell: pwsh
+      run: |
+        # Change to the repository root
+        Set-Location $env:GITHUB_WORKSPACE
+        
+        # Run tests using the PesterConfig.ps1
+        ./PesterConfig.ps1
+        
+        # Check if tests passed
+        if ($LASTEXITCODE -ne 0) {
+          Write-Error "Tests failed with exit code $LASTEXITCODE"
+          exit $LASTEXITCODE
+        }
+    
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results-Windows-PowerShell7
+        path: |
+          Tests/TestResults.xml
+          Tests/CodeCoverage.xml
+        retention-days: 30
+    
+    - name: Publish Test Results
+      uses: dorny/test-reporter@v1
+      if: always()
+      with:
+        name: Pester Test Results (Windows-PowerShell7)
+        path: Tests/TestResults.xml
+        reporter: java-junit
+        fail-on-error: false
+    
+    - name: Add Coverage Comment
+      if: github.event_name == 'pull_request'
+      shell: pwsh
+      run: |
+        if (Test-Path "Tests/CodeCoverage.xml") {
+          [xml]$coverage = Get-Content "Tests/CodeCoverage.xml"
+          $lineCounter = $coverage.report.counter | Where-Object {$_.type -eq "LINE"}
+          
+          if ($lineCounter) {
+            $covered = [int]$lineCounter.covered
+            $missed = [int]$lineCounter.missed
+            $total = $covered + $missed
+            
+            if ($total -gt 0) {
+              $lineRate = [math]::Round(($covered / $total) * 100, 2)
+              Write-Host "📊 Code Coverage (Windows-PowerShell7): $lineRate% ($covered/$total lines covered)"
+            } else {
+              Write-Host "📊 No coverage data available"
+            }
+          } else {
+            Write-Host "📊 No line coverage data found in report"
+          }
+        } else {
+          Write-Host "❌ No coverage file found"
+        }
+
+  test-windows-powershell5:
+    runs-on: windows-latest
+    name: Test on Windows-PowerShell5
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup PowerShell modules
+      shell: powershell
+      run: |
+        # Install Pester if not available or update to latest version
+        if (Get-Module -ListAvailable -Name Pester | Where-Object {$_.Version -ge '5.0.0'}) {
+          Write-Host "Pester 5.x is already installed"
+        } else {
+          Write-Host "Installing Pester 5.x"
+          Install-Module -Name Pester -Force -SkipPublisherCheck -MinimumVersion 5.0.0
+        }
+        
+        # Import Pester
+        Import-Module Pester -Force
+        
+        # Display Pester version
+        Get-Module Pester | Select-Object Name, Version
+    
+    - name: Run Pester Tests
+      shell: powershell
+      run: |
+        # Change to the repository root
+        Set-Location $env:GITHUB_WORKSPACE
+        
+        # Run tests using the PesterConfig.ps1
+        ./PesterConfig.ps1
+        
+        # Check if tests passed
+        if ($LASTEXITCODE -ne 0) {
+          Write-Error "Tests failed with exit code $LASTEXITCODE"
+          exit $LASTEXITCODE
+        }
+    
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results-Windows-PowerShell5
+        path: |
+          Tests/TestResults.xml
+          Tests/CodeCoverage.xml
+        retention-days: 30
+    
+    - name: Publish Test Results
+      uses: dorny/test-reporter@v1
+      if: always()
+      with:
+        name: Pester Test Results (Windows-PowerShell5)
+        path: Tests/TestResults.xml
+        reporter: java-junit
+        fail-on-error: false
+    
+    - name: Add Coverage Comment
+      if: github.event_name == 'pull_request'
+      shell: powershell
+      run: |
+        if (Test-Path "Tests/CodeCoverage.xml") {
+          [xml]$coverage = Get-Content "Tests/CodeCoverage.xml"
+          $lineCounter = $coverage.report.counter | Where-Object {$_.type -eq "LINE"}
+          
+          if ($lineCounter) {
+            $covered = [int]$lineCounter.covered
+            $missed = [int]$lineCounter.missed
+            $total = $covered + $missed
+            
+            if ($total -gt 0) {
+              $lineRate = [math]::Round(($covered / $total) * 100, 2)
+              Write-Host "📊 Code Coverage (Windows-PowerShell5): $lineRate% ($covered/$total lines covered)"
             } else {
               Write-Host "📊 No coverage data available"
             }
