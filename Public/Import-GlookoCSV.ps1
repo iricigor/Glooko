@@ -20,8 +20,8 @@ function Import-GlookoCSV {
         Imports the CSV file via pipeline input.
     
     .OUTPUTS
-        System.Management.Automation.PSCustomObject[]
-        Returns an array of custom objects representing the CSV data.
+        PSCustomObject
+        Returns an object with Metadata (first row as string) and Data (array of CSV objects) properties.
     #>
     
     [CmdletBinding()]
@@ -50,20 +50,25 @@ function Import-GlookoCSV {
             
             if ($allLines.Count -lt 2) {
                 Write-Warning "File contains fewer than 2 lines. At least 2 lines are required (one to skip, one for data)."
-                return
+                return [PSCustomObject]@{
+                    Metadata = if ($allLines) { $allLines | Select-Object -First 1 } else { '' }
+                    Data     = @()
+                }
             }
             
-            # Skip the first line and use remaining lines
+            # Capture metadata (first line) and data lines
+            $metadata = $allLines[0]
             $dataLines = $allLines[1..($allLines.Count - 1)]
             
-            Write-Verbose "Skipped first line. Processing $($dataLines.Count) remaining lines."
+            Write-Verbose "Captured metadata: $metadata"
+            Write-Verbose "Processing $($dataLines.Count) remaining lines."
             
             # Create temporary file content with remaining lines (second row becomes headers)
             $tempFile = [System.IO.Path]::GetTempFileName()
             
             try {
                 $dataLines | Out-File -FilePath $tempFile -Encoding UTF8
-                $result = Import-Csv -Path $tempFile
+                $data = Import-Csv -Path $tempFile
             }
             finally {
                 if (Test-Path $tempFile) {
@@ -71,8 +76,13 @@ function Import-GlookoCSV {
                 }
             }
             
-            Write-Verbose "Successfully processed $($result.Count) data rows"
-            return $result
+            Write-Verbose "Successfully processed $($data.Count) data rows"
+            
+            # Return structured object
+            return [PSCustomObject]@{
+                Metadata = $metadata
+                Data     = $data
+            }
         }
         catch {
             Write-Error "Error processing CSV file: $($_.Exception.Message)"

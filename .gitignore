@@ -1,0 +1,28 @@
+# Pester Test Results
+Tests/TestResults.xml
+Tests/CodeCoverage.xml
+
+# PowerShell temporary files
+*.tmp
+*.temp
+
+# VS Code settings (optional - uncomment if you don't want to share workspace settings)
+# .vscode/
+
+# Windows thumbnail cache files
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
