@@ -1,16 +1,16 @@
 BeforeAll {
     # Import the module being tested
-    $ModulePath = Join-Path $PSScriptRoot '..' 'Glooko.psd1'
+    $ModulePath = Join-Path (Join-Path $PSScriptRoot '..') -ChildPath 'Glooko.psd1'
     Import-Module $ModulePath -Force
     
     # Import test helpers
-    . (Join-Path $PSScriptRoot 'TestHelpers.ps1')
+    . (Join-Path $PSScriptRoot -ChildPath 'TestHelpers.ps1')
     
     # Import Private functions for direct testing
-    . (Join-Path $PSScriptRoot '..' 'Private' 'Expand-GlookoMetadata.ps1')
+    . (Join-Path (Join-Path $PSScriptRoot '..') -ChildPath 'Private' | Join-Path -ChildPath 'Expand-GlookoMetadata.ps1')
     
     # Fixtures path for static test data
-    $FixturesPath = Join-Path $PSScriptRoot 'Fixtures'
+    $FixturesPath = Join-Path $PSScriptRoot -ChildPath 'Fixtures'
     if (-not (Test-Path $FixturesPath)) {
         New-Item -Path $FixturesPath -ItemType Directory -Force | Out-Null
     }
