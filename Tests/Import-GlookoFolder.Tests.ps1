@@ -18,39 +18,14 @@ AfterAll {
 Describe 'Import-GlookoFolder' {
     
     BeforeEach {
-        # Create a test folder structure in TestDrive
-        $Script:TestFolder = 'TestDrive:\test_folder'
-        New-Item -Path $Script:TestFolder -ItemType Directory -Force | Out-Null
-        
-        # Create multiple test CSV files in the folder
-        $testCSV1 = Join-Path $Script:TestFolder 'file1.csv'
-        @"
-Metadata: Export from system on 2025-10-18
-Name,Age,City
-John,25,New York
-Jane,30,Los Angeles
-"@ | Out-File -FilePath $testCSV1 -Encoding UTF8
-
-        $testCSV2 = Join-Path $Script:TestFolder 'file2.csv'
-        @"
-Skip this line
-Name,Age,City
-Bob,35,Chicago
-"@ | Out-File -FilePath $testCSV2 -Encoding UTF8
-
-        $testCSV3 = Join-Path $Script:TestFolder 'file3.csv'
-        @"
-Name:Igor Irić, Date Range:2025-05-31 - 2025-08-17
-Timestamp,Alarm/Event,Serial Number
-8/17/2025 0:15,tandem_control_low,1266847
-8/16/2025 22:35,tandem_control_low,1266847
-"@ | Out-File -FilePath $testCSV3 -Encoding UTF8
+        # Create test folder structures in TestDrive for each test
+        $Script:TestFolders = New-TestFolders
     }
     
     Context 'Basic functionality' {
         
         It 'Should import all CSV files from a folder' {
-            $results = Import-GlookoFolder -Path $Script:TestFolder
+            $results = Import-GlookoFolder -Path $Script:TestFolders.TestFolder
             
             $results | Should -HaveCount 3
             $results | ForEach-Object {
@@ -61,7 +36,7 @@ Timestamp,Alarm/Event,Serial Number
         }
         
         It 'Should import files with correct data from each file' {
-            $results = Import-GlookoFolder -Path $Script:TestFolder
+            $results = Import-GlookoFolder -Path $Script:TestFolders.TestFolder
             
             # Find file1.csv result
             $file1Result = $results | Where-Object { $_.Metadata.FullName -eq 'file1.csv' }
@@ -85,11 +60,8 @@ Timestamp,Alarm/Event,Serial Number
         }
         
         It 'Should work with empty folder' {
-            $emptyFolder = 'TestDrive:\empty_folder'
-            New-Item -Path $emptyFolder -ItemType Directory -Force | Out-Null
-            
             $warnings = @()
-            $results = Import-GlookoFolder -Path $emptyFolder -WarningVariable warnings
+            $results = Import-GlookoFolder -Path $Script:TestFolders.EmptyFolder -WarningVariable warnings
             
             $results | Should -BeNullOrEmpty
             $warnings | Should -HaveCount 1
@@ -97,17 +69,7 @@ Timestamp,Alarm/Event,Serial Number
         }
         
         It 'Should work with folder containing only one CSV file' {
-            $singleFileFolder = 'TestDrive:\single_file_folder'
-            New-Item -Path $singleFileFolder -ItemType Directory -Force | Out-Null
-            
-            $testCSV = Join-Path $singleFileFolder 'single.csv'
-            @"
-Skip this line
-Name,Age,City
-Alice,28,Boston
-"@ | Out-File -FilePath $testCSV -Encoding UTF8
-            
-            $results = Import-GlookoFolder -Path $singleFileFolder
+            $results = Import-GlookoFolder -Path $Script:TestFolders.SingleFileFolder
             
             $results | Should -HaveCount 1
             $results[0].Metadata.FullName | Should -Be 'single.csv'
@@ -117,10 +79,10 @@ Alice,28,Boston
         
         It 'Should ignore non-CSV files in the folder' {
             # Add a non-CSV file to the test folder
-            $txtFile = Join-Path $Script:TestFolder 'readme.txt'
+            $txtFile = Join-Path $Script:TestFolders.TestFolder 'readme.txt'
             'This is not a CSV file' | Out-File -FilePath $txtFile -Encoding UTF8
             
-            $results = Import-GlookoFolder -Path $Script:TestFolder
+            $results = Import-GlookoFolder -Path $Script:TestFolders.TestFolder
             
             # Should still only import the 3 CSV files
             $results | Should -HaveCount 3
@@ -130,27 +92,26 @@ Alice,28,Boston
     Context 'Error handling' {
         
         It 'Should throw error for non-existent folder' {
-            { Import-GlookoFolder -Path 'TestDrive:\nonexistent_folder' } | Should -Throw "*Folder not found*"
+            { Import-GlookoFolder -Path $Script:TestFolders.NonExistentFolder } | Should -Throw "*Folder not found*"
         }
         
         It 'Should throw error when path is a file instead of folder' {
-            $testFile = 'TestDrive:\testfile.csv'
-            'test' | Out-File -FilePath $testFile -Encoding UTF8
+            'test' | Out-File -FilePath $Script:TestFolders.TestFile -Encoding UTF8
             
-            { Import-GlookoFolder -Path $testFile } | Should -Throw "*Folder not found*"
+            { Import-GlookoFolder -Path $Script:TestFolders.TestFile } | Should -Throw "*Folder not found*"
         }
     }
     
     Context 'Pipeline support' {
         
         It 'Should accept pipeline input' {
-            $results = $Script:TestFolder | Import-GlookoFolder
+            $results = $Script:TestFolders.TestFolder | Import-GlookoFolder
             
             $results | Should -HaveCount 3
         }
         
         It 'Should work with Get-Item pipeline' {
-            $folderItem = Get-Item -Path $Script:TestFolder
+            $folderItem = Get-Item -Path $Script:TestFolders.TestFolder
             $results = $folderItem.FullName | Import-GlookoFolder
             
             $results | Should -HaveCount 3
@@ -162,7 +123,7 @@ Alice,28,Boston
         It 'Should provide verbose output when requested' {
             # Test that the function runs with -Verbose without errors
             # and that it produces the expected result
-            $results = Import-GlookoFolder -Path $Script:TestFolder -Verbose
+            $results = Import-GlookoFolder -Path $Script:TestFolders.TestFolder -Verbose
             
             # Verify the function still works correctly with verbose output
             $results | Should -HaveCount 3
@@ -172,7 +133,7 @@ Alice,28,Boston
     Context 'Data integrity' {
         
         It 'Should preserve all metadata from individual files' {
-            $results = Import-GlookoFolder -Path $Script:TestFolder
+            $results = Import-GlookoFolder -Path $Script:TestFolders.TestFolder
             
             # Each result should have complete metadata structure
             $results | ForEach-Object {
@@ -183,18 +144,7 @@ Alice,28,Boston
         }
         
         It 'Should handle files with special characters correctly' {
-            $specialFolder = 'TestDrive:\special_folder'
-            New-Item -Path $specialFolder -ItemType Directory -Force | Out-Null
-            
-            $specialFile = Join-Path $specialFolder 'special.csv'
-            @"
-Skip this metadata line
-Name,Description,Value
-Test,"Data with, comma",123
-Quote,"Data with ""quotes""",456
-"@ | Out-File -FilePath $specialFile -Encoding UTF8
-            
-            $results = Import-GlookoFolder -Path $specialFolder
+            $results = Import-GlookoFolder -Path $Script:TestFolders.SpecialFolder
             
             $results | Should -HaveCount 1
             $results[0].Data | Should -HaveCount 2
