@@ -35,6 +35,7 @@ This module provides the following functions:
 
 - **`Import-GlookoCSV`** - Imports CSV data while skipping the first row, see [detailed documentation](docs/functions/import-glookocsv.md).
 - **`Import-GlookoFolder`** - Imports all CSV files from a specified folder using Import-GlookoCSV, see [detailed documentation](docs/functions/import-glookofolder.md).
+- **`Import-GlookoZip`** - Imports data from a Glooko zip file by extracting and processing CSV files, see [detailed documentation](docs/functions/import-glookozip.md).
 
 ## Development
 
