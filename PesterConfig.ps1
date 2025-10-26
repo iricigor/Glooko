@@ -6,7 +6,7 @@ $PesterConfig = New-PesterConfiguration
 $PesterConfig.Run.Path = @('Tests')
 $PesterConfig.TestResult.Enabled = $true
 $PesterConfig.TestResult.OutputPath = 'Tests/TestResults.xml'
-$PesterConfig.TestResult.OutputFormat = 'NUnitXml'
+$PesterConfig.TestResult.OutputFormat = 'JUnitXml'
 
 # Code Coverage
 $PesterConfig.CodeCoverage.Enabled = $true

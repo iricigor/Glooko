@@ -64,12 +64,13 @@ jobs:
         retention-days: 30
     
     - name: Publish Test Results
-      uses: EnricoMi/publish-unit-test-result-action/windows@v2
+      uses: dorny/test-reporter@v1
       if: always()
       with:
-        files: Tests/TestResults.xml
-        check_name: "Pester Test Results"
-        comment_title: "Pester Test Results"
+        name: Pester Test Results
+        path: Tests/TestResults.xml
+        reporter: java-junit
+        fail-on-error: false
     
     - name: Add Coverage Comment
       if: github.event_name == 'pull_request'
