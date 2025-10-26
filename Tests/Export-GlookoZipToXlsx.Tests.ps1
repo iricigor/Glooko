@@ -4,9 +4,21 @@ BeforeAll {
     Import-Module $ModulePath -Force
     
     # Import ImportExcel module for testing
-    $ImportExcelPath = '/tmp/ImportExcel/ImportExcel.psd1'
-    if (Test-Path $ImportExcelPath) {
-        Import-Module $ImportExcelPath -Force
+    # Try system-installed module first, then fallback to local paths
+    if (Get-Module -ListAvailable -Name ImportExcel) {
+        Import-Module ImportExcel -Force -ErrorAction SilentlyContinue
+    } else {
+        # Try Linux/Mac path
+        $ImportExcelPath = '/tmp/ImportExcel/ImportExcel.psd1'
+        if (Test-Path $ImportExcelPath) {
+            Import-Module $ImportExcelPath -Force -ErrorAction SilentlyContinue
+        } else {
+            # Try Windows path
+            $ImportExcelPath = 'C:\Temp\ImportExcel\ImportExcel.psd1'
+            if (Test-Path $ImportExcelPath) {
+                Import-Module $ImportExcelPath -Force -ErrorAction SilentlyContinue
+            }
+        }
     }
     
     # Import test helpers
