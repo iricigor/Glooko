@@ -52,7 +52,8 @@ $results = Import-GlookoFolder -Path "C:\data\exports" -Verbose
 $results = Import-GlookoFolder -Path "C:\data\exports"
 foreach ($dataset in $results) {
     Write-Host "Dataset: $($dataset.Metadata.Dataset)"
-    Write-Host "  Files: $($dataset.Metadata.FullName) (Order: $($dataset.Metadata.Order))"
+    # Note: FullName and Order come from the file with lowest Order in the consolidated dataset
+    Write-Host "  Primary file: $($dataset.Metadata.FullName) (Order: $($dataset.Metadata.Order))"
     Write-Host "  Total rows: $($dataset.Data.Count)"
     # Process $dataset.Data
 }
@@ -88,7 +89,7 @@ When multiple CSV files have matching `Dataset` and `OriginalFirstLine` metadata
 - `cgm_data_2.csv` (2 rows)  
 - `cgm_data_3.csv` (2 rows)
 
-All with the same first line: `Name:John Doe, Date Range:2025-01-01 - 2025-01-31`
+All with the same first line: `Name:John Doe, Date Range:2024-06-01 - 2024-06-30`
 
 The result will be a single object with:
 - Metadata from `cgm_data_1.csv` (Order=1)

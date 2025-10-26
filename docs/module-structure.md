@@ -10,7 +10,7 @@ Glooko/
 ├── Glooko.psm1                 # Module loader
 ├── Public/                     # Public functions (exported)
 │   ├── Import-GlookoCSV.ps1    # Main CSV import function
-│   └── Import-GlookoFolder.ps1 # Folder import with consolidation
+│   └── Import-GlookoFolder.ps1 # Folder import with dataset consolidation
 ├── Private/                    # Private functions (internal use only)
 │   ├── Expand-GlookoMetadata.ps1  # Metadata parsing helper
 │   └── Merge-GlookoDatasets.ps1   # Dataset consolidation helper
