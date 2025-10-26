@@ -152,4 +152,188 @@ Describe 'Import-GlookoFolder' {
             $results[0].Data[1].Description | Should -Be 'Data with "quotes"'
         }
     }
+    
+    Context 'Dataset consolidation' {
+        
+        It 'Should consolidate files with same Dataset and OriginalFirstLine' {
+            # Create a test folder with split datasets
+            $consolidateFolder = 'TestDrive:\consolidate_folder'
+            New-Item -Path $consolidateFolder -ItemType Directory -Force | Out-Null
+            
+            $file1 = Join-Path $consolidateFolder 'cgm_data_1.csv'
+            @"
+Name:John Doe, Date Range:2025-01-01 - 2025-01-31
+Timestamp,Value,Unit
+2025-01-01 10:00,100,mg/dL
+2025-01-01 10:05,105,mg/dL
+"@ | Out-File -FilePath $file1 -Encoding UTF8
+            
+            $file2 = Join-Path $consolidateFolder 'cgm_data_2.csv'
+            @"
+Name:John Doe, Date Range:2025-01-01 - 2025-01-31
+Timestamp,Value,Unit
+2025-01-01 10:10,110,mg/dL
+2025-01-01 10:15,108,mg/dL
+"@ | Out-File -FilePath $file2 -Encoding UTF8
+            
+            $results = Import-GlookoFolder -Path $consolidateFolder
+            
+            # Should consolidate into one dataset
+            $results | Should -HaveCount 1
+            $results[0].Metadata.Dataset | Should -Be 'cgm'
+            $results[0].Metadata.FullName | Should -Be 'cgm_data_1.csv'
+            $results[0].Metadata.Order | Should -Be 1
+            $results[0].Data | Should -HaveCount 4
+        }
+        
+        It 'Should merge data in ascending Order' {
+            $consolidateFolder = 'TestDrive:\consolidate_order_folder'
+            New-Item -Path $consolidateFolder -ItemType Directory -Force | Out-Null
+            
+            # Create files out of order (2, then 1, then 3)
+            $file2 = Join-Path $consolidateFolder 'alarms_data_2.csv'
+            @"
+Name:Jane Doe, Date Range:2025-02-01 - 2025-02-28
+Timestamp,Alarm
+2025-02-15 12:00,Medium
+"@ | Out-File -FilePath $file2 -Encoding UTF8
+            
+            $file1 = Join-Path $consolidateFolder 'alarms_data_1.csv'
+            @"
+Name:Jane Doe, Date Range:2025-02-01 - 2025-02-28
+Timestamp,Alarm
+2025-02-01 10:00,Low
+"@ | Out-File -FilePath $file1 -Encoding UTF8
+            
+            $file3 = Join-Path $consolidateFolder 'alarms_data_3.csv'
+            @"
+Name:Jane Doe, Date Range:2025-02-01 - 2025-02-28
+Timestamp,Alarm
+2025-02-28 18:00,High
+"@ | Out-File -FilePath $file3 -Encoding UTF8
+            
+            $results = Import-GlookoFolder -Path $consolidateFolder
+            
+            $results | Should -HaveCount 1
+            $results[0].Data | Should -HaveCount 3
+            $results[0].Data[0].Alarm | Should -Be 'Low'
+            $results[0].Data[1].Alarm | Should -Be 'Medium'
+            $results[0].Data[2].Alarm | Should -Be 'High'
+        }
+        
+        It 'Should not consolidate files with different Dataset values' {
+            $consolidateFolder = 'TestDrive:\no_consolidate_dataset_folder'
+            New-Item -Path $consolidateFolder -ItemType Directory -Force | Out-Null
+            
+            $cgmFile = Join-Path $consolidateFolder 'cgm_data_1.csv'
+            @"
+Name:Test User, Date Range:2025-03-01 - 2025-03-31
+Timestamp,Value
+2025-03-01 10:00,100
+"@ | Out-File -FilePath $cgmFile -Encoding UTF8
+            
+            $alarmFile = Join-Path $consolidateFolder 'alarms_data_1.csv'
+            @"
+Name:Test User, Date Range:2025-03-01 - 2025-03-31
+Timestamp,Alarm
+2025-03-01 10:00,Low
+"@ | Out-File -FilePath $alarmFile -Encoding UTF8
+            
+            $results = Import-GlookoFolder -Path $consolidateFolder
+            
+            # Should NOT consolidate - different datasets
+            $results | Should -HaveCount 2
+        }
+        
+        It 'Should not consolidate files with different OriginalFirstLine' {
+            $consolidateFolder = 'TestDrive:\no_consolidate_firstline_folder'
+            New-Item -Path $consolidateFolder -ItemType Directory -Force | Out-Null
+            
+            $file1 = Join-Path $consolidateFolder 'cgm_data_1.csv'
+            @"
+Name:User A, Date Range:2025-04-01 - 2025-04-30
+Timestamp,Value
+2025-04-01 10:00,100
+"@ | Out-File -FilePath $file1 -Encoding UTF8
+            
+            $file2 = Join-Path $consolidateFolder 'cgm_data_2.csv'
+            @"
+Name:User B, Date Range:2025-04-01 - 2025-04-30
+Timestamp,Value
+2025-04-01 10:00,105
+"@ | Out-File -FilePath $file2 -Encoding UTF8
+            
+            $results = Import-GlookoFolder -Path $consolidateFolder
+            
+            # Should NOT consolidate - different OriginalFirstLine (different names)
+            $results | Should -HaveCount 2
+        }
+        
+        It 'Should use metadata from file with lowest Order' {
+            $consolidateFolder = 'TestDrive:\consolidate_metadata_folder'
+            New-Item -Path $consolidateFolder -ItemType Directory -Force | Out-Null
+            
+            $file1 = Join-Path $consolidateFolder 'test_data_1.csv'
+            @"
+Name:Metadata User, Date Range:2025-05-01 - 2025-05-31
+Timestamp,Value
+2025-05-01 10:00,100
+"@ | Out-File -FilePath $file1 -Encoding UTF8
+            
+            $file2 = Join-Path $consolidateFolder 'test_data_2.csv'
+            @"
+Name:Metadata User, Date Range:2025-05-01 - 2025-05-31
+Timestamp,Value
+2025-05-01 10:05,105
+"@ | Out-File -FilePath $file2 -Encoding UTF8
+            
+            $results = Import-GlookoFolder -Path $consolidateFolder
+            
+            $results | Should -HaveCount 1
+            # Should use metadata from Order=1 file
+            $results[0].Metadata.FullName | Should -Be 'test_data_1.csv'
+            $results[0].Metadata.Order | Should -Be 1
+        }
+        
+        It 'Should handle mixed scenarios with some files consolidating and others not' {
+            $consolidateFolder = 'TestDrive:\mixed_consolidate_folder'
+            New-Item -Path $consolidateFolder -ItemType Directory -Force | Out-Null
+            
+            # Group 1: cgm files that should consolidate
+            $cgm1 = Join-Path $consolidateFolder 'cgm_data_1.csv'
+            @"
+Name:Patient X, Date Range:2025-06-01 - 2025-06-30
+Timestamp,Value
+2025-06-01 10:00,100
+"@ | Out-File -FilePath $cgm1 -Encoding UTF8
+            
+            $cgm2 = Join-Path $consolidateFolder 'cgm_data_2.csv'
+            @"
+Name:Patient X, Date Range:2025-06-01 - 2025-06-30
+Timestamp,Value
+2025-06-01 10:05,105
+"@ | Out-File -FilePath $cgm2 -Encoding UTF8
+            
+            # Standalone file that should not consolidate
+            $standalone = Join-Path $consolidateFolder 'other.csv'
+            @"
+Different metadata line
+Timestamp,Data
+2025-06-01 10:00,abc
+"@ | Out-File -FilePath $standalone -Encoding UTF8
+            
+            $results = Import-GlookoFolder -Path $consolidateFolder
+            
+            # Should have 2 results: consolidated cgm data and standalone other
+            $results | Should -HaveCount 2
+            
+            $cgmResult = $results | Where-Object { $_.Metadata.Dataset -eq 'cgm' }
+            $cgmResult | Should -Not -BeNullOrEmpty
+            $cgmResult.Data | Should -HaveCount 2
+            
+            $otherResult = $results | Where-Object { $_.Metadata.Dataset -eq $null }
+            $otherResult | Should -Not -BeNullOrEmpty
+            $otherResult.Data | Should -HaveCount 1
+        }
+    }
 }

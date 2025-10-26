@@ -9,13 +9,20 @@ Glooko/
 ├── Glooko.psd1                 # Module manifest
 ├── Glooko.psm1                 # Module loader
 ├── Public/                     # Public functions (exported)
-│   └── Import-GlookoCSV.ps1    # Main CSV import function
+│   ├── Import-GlookoCSV.ps1    # Main CSV import function
+│   └── Import-GlookoFolder.ps1 # Folder import with dataset consolidation
 ├── Private/                    # Private functions (internal use only)
-│   └── Expand-GlookoMetadata.ps1  # Metadata parsing helper
+│   ├── Expand-GlookoMetadata.ps1  # Metadata parsing helper
+│   └── Merge-GlookoDatasets.ps1   # Dataset consolidation helper
 ├── Tests/                      # Pester test files
 │   ├── Import-GlookoCSV.Tests.ps1
+│   ├── Import-GlookoFolder.Tests.ps1
 │   ├── Expand-GlookoMetadata.Tests.ps1
-│   ├── TestHelpers.ps1         # Test helper functions
+│   ├── Merge-GlookoDatasets.Tests.ps1
+│   ├── Helpers/                # Test helper functions
+│   │   ├── TestHelpers.ps1
+│   │   ├── New-TestCSVFile.ps1
+│   │   └── New-TestFolder.ps1
 │   └── Fixtures/               # Test data files
 ├── docs/                       # Additional documentation
 │   ├── quick-start-codespaces.md
