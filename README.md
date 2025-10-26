@@ -1,5 +1,7 @@
 # Glooko
 
+[![Run Pester Tests](https://github.com/iricigor/Glooko/actions/workflows/test.yml/badge.svg)](https://github.com/iricigor/Glooko/actions/workflows/test.yml)
+
 A PowerShell module for CSV data processing utilities, specifically designed for handling CSV files that require first-row skipping functionality.
 
 ## 🚀 Quick Start with GitHub Codespaces
@@ -205,6 +207,36 @@ To view detailed test results for a pull request:
 3. View individual test cases with their pass/fail status and execution times
 
 The test reporter creates detailed check runs similar to the examples shown at the [Test Reporter marketplace page](https://github.com/marketplace/actions/test-reporter).
+
+### Test Statistics
+
+The module currently has comprehensive test coverage with the following statistics:
+
+| Metric | Value |
+|--------|-------|
+| **Total Tests** | 32 |
+| **Passing Tests** | ✅ 32 (100%) |
+| **Code Coverage** | 92.31% |
+| **Test Files** | 2 |
+| **Functions Tested** | 2 (Import-GlookoCSV, Expand-GlookoMetadata) |
+
+**Test Breakdown by Function:**
+
+- **Expand-GlookoMetadata**: 19 tests
+  - Filename parsing (5 tests)
+  - First line parsing (6 tests)
+  - Combined parsing scenarios (4 tests)
+  - Object structure validation (2 tests)
+  - Edge cases and error conditions (2 tests)
+
+- **Import-GlookoCSV**: 13 tests
+  - Basic functionality (5 tests)
+  - Error handling (3 tests)
+  - Pipeline support (2 tests)
+  - Verbose output (1 test)
+  - Data integrity (2 tests)
+
+All tests run automatically on every pull request and push to the main branch via GitHub Actions. The latest test results and detailed coverage reports are available in the [Actions tab](https://github.com/iricigor/Glooko/actions/workflows/test.yml).
 
 ## License
 
