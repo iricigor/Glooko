@@ -71,7 +71,7 @@ function Import-GlookoCSV {
             $metadata = Expand-GlookoMetadata -FileName $fileName -FirstLine $firstLine
             
             # Create temporary file content with remaining lines (second row becomes headers)
-            $tempFile = [System.IO.Path]::GetTempFileName()
+            $tempFile = (New-TemporaryFile).FullName
             
             try {
                 $dataLines | Out-File -FilePath $tempFile -Encoding UTF8
