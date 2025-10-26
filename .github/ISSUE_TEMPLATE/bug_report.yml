@@ -1,0 +1,73 @@
+name: Bug Report
+description: Report a bug in the Glooko PowerShell module
+title: "[BUG]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please fill out the sections below to help us understand and fix the issue.
+  
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is.
+      placeholder: Describe the bug you encountered...
+    validations:
+      required: true
+  
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Import the module with '...'
+        2. Run the command '...'
+        3. Observe the error '...'
+    validations:
+      required: true
+  
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: A clear and concise description of what you expected to happen.
+      placeholder: What should have happened instead?
+    validations:
+      required: true
+  
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: A clear and concise description of what actually happened.
+      placeholder: What actually happened?
+    validations:
+      required: true
+  
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Information about your environment
+      placeholder: |
+        - PowerShell Version: (e.g., 7.4.0)
+        - OS: (e.g., Windows 11, Ubuntu 22.04)
+        - Glooko Module Version: (e.g., 1.0.0)
+      value: |
+        - PowerShell Version: 
+        - OS: 
+        - Glooko Module Version: 
+    validations:
+      required: true
+  
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Add any other context about the problem here, such as error messages, screenshots, or sample data.
+      placeholder: Any additional information that might help diagnose the issue...
+    validations:
+      required: false
