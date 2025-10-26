@@ -55,11 +55,9 @@ function Import-GlookoFolder {
             Write-Verbose "Found $($csvFiles.Count) CSV file(s) in folder"
             
             # Import each CSV file using Import-GlookoCSV
-            $results = @()
-            foreach ($file in $csvFiles) {
-                Write-Verbose "Importing file: $($file.Name)"
-                $result = Import-GlookoCSV -Path $file.FullName
-                $results += $result
+            $results = $csvFiles | ForEach-Object {
+                Write-Verbose "Importing file: $($_.Name)"
+                Import-GlookoCSV -Path $_.FullName
             }
             
             Write-Verbose "Successfully imported $($results.Count) file(s)"
