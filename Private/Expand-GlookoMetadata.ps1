@@ -34,7 +34,6 @@ function Expand-GlookoMetadata {
     
     # Extract just the filename without path for parsing and output
     $fileNameOnly = Split-Path -Path $FileName -Leaf
-    # Write-Verbose ("Function result: " + [System.IO.Path]::GetFileName($FileName))
     Write-Verbose "Processing filename: '$fileNameOnly'"
     
     # Parse filename for dataset and order information
