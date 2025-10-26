@@ -1,6 +1,6 @@
 # Test data creation helpers for Import-GlookoCSV tests
 
-function New-TestCSVFiles {
+function New-TestCSVFile {
     <#
     .SYNOPSIS
         Creates test CSV files in TestDrive for Import-GlookoCSV tests

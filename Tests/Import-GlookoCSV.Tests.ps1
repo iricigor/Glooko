@@ -29,7 +29,7 @@ Describe 'Import-GlookoCSV' {
     
     BeforeEach {
         # Create test files in TestDrive for each test
-        $Script:TestFiles = New-TestCSVFiles
+        $Script:TestFiles = New-TestCSVFile
     }
     
     Context 'Basic functionality' {
