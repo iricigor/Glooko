@@ -65,46 +65,50 @@ Describe 'Import-GlookoCSV' {
         It 'Should import CSV data and skip the first row' {
             $result = Import-GlookoCSV -Path $Script:TestCSV1
             
-            $result | Should -HaveCount 3
-            $result[0].Name | Should -Be 'John'
-            $result[0].Age | Should -Be '25'
-            $result[0].City | Should -Be 'New York'
-            $result[2].Name | Should -Be 'Bob'
+            $result.Metadata | Should -Be 'Metadata: Export from system on 2025-10-18'
+            $result.Data | Should -HaveCount 3
+            $result.Data[0].Name | Should -Be 'John'
+            $result.Data[0].Age | Should -Be '25'
+            $result.Data[0].City | Should -Be 'New York'
+            $result.Data[2].Name | Should -Be 'Bob'
         }
         
         It 'Should use second row as headers when first row is skipped' {
             $result = Import-GlookoCSV -Path $Script:TestCSV2
             
-            $result | Should -HaveCount 2
-            $result[0] | Should -BeOfType [PSCustomObject]
-            $result[0].PSObject.Properties.Name | Should -Contain 'Name'
-            $result[0].PSObject.Properties.Name | Should -Contain 'Age'
-            $result[0].PSObject.Properties.Name | Should -Contain 'City'
+            $result.Metadata | Should -Be 'OldName,OldAge,OldCity'
+            $result.Data | Should -HaveCount 2
+            $result.Data[0] | Should -BeOfType [PSCustomObject]
+            $result.Data[0].PSObject.Properties.Name | Should -Contain 'Name'
+            $result.Data[0].PSObject.Properties.Name | Should -Contain 'Age'
+            $result.Data[0].PSObject.Properties.Name | Should -Contain 'City'
         }
         
         It 'Should work with single data row' {
             $result = Import-GlookoCSV -Path $Script:TestCSV3
             
-            $result | Should -HaveCount 1
-            $result[0].Name | Should -Be 'David'
-            $result[0].Age | Should -Be '40'
-            $result[0].City | Should -Be 'Miami'
+            $result.Metadata | Should -Be 'Skip this line'
+            $result.Data | Should -HaveCount 1
+            $result.Data[0].Name | Should -Be 'David'
+            $result.Data[0].Age | Should -Be '40'
+            $result.Data[0].City | Should -Be 'Miami'
         }
         
         It 'Should import alarm/event data from test-data01.csv' {
             $result = Import-GlookoCSV -Path $Script:TestData01
             
-            $result | Should -HaveCount 2
-            $result[0] | Should -BeOfType [PSCustomObject]
-            $result[0].PSObject.Properties.Name | Should -Contain 'Timestamp'
-            $result[0].PSObject.Properties.Name | Should -Contain 'Alarm/Event'
-            $result[0].PSObject.Properties.Name | Should -Contain 'Serial Number'
-            $result[0].Timestamp | Should -Be '8/17/2025 0:15'
-            $result[0].'Alarm/Event' | Should -Be 'tandem_control_low'
-            $result[0].'Serial Number' | Should -Be '1266847'
-            $result[1].Timestamp | Should -Be '8/16/2025 22:35'
-            $result[1].'Alarm/Event' | Should -Be 'tandem_control_low'
-            $result[1].'Serial Number' | Should -Be '1266847'
+            $result.Metadata | Should -Be 'Name:Igor Irić, Date Range:2025-05-31 - 2025-08-17'
+            $result.Data | Should -HaveCount 2
+            $result.Data[0] | Should -BeOfType [PSCustomObject]
+            $result.Data[0].PSObject.Properties.Name | Should -Contain 'Timestamp'
+            $result.Data[0].PSObject.Properties.Name | Should -Contain 'Alarm/Event'
+            $result.Data[0].PSObject.Properties.Name | Should -Contain 'Serial Number'
+            $result.Data[0].Timestamp | Should -Be '8/17/2025 0:15'
+            $result.Data[0].'Alarm/Event' | Should -Be 'tandem_control_low'
+            $result.Data[0].'Serial Number' | Should -Be '1266847'
+            $result.Data[1].Timestamp | Should -Be '8/16/2025 22:35'
+            $result.Data[1].'Alarm/Event' | Should -Be 'tandem_control_low'
+            $result.Data[1].'Serial Number' | Should -Be '1266847'
         }
     }
     
@@ -120,7 +124,8 @@ Describe 'Import-GlookoCSV' {
         It 'Should handle empty file gracefully' {
             $result = Import-GlookoCSV -Path $Script:TestCSVEmpty -WarningAction SilentlyContinue
             
-            $result | Should -BeNullOrEmpty
+            $result.Metadata | Should -Be ''
+            $result.Data | Should -BeNullOrEmpty
         }
         
         It 'Should warn when file has fewer than 2 lines' {
@@ -132,7 +137,8 @@ Describe 'Import-GlookoCSV' {
             
             $warnings | Should -HaveCount 1
             $warnings[0] | Should -Match "fewer than 2 lines"
-            $result | Should -BeNullOrEmpty
+            $result.Metadata | Should -Be 'Only one line'
+            $result.Data | Should -BeNullOrEmpty
             
             Remove-Item $singleLineFile -Force
         }
@@ -143,16 +149,18 @@ Describe 'Import-GlookoCSV' {
         It 'Should accept pipeline input' {
             $result = $Script:TestCSV1 | Import-GlookoCSV
             
-            $result | Should -HaveCount 3
-            $result[0].Name | Should -Be 'John'
+            $result.Data | Should -HaveCount 3
+            $result.Data[0].Name | Should -Be 'John'
         }
         
         It 'Should work with Get-ChildItem pipeline' {
             $testFiles = @($Script:TestCSV1, $Script:TestCSV3)
             $results = $testFiles | Import-GlookoCSV
             
-            # Should have results from both files
-            $results | Should -HaveCount 4  # 3 from test1 + 1 from test3
+            # Should have results from both files (2 result objects)
+            $results | Should -HaveCount 2
+            $results[0].Data | Should -HaveCount 3  # 3 from test1
+            $results[1].Data | Should -HaveCount 1  # 1 from test3
         }
     }
     
@@ -164,8 +172,8 @@ Describe 'Import-GlookoCSV' {
             $result = Import-GlookoCSV -Path $Script:TestCSV1 -Verbose
             
             # Verify the function still works correctly with verbose output
-            $result | Should -HaveCount 3
-            $result[0].Name | Should -Be 'John'
+            $result.Data | Should -HaveCount 3
+            $result.Data[0].Name | Should -Be 'John'
         }
     }
     
@@ -174,8 +182,8 @@ Describe 'Import-GlookoCSV' {
         It 'Should preserve data types as strings (CSV behavior)' {
             $result = Import-GlookoCSV -Path $Script:TestCSV1
             
-            $result[0].Age | Should -BeOfType [string]
-            $result[0].Age | Should -Be '25'
+            $result.Data[0].Age | Should -BeOfType [string]
+            $result.Data[0].Age | Should -Be '25'
         }
         
         It 'Should handle special characters in data' {
@@ -189,9 +197,9 @@ Quote,"Data with ""quotes""",456
             
             $result = Import-GlookoCSV -Path $specialCharFile
             
-            $result | Should -HaveCount 2
-            $result[0].Description | Should -Be 'Data with, comma'
-            $result[1].Description | Should -Be 'Data with "quotes"'
+            $result.Data | Should -HaveCount 2
+            $result.Data[0].Description | Should -Be 'Data with, comma'
+            $result.Data[1].Description | Should -Be 'Data with "quotes"'
             
             Remove-Item $specialCharFile -Force
         }
