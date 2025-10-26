@@ -210,7 +210,7 @@ The test reporter creates detailed check runs similar to the examples shown at t
 
 ### Test Statistics
 
-The module currently has comprehensive test coverage with the following statistics:
+The module currently has comprehensive test coverage with the following statistics (as of October 2025):
 
 | Metric | Value |
 |--------|-------|
@@ -220,7 +220,7 @@ The module currently has comprehensive test coverage with the following statisti
 | **Test Files** | 2 |
 | **Functions Tested** | 2 (Import-GlookoCSV, Expand-GlookoMetadata) |
 
-**Test Breakdown by Function:**
+**Test Breakdown by Function (as of October 2025):**
 
 - **Expand-GlookoMetadata**: 19 tests
   - Filename parsing (5 tests)
@@ -236,7 +236,9 @@ The module currently has comprehensive test coverage with the following statisti
   - Verbose output (1 test)
   - Data integrity (2 tests)
 
-All tests run automatically on every pull request and push to the main branch via GitHub Actions. The latest test results and detailed coverage reports are available in the [Actions tab](https://github.com/iricigor/Glooko/actions/workflows/test.yml).
+> **Note:** These statistics reflect the current state of the test suite. For the most up-to-date test results and detailed coverage reports, visit the [Actions tab](https://github.com/iricigor/Glooko/actions/workflows/test.yml).
+
+All tests run automatically on every pull request and push to the main branch via GitHub Actions.
 
 ## License
 
