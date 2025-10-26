@@ -135,8 +135,8 @@ For more information, visit: https://github.com/dfinke/ImportExcel
                     "Sheet$sheetCounter"
                 }
                 
-                # Excel worksheet names must be 31 characters or less and cannot contain: \ / ? * [ ]
-                $worksheetName = $worksheetName -replace '[\\\/\?\*\[\]]', '_'
+                # Excel worksheet names must be 31 characters or less and cannot contain: \ / ? * [ ] :
+                $worksheetName = $worksheetName -replace '[\\\/\?\*\[\]:]', '_'
                 if ($worksheetName.Length -gt 31) {
                     $worksheetName = $worksheetName.Substring(0, 31)
                 }

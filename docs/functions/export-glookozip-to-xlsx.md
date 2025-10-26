@@ -124,7 +124,7 @@ The function creates one worksheet per dataset:
    
 2. **Name Sanitization**: Excel worksheet names have constraints:
    - Maximum 31 characters (automatically truncated if longer)
-   - Cannot contain: `\ / ? * [ ]` (automatically replaced with `_`)
+   - Cannot contain: `\ / ? * [ ] :` (automatically replaced with `_`)
 
 3. **Table Formatting**: Each worksheet contains:
    - Data formatted as an Excel table
