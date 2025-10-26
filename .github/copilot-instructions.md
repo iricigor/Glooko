@@ -2,7 +2,7 @@
 
 ## Repository Overview
 
-This is a PowerShell module for CSV data processing utilities, specifically designed for handling CSV files that require first-row skipping functionality. The module is compatible with both PowerShell Desktop (5.1+) and PowerShell Core (7.0+).
+This is a PowerShell module for CSV data processing utilities, specifically designed for handling CSV files that require first-row skipping functionality. The module requires PowerShell 7.0 or later and is NOT backwards compatible with Windows PowerShell 5.1.
 
 ## Module Structure
 
@@ -23,7 +23,7 @@ This is a PowerShell module for CSV data processing utilities, specifically desi
 ## Building and Testing
 
 ### Prerequisites
-- PowerShell 5.1 or later (PowerShell 7 recommended)
+- PowerShell 7.0 or later (required)
 - Pester 5.0 or later for testing
 
 ### Running Tests
@@ -164,8 +164,8 @@ Import-GlookoCSV -Path path/to/file.csv
 - CI will run tests on both Windows and Linux
 
 ## Important Notes
-- This module supports both Windows PowerShell 5.1 and PowerShell Core 7+
-- Test on both platforms when making significant changes
+- This module requires PowerShell 7.0 or later and is NOT compatible with Windows PowerShell 5.1
+- Test on both Linux and Windows platforms when making significant changes
 - The module has no external dependencies beyond Pester for testing
-- Maintain backward compatibility with PowerShell 5.1
+- Do not add dependencies on PowerShell 5.1 features as the module is designed for PowerShell 7+
 - Use cross-platform compatible code (avoid Windows-specific cmdlets)
