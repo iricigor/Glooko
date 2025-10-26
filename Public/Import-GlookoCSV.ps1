@@ -45,8 +45,8 @@ function Import-GlookoCSV {
         try {
             Write-Verbose "Reading file: $Path"
             
-            # Read all lines from the file
-            $allLines = Get-Content -Path $Path -Encoding UTF8
+            # Read all lines from the file using .NET to properly handle UTF-8 with BOM in PowerShell 5.1
+            $allLines = [System.IO.File]::ReadAllLines($Path, [System.Text.Encoding]::UTF8)
             
             if ($allLines.Count -lt 2) {
                 Write-Warning "File contains fewer than 2 lines. At least 2 lines are required (one to skip, one for data)."
