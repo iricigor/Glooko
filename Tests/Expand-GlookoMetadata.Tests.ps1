@@ -1,6 +1,6 @@
 BeforeAll {
     # Import the Private function for direct testing
-    . (Join-Path (Join-Path $PSScriptRoot '..') -ChildPath 'Private' | Join-Path -ChildPath 'Expand-GlookoMetadata.ps1')
+    . (Join-Path $PSScriptRoot '..' 'Private' 'Expand-GlookoMetadata.ps1')
 }
 
 Describe 'Expand-GlookoMetadata' {
