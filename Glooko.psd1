@@ -23,8 +23,9 @@
     # Minimum version of the PowerShell engine required by this module
     PowerShellVersion = '5.1'
 
-    # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry
-    FunctionsToExport = @('Import-GlookoCSV', 'Import-GlookoFolder', 'Import-GlookoZip')
+    # Functions to export from this module - uses wildcard to automatically export all public functions
+    # The actual function list is controlled by Export-ModuleMember in Glooko.psm1
+    FunctionsToExport = '*'
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry
     CmdletsToExport = @()

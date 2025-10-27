@@ -33,6 +33,10 @@ jobs:
           Install-Module -Name Pester -Force -SkipPublisherCheck -MinimumVersion 5.0.0
         }
         
+        # Clone ImportExcel module for Export-GlookoZipToXlsx tests
+        Write-Host "Cloning ImportExcel module from GitHub"
+        git clone --depth 1 https://github.com/dfinke/ImportExcel.git /tmp/ImportExcel
+        
         # Import Pester
         Import-Module Pester -Force
         
@@ -146,6 +150,10 @@ jobs:
           Write-Host "Installing Pester 5.x"
           Install-Module -Name Pester -Force -SkipPublisherCheck -MinimumVersion 5.0.0
         }
+        
+        # Clone ImportExcel module for Export-GlookoZipToXlsx tests
+        Write-Host "Cloning ImportExcel module from GitHub"
+        git clone --depth 1 https://github.com/dfinke/ImportExcel.git C:\Temp\ImportExcel
         
         # Import Pester
         Import-Module Pester -Force
