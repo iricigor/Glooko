@@ -1,9 +1,10 @@
 # Export-GlookoZipToXlsx Function
 
-The `Export-GlookoZipToXlsx` function is a PowerShell advanced function that converts a Glooko zip file to an Excel (XLSX) file. Each dataset is exported to a separate worksheet, making it easy to analyze the data in Excel.
+The `Export-GlookoZipToXlsx` function is a PowerShell advanced function that converts a Glooko zip file to an Excel (XLSX) file. A Summary worksheet is created as the first tab containing an overview of all datasets, followed by each dataset in a separate worksheet, making it easy to analyze the data in Excel.
 
 ## Features
 
+- **Summary Tab**: First worksheet contains an overview of all datasets with name, record count, and date information
 - **Automated Conversion**: Automatically imports from ZIP and exports to Excel format
 - **Multiple Worksheets**: Each dataset gets its own worksheet/tab in the Excel file
 - **Automatic Naming**: Output file uses the same name as the ZIP file (with .xlsx extension)
@@ -116,7 +117,23 @@ Returns a `System.IO.FileInfo` object representing the created XLSX file. This o
 
 ## Worksheet Organization
 
-The function creates one worksheet per dataset:
+The function creates a Summary worksheet followed by one worksheet per dataset:
+
+### Summary Worksheet
+
+The first worksheet is always named "Summary" and contains an overview of all datasets with the following columns:
+
+- **Dataset**: The dataset name (from the CSV filename)
+- **Records**: The number of data rows in the dataset
+- **Name**: The name from the metadata (first line of CSV)
+- **StartDate**: The start date from the metadata date range
+- **EndDate**: The end date from the metadata date range
+
+This provides a quick overview of all data in the export without needing to check individual worksheets.
+
+### Data Worksheets
+
+After the Summary worksheet, each dataset gets its own worksheet:
 
 1. **Worksheet Names**: Based on the `Dataset` metadata property from the CSV filename
    - Example: `cgm_data_1.csv` → worksheet named "cgm"
@@ -142,6 +159,7 @@ If a ZIP file contains these CSV files:
 - `insulin_data_1.csv` (30 rows)
 
 With matching metadata in cgm files, the resulting XLSX will have:
+- **Summary** worksheet: Overview of 2 datasets (cgm and insulin)
 - **cgm** worksheet: 150 rows (consolidated from both cgm files)
 - **insulin** worksheet: 30 rows
 
@@ -151,13 +169,15 @@ With matching metadata in cgm files, the resulting XLSX will have:
 2. **Path Resolution**: Resolves the ZIP file path to an absolute path
 3. **Output Path**: Determines the output XLSX path (default or custom)
 4. **Import Data**: Uses `Import-GlookoZip` to extract and process all CSV files
-5. **Dataset Processing**: Iterates through each consolidated dataset
-6. **Worksheet Creation**: Creates a worksheet for each dataset with:
+5. **Summary Creation**: Generates summary data with dataset names, record counts, and metadata
+6. **Summary Export**: Creates the Summary worksheet as the first tab
+7. **Dataset Processing**: Iterates through each consolidated dataset
+8. **Worksheet Creation**: Creates a worksheet for each dataset with:
    - Sanitized worksheet name
    - Formatted Excel table
    - Auto-sized columns
-7. **File Overwrite**: If the XLSX file already exists, it is removed before creating the new one
-8. **Return**: Returns the FileInfo object for the created XLSX file
+9. **File Overwrite**: If the XLSX file already exists, it is removed before creating the new one
+10. **Return**: Returns the FileInfo object for the created XLSX file
 
 ## Related Functions
 
