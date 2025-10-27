@@ -3,7 +3,7 @@
     RootModule = 'Glooko.psm1'
 
     # Version number of this module.
-    ModuleVersion = '1.0.0'
+    ModuleVersion = '1.0'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Desktop', 'Core')
@@ -52,7 +52,7 @@
             # IconUri = ''
 
             # ReleaseNotes of this module
-            ReleaseNotes = 'Initial release with Import-GlookoCSV function for CSV processing with first row skipping capability. Released under MIT license.'
+            ReleaseNotes = 'Version 1.0 - Updated to use major.minor version format. Initial release with Import-GlookoCSV function for CSV processing with first row skipping capability. Released under MIT license.'
         }
     }
 }

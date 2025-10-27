@@ -165,6 +165,19 @@ Import-GlookoCSV -Path path/to/file.csv
 - Ensure all tests pass before pushing
 - CI will run tests on both Windows and Linux
 
+## Versioning
+
+### Version Format
+- The module **must** use a **major.minor** version format (e.g., `1.0`, `2.1`)
+- Do **not** use three-part versioning like `1.0.0` or `1.2.3`
+- Version is specified in the `ModuleVersion` field in `Glooko.psd1`
+
+### Version Updates
+- **New feature requests** must increment the **minor version** (e.g., `1.0` → `1.1`, `1.5` → `1.6`)
+- **Breaking changes** must increment the **major version** (e.g., `1.9` → `2.0`)
+- **Bug fixes** that don't add new features should not change the version unless explicitly requested
+- Always update the `ReleaseNotes` field in `Glooko.psd1` when changing the version
+
 ## Important Notes
 - This module requires PowerShell 7.0 or later and is NOT compatible with Windows PowerShell 5.1
 - Test on both Linux and Windows platforms when making significant changes
