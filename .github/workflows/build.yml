@@ -1,0 +1,93 @@
+name: Build Module
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build Module Artifact
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Restore version file from cache
+      if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+      id: cache-version
+      uses: actions/cache/restore@v4
+      with:
+        path: .version
+        key: version-${{ github.ref_name }}
+    
+    - name: Build module
+      shell: pwsh
+      run: |
+        $ErrorActionPreference = 'Stop'
+        Write-Host "Building Glooko module..."
+        ./Build.ps1 -Verbose
+    
+    - name: Display build information
+      shell: pwsh
+      run: |
+        if (Test-Path "BuildOutput/BuildInfo.json") {
+          $buildInfo = Get-Content "BuildOutput/BuildInfo.json" | ConvertFrom-Json
+          Write-Host "Built version: $($buildInfo.Version)"
+          Write-Host "Build date: $($buildInfo.BuildDate)"
+          Write-Host "Major.Minor: $($buildInfo.MajorMinor)"
+          Write-Host "Build number: $($buildInfo.BuildNumber)"
+          
+          # Set outputs for badge and artifact naming
+          "VERSION=$($buildInfo.Version)" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "BUILD_NUMBER=$($buildInfo.BuildNumber)" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        }
+    
+    - name: Test module loads
+      shell: pwsh
+      run: |
+        Write-Host "Testing module can be loaded..."
+        Import-Module ./BuildOutput/Glooko.psd1 -Force
+        
+        $module = Get-Module Glooko
+        if (-not $module) {
+          Write-Error "Module failed to load"
+          exit 1
+        }
+        
+        Write-Host "Module loaded successfully!"
+        Write-Host "Module version: $($module.Version)"
+        Write-Host "Exported functions: $($module.ExportedFunctions.Keys -join ', ')"
+    
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Glooko-Module-${{ env.VERSION }}
+        path: BuildOutput/
+        retention-days: 90
+    
+    - name: Save version file to cache
+      if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+      uses: actions/cache/save@v4
+      with:
+        path: .version
+        key: version-${{ github.ref_name }}-${{ env.VERSION }}
+    
+    - name: Update build badge
+      uses: schneegans/dynamic-badges-action@v1.7.0
+      if: github.ref == 'refs/heads/main' && always()
+      with:
+        auth: ${{ secrets.GIST_TOKEN }}
+        gistID: 7d87b86e6e187d46c3d1da7b851e3207
+        filename: glooko-build-version.json
+        label: version
+        message: ${{ env.VERSION }}
+        color: blue
