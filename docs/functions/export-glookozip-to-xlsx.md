@@ -8,6 +8,7 @@ The `Export-GlookoZipToXlsx` function is a PowerShell advanced function that con
 - **Automated Conversion**: Automatically imports from ZIP and exports to Excel format
 - **Multiple Worksheets**: Each dataset gets its own worksheet/tab in the Excel file
 - **Automatic Naming**: Output file uses the same name as the ZIP file (with .xlsx extension)
+- **Smart Overwrite Handling**: When file exists, creates timestamped version unless -Force is specified
 - **Custom Output Path**: Optionally specify a custom location for the XLSX file
 - **Formatted Tables**: Data is exported as Excel tables with formatting (Medium2 style)
 - **Auto-sizing Columns**: Columns are automatically sized for readability (when supported)
@@ -39,6 +40,11 @@ For more information about ImportExcel, visit: https://github.com/dfinke/ImportE
 # Basic usage - convert ZIP to XLSX in the same folder
 Export-GlookoZipToXlsx -Path "C:\data\export.zip"
 # Creates: C:\data\export.xlsx
+# If file exists, creates: C:\data\export_311225_143022.xlsx (with timestamp)
+
+# Force overwrite of existing file
+Export-GlookoZipToXlsx -Path "C:\data\export.zip" -Force
+# Always creates: C:\data\export.xlsx (overwrites if exists)
 
 # Specify custom output path
 Export-GlookoZipToXlsx -Path "C:\data\export.zip" -OutputPath "C:\reports\mydata.xlsx"
@@ -55,6 +61,8 @@ Export-GlookoZipToXlsx -Path "C:\data\export.zip" -Verbose
 - **Path** (Mandatory): The path to the zip file to convert. Must be a file with a `.zip` extension. Supports pipeline input and validation.
 
 - **OutputPath** (Optional): The full path for the output XLSX file. If not specified, the XLSX file will be created in the same folder as the ZIP file with the same name but `.xlsx` extension.
+
+- **Force** (Optional): Switch parameter. If specified, overwrites the existing XLSX file if it exists. If not specified and the file exists, a timestamp will be appended to the filename (e.g., export_311225_143022.xlsx).
 
 ## Examples
 
@@ -84,7 +92,21 @@ $result = Export-GlookoZipToXlsx -Path "C:\data\export.zip"
 Invoke-Item $result.FullName  # Opens the XLSX file in Excel
 ```
 
-**Example 5**: Process with verbose output
+**Example 5**: Force overwrite of existing file
+```powershell
+# First run creates the file
+Export-GlookoZipToXlsx -Path "C:\data\export.zip"
+
+# Second run with -Force overwrites the original file
+Export-GlookoZipToXlsx -Path "C:\data\export.zip" -Force
+# Result: C:\data\export.xlsx (overwritten)
+
+# Without -Force, creates timestamped file
+Export-GlookoZipToXlsx -Path "C:\data\export.zip"
+# Result: C:\data\export_311225_143530.xlsx (new file with timestamp)
+```
+
+**Example 6**: Process with verbose output
 ```powershell
 Export-GlookoZipToXlsx -Path "C:\data\export.zip" -Verbose
 # Shows detailed progress:
@@ -176,7 +198,9 @@ With matching metadata in cgm files, the resulting XLSX will have:
    - Sanitized worksheet name
    - Formatted Excel table
    - Auto-sized columns
-9. **File Overwrite**: If the XLSX file already exists, it is removed before creating the new one
+9. **File Handling**: If the XLSX file already exists:
+   - With `-Force`: Removes the existing file and creates a new one
+   - Without `-Force`: Appends timestamp to filename and creates a new file (e.g., export_311225_143022.xlsx)
 10. **Return**: Returns the FileInfo object for the created XLSX file
 
 ## Related Functions
@@ -222,7 +246,8 @@ For more information, visit: https://github.com/dfinke/ImportExcel
 - The function creates the entire XLSX file in memory before writing to disk
 - Large datasets may require significant memory
 - Auto-sizing columns can be slow for very large datasets
-- The output XLSX file is overwritten if it already exists
+- By default, the function creates a new timestamped file if the output file exists
+- Use `-Force` to overwrite existing files instead of creating timestamped versions
 - Processing time depends on:
   - Number of datasets in the ZIP
   - Total number of rows across all datasets
@@ -243,6 +268,7 @@ For more information, visit: https://github.com/dfinke/ImportExcel
 3. **Memory Usage**: For very large ZIP files, monitor memory usage during conversion
 4. **Batch Processing**: When converting many files, consider doing them one at a time to avoid memory issues
 5. **Verification**: After conversion, open the XLSX file to verify all data was exported correctly
+6. **Prevent Overwrite**: By default, the function creates timestamped files to preserve existing exports. Use `-Force` only when you're sure you want to overwrite
 
 ## Troubleshooting
 
