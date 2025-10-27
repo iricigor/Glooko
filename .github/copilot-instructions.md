@@ -117,6 +117,7 @@ Invoke-Pester -Configuration $PesterConfig
 5. Ensure all tests pass and coverage meets minimum threshold
 6. Create a documentation file in `docs/functions/` directory (e.g., `docs/functions/functionname.md`) - see `docs/functions/import-glookocsv.md` as an example
 7. Add the function to the main README.md file under the Usage section
+8. **Update the module version** - Increment the minor version in `Glooko.psd1` (e.g., `1.0.0` → `1.1.0`) and update ReleaseNotes
 
 ### Adding a New Private Function
 1. Create function file in `Private/` directory
@@ -164,6 +165,37 @@ Import-GlookoCSV -Path path/to/file.csv
 - Write clear commit messages
 - Ensure all tests pass before pushing
 - CI will run tests on both Windows and Linux
+
+## Versioning
+
+### Version Format
+- The module **must** use semantic versioning with the format `major.minor.patch` (e.g., `1.0.0`, `1.1.0`, `2.0.0`)
+- Version is specified in the `ModuleVersion` field in `Glooko.psd1`
+
+### Version Update Guidelines
+When making changes to the module, update the version number in `Glooko.psd1` according to these rules:
+
+1. **New Features** - Increment the **minor** version (e.g., `1.0.0` → `1.1.0`)
+   - Adding a new public function
+   - Adding new functionality to existing functions (backwards-compatible)
+   - Adding new parameters to existing functions (backwards-compatible)
+
+2. **Bug Fixes** - Increment the **patch** version (e.g., `1.0.0` → `1.0.1`)
+   - Fixing bugs or errors
+   - Performance improvements
+   - Documentation updates (without code changes)
+
+3. **Breaking Changes** - Increment the **major** version (e.g., `1.0.0` → `2.0.0`)
+   - Removing or renaming public functions
+   - Changing function signatures in non-backwards-compatible ways
+   - Removing or renaming parameters
+   - Changing default behavior that breaks existing scripts
+
+### Version Update Process
+1. Update the `ModuleVersion` field in `Glooko.psd1`
+2. Update the `ReleaseNotes` field in `Glooko.psd1` to describe the changes
+3. Document the version change in your pull request description
+4. Ensure all tests pass with the new version
 
 ## Important Notes
 - This module requires PowerShell 7.0 or later and is NOT compatible with Windows PowerShell 5.1
