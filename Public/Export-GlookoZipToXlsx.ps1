@@ -5,9 +5,11 @@ function Export-GlookoZipToXlsx {
     
     .DESCRIPTION
         This advanced function imports data from a Glooko zip file using Import-GlookoZip and exports
-        it to an Excel file. Each dataset is placed in a separate worksheet, with the worksheet name
-        corresponding to the dataset value from the metadata. The XLSX file is created with the same
-        name and location as the ZIP file (unless a custom output path is specified).
+        it to an Excel file. A Summary worksheet is created as the first tab, containing an overview
+        of all datasets with their name, record count, and date range information. Each dataset is then
+        placed in a separate worksheet, with the worksheet name corresponding to the dataset value from
+        the metadata. The XLSX file is created with the same name and location as the ZIP file (unless
+        a custom output path is specified).
         
         This function requires the ImportExcel module to be installed. If not installed, it will
         provide instructions on how to install it.
@@ -21,7 +23,8 @@ function Export-GlookoZipToXlsx {
     
     .EXAMPLE
         Export-GlookoZipToXlsx -Path "C:\data\export.zip"
-        Converts the zip file to C:\data\export.xlsx with each dataset in a separate worksheet.
+        Converts the zip file to C:\data\export.xlsx with a Summary worksheet as the first tab,
+        followed by each dataset in a separate worksheet.
     
     .EXAMPLE
         Export-GlookoZipToXlsx -Path "C:\data\export.zip" -OutputPath "C:\output\mydata.xlsx"
@@ -123,6 +126,31 @@ For more information, visit: https://github.com/dfinke/ImportExcel
             if (Test-Path $OutputPath) {
                 Write-Verbose "Removing existing file: $OutputPath"
                 Remove-Item -Path $OutputPath -Force
+            }
+            
+            # Create summary data for all datasets
+            Write-Verbose "Creating summary data for $($datasets.Count) dataset(s)"
+            $summaryData = @()
+            foreach ($dataset in $datasets) {
+                $datasetName = if ($dataset.Metadata.Dataset) {
+                    $dataset.Metadata.Dataset
+                } else {
+                    'Unknown'
+                }
+                
+                $summaryData += [PSCustomObject]@{
+                    Dataset = $datasetName
+                    Records = $dataset.Data.Count
+                    Name = $dataset.Metadata.Name
+                    StartDate = $dataset.Metadata.StartDate
+                    EndDate = $dataset.Metadata.EndDate
+                }
+            }
+            
+            # Export summary worksheet first
+            if ($summaryData.Count -gt 0) {
+                Write-Verbose "Exporting Summary worksheet with $($summaryData.Count) dataset(s)"
+                $summaryData | Export-Excel -Path $OutputPath -WorksheetName 'Summary' -AutoSize -TableName 'Summary' -TableStyle Medium2
             }
             
             # Export each dataset to a separate worksheet
