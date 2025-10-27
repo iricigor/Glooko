@@ -151,7 +151,8 @@ Describe 'Export-GlookoZipToXlsx' {
             Export-GlookoZipToXlsx -Path $zipPath
             
             $worksheets = Get-ExcelSheetInfo -Path $outputPath
-            $worksheetName = $worksheets[0].Name
+            # First worksheet should be Summary, data is in second worksheet
+            $worksheetName = $worksheets[1].Name
             $excelData = Import-Excel -Path $outputPath -WorksheetName $worksheetName
             
             $excelData | Should -Not -BeNullOrEmpty
@@ -248,7 +249,8 @@ Describe 'Export-GlookoZipToXlsx' {
             Export-GlookoZipToXlsx -Path $zipPath
             
             $worksheets = Get-ExcelSheetInfo -Path $outputPath
-            $worksheets[0].Name | Should -Be 'cgm'
+            # First worksheet should be Summary, dataset worksheets start at index 1
+            $worksheets[1].Name | Should -Be 'cgm'
         }
         
         It 'Should handle worksheet names longer than 31 characters' {
@@ -267,6 +269,90 @@ Describe 'Export-GlookoZipToXlsx' {
             
             # Should not throw even if dataset name has invalid characters
             { Export-GlookoZipToXlsx -Path $zipPath } | Should -Not -Throw
+        }
+    }
+    
+    Context 'Summary worksheet' {
+        
+        It 'Should create Summary worksheet as first worksheet' {
+            $zipPath = $Script:TestZipFiles.MetadataZip
+            $outputPath = [System.IO.Path]::ChangeExtension($zipPath, '.xlsx')
+            
+            Export-GlookoZipToXlsx -Path $zipPath
+            
+            $worksheets = Get-ExcelSheetInfo -Path $outputPath
+            $worksheets[0].Name | Should -Be 'Summary'
+        }
+        
+        It 'Should include dataset name in summary' {
+            $zipPath = $Script:TestZipFiles.MetadataZip
+            $outputPath = [System.IO.Path]::ChangeExtension($zipPath, '.xlsx')
+            
+            Export-GlookoZipToXlsx -Path $zipPath
+            
+            $summaryData = Import-Excel -Path $outputPath -WorksheetName 'Summary'
+            $summaryData | Should -Not -BeNullOrEmpty
+            $summaryData[0].Dataset | Should -Be 'cgm'
+        }
+        
+        It 'Should include record count in summary' {
+            $zipPath = $Script:TestZipFiles.MetadataZip
+            $outputPath = [System.IO.Path]::ChangeExtension($zipPath, '.xlsx')
+            
+            Export-GlookoZipToXlsx -Path $zipPath
+            
+            $summaryData = Import-Excel -Path $outputPath -WorksheetName 'Summary'
+            $summaryData | Should -Not -BeNullOrEmpty
+            $summaryData[0].Records | Should -Be 1
+        }
+        
+        It 'Should include metadata name in summary' {
+            $zipPath = $Script:TestZipFiles.MetadataZip
+            $outputPath = [System.IO.Path]::ChangeExtension($zipPath, '.xlsx')
+            
+            Export-GlookoZipToXlsx -Path $zipPath
+            
+            $summaryData = Import-Excel -Path $outputPath -WorksheetName 'Summary'
+            $summaryData | Should -Not -BeNullOrEmpty
+            $summaryData[0].Name | Should -Be 'Igor Irić'
+        }
+        
+        It 'Should include start and end dates in summary' {
+            $zipPath = $Script:TestZipFiles.MetadataZip
+            $outputPath = [System.IO.Path]::ChangeExtension($zipPath, '.xlsx')
+            
+            Export-GlookoZipToXlsx -Path $zipPath
+            
+            $summaryData = Import-Excel -Path $outputPath -WorksheetName 'Summary'
+            $summaryData | Should -Not -BeNullOrEmpty
+            $summaryData[0].StartDate | Should -Be '2025-05-31'
+            $summaryData[0].EndDate | Should -Be '2025-08-17'
+        }
+        
+        It 'Should handle multiple datasets in summary' {
+            $zipPath = $Script:TestZipFiles.ConsolidateZip
+            $outputPath = [System.IO.Path]::ChangeExtension($zipPath, '.xlsx')
+            
+            Export-GlookoZipToXlsx -Path $zipPath
+            
+            $summaryData = Import-Excel -Path $outputPath -WorksheetName 'Summary'
+            $summaryData | Should -Not -BeNullOrEmpty
+            # Consolidate zip has files that merge into one dataset
+            $summaryData.Count | Should -Be 1
+            $summaryData[0].Dataset | Should -Be 'cgm'
+            $summaryData[0].Records | Should -Be 4
+        }
+        
+        It 'Should handle datasets without metadata gracefully' {
+            $zipPath = $Script:TestZipFiles.MultiFileZip
+            $outputPath = [System.IO.Path]::ChangeExtension($zipPath, '.xlsx')
+            
+            Export-GlookoZipToXlsx -Path $zipPath
+            
+            $summaryData = Import-Excel -Path $outputPath -WorksheetName 'Summary'
+            $summaryData | Should -Not -BeNullOrEmpty
+            # Files without proper metadata will have null or 'Unknown' values
+            $summaryData.Count | Should -BeGreaterThan 0
         }
     }
 }
