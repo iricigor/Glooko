@@ -169,7 +169,7 @@ With matching metadata in cgm files, the resulting XLSX will have:
 2. **Path Resolution**: Resolves the ZIP file path to an absolute path
 3. **Output Path**: Determines the output XLSX path (default or custom)
 4. **Import Data**: Uses `Import-GlookoZip` to extract and process all CSV files
-5. **Summary Creation**: Generates summary data with dataset names, record counts, and metadata
+5. **Summary Creation**: Generates summary data with dataset names, record counts, and date range metadata
 6. **Summary Export**: Creates the Summary worksheet as the first tab
 7. **Dataset Processing**: Iterates through each consolidated dataset
 8. **Worksheet Creation**: Creates a worksheet for each dataset with:
