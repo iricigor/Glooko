@@ -4,21 +4,10 @@ BeforeAll {
     Import-Module $ModulePath -Force
     
     # Import ImportExcel module for testing
-    # Try system-installed module first, then fallback to local paths
+    # In CI, this module is installed via Install-Module
+    # Locally, users should have it installed or will get an error from the function itself
     if (Get-Module -ListAvailable -Name ImportExcel) {
         Import-Module ImportExcel -Force -ErrorAction SilentlyContinue
-    } else {
-        # Try Linux/Mac path
-        $ImportExcelPath = '/tmp/ImportExcel/ImportExcel.psd1'
-        if (Test-Path $ImportExcelPath) {
-            Import-Module $ImportExcelPath -Force -ErrorAction SilentlyContinue
-        } else {
-            # Try Windows path
-            $ImportExcelPath = 'C:\Temp\ImportExcel\ImportExcel.psd1'
-            if (Test-Path $ImportExcelPath) {
-                Import-Module $ImportExcelPath -Force -ErrorAction SilentlyContinue
-            }
-        }
     }
     
     # Import test helpers

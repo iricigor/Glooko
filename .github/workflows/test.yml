@@ -33,15 +33,20 @@ jobs:
           Install-Module -Name Pester -Force -SkipPublisherCheck -MinimumVersion 5.0.0
         }
         
-        # Clone ImportExcel module for Export-GlookoZipToXlsx tests
-        Write-Host "Cloning ImportExcel module from GitHub"
-        git clone --depth 1 https://github.com/dfinke/ImportExcel.git /tmp/ImportExcel
+        # Install ImportExcel module for Export-GlookoZipToXlsx tests
+        if (Get-Module -ListAvailable -Name ImportExcel) {
+          Write-Host "ImportExcel is already installed"
+        } else {
+          Write-Host "Installing ImportExcel"
+          Install-Module -Name ImportExcel -Force -SkipPublisherCheck -Scope CurrentUser
+        }
         
-        # Import Pester
+        # Import modules
         Import-Module Pester -Force
+        Import-Module ImportExcel -Force
         
-        # Display Pester version
-        Get-Module Pester | Select-Object Name, Version
+        # Display module versions
+        Get-Module Pester, ImportExcel | Select-Object Name, Version
     
     - name: Run Pester Tests
       shell: pwsh
@@ -151,15 +156,20 @@ jobs:
           Install-Module -Name Pester -Force -SkipPublisherCheck -MinimumVersion 5.0.0
         }
         
-        # Clone ImportExcel module for Export-GlookoZipToXlsx tests
-        Write-Host "Cloning ImportExcel module from GitHub"
-        git clone --depth 1 https://github.com/dfinke/ImportExcel.git C:\Temp\ImportExcel
+        # Install ImportExcel module for Export-GlookoZipToXlsx tests
+        if (Get-Module -ListAvailable -Name ImportExcel) {
+          Write-Host "ImportExcel is already installed"
+        } else {
+          Write-Host "Installing ImportExcel"
+          Install-Module -Name ImportExcel -Force -SkipPublisherCheck -Scope CurrentUser
+        }
         
-        # Import Pester
+        # Import modules
         Import-Module Pester -Force
+        Import-Module ImportExcel -Force
         
-        # Display Pester version
-        Get-Module Pester | Select-Object Name, Version
+        # Display module versions
+        Get-Module Pester, ImportExcel | Select-Object Name, Version
     
     - name: Run Pester Tests
       shell: pwsh
