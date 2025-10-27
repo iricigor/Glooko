@@ -159,22 +159,62 @@ Describe 'Export-GlookoZipToXlsx' {
             $excelData[1].Description | Should -Be 'Data with "quotes"'
         }
         
-        It 'Should overwrite existing XLSX file' {
+        It 'Should overwrite existing XLSX file when Force is specified' {
             $zipPath = $Script:TestZipFiles.SingleFileZip
             $outputPath = [System.IO.Path]::ChangeExtension($zipPath, '.xlsx')
             
             # Create file first time
-            Export-GlookoZipToXlsx -Path $zipPath
+            Export-GlookoZipToXlsx -Path $zipPath -Force
             $firstWrite = Get-Item $outputPath
             
             Start-Sleep -Milliseconds 100
             
-            # Create file second time
-            Export-GlookoZipToXlsx -Path $zipPath
+            # Create file second time with -Force
+            Export-GlookoZipToXlsx -Path $zipPath -Force
             $secondWrite = Get-Item $outputPath
             
             # Should have been overwritten (different write time)
             $secondWrite.LastWriteTime | Should -BeGreaterThan $firstWrite.LastWriteTime
+        }
+        
+        It 'Should create new file with timestamp when file exists and Force is not specified' {
+            $zipPath = $Script:TestZipFiles.SingleFileZip
+            $outputPath = [System.IO.Path]::ChangeExtension($zipPath, '.xlsx')
+            
+            # Create file first time
+            Export-GlookoZipToXlsx -Path $zipPath -Force
+            $firstFile = Get-Item $outputPath
+            $firstFile | Should -Not -BeNullOrEmpty
+            
+            Start-Sleep -Milliseconds 1100
+            
+            # Create file second time without -Force
+            $result = Export-GlookoZipToXlsx -Path $zipPath
+            
+            # Should have created a new file with timestamp
+            $result.Name | Should -Not -Be $firstFile.Name
+            $result.Name | Should -Match 'single_file_\d{6}_\d{6}\.xlsx'
+            
+            # Both files should exist
+            Test-Path $outputPath | Should -Be $true
+            Test-Path $result.FullName | Should -Be $true
+        }
+        
+        It 'Should create file without timestamp when file does not exist' {
+            $zipPath = $Script:TestZipFiles.SingleFileZip
+            $outputPath = [System.IO.Path]::ChangeExtension($zipPath, '.xlsx')
+            
+            # Ensure file doesn't exist
+            if (Test-Path $outputPath) {
+                Remove-Item $outputPath -Force
+            }
+            
+            # Create file without -Force
+            $result = Export-GlookoZipToXlsx -Path $zipPath
+            
+            # Should have created file without timestamp
+            $result.Name | Should -Be 'single_file.xlsx'
+            Test-Path $outputPath | Should -Be $true
         }
     }
     

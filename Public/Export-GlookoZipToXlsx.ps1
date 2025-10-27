@@ -19,9 +19,17 @@ function Export-GlookoZipToXlsx {
         Optional. The full path for the output XLSX file. If not specified, the XLSX file will be
         created in the same folder as the ZIP file with the same name but .xlsx extension.
     
+    .PARAMETER Force
+        Optional. If specified, overwrites the existing XLSX file if it exists. If not specified and
+        the file exists, a timestamp will be appended to the filename (e.g., export_311225_143022.xlsx).
+    
     .EXAMPLE
         Export-GlookoZipToXlsx -Path "C:\data\export.zip"
-        Converts the zip file to C:\data\export.xlsx with each dataset in a separate worksheet.
+        Converts the zip file to C:\data\export.xlsx. If the file exists, creates export_DDmmYY_HHMMSS.xlsx.
+    
+    .EXAMPLE
+        Export-GlookoZipToXlsx -Path "C:\data\export.zip" -Force
+        Converts the zip file to C:\data\export.xlsx, overwriting if it exists.
     
     .EXAMPLE
         Export-GlookoZipToXlsx -Path "C:\data\export.zip" -OutputPath "C:\output\mydata.xlsx"
@@ -53,7 +61,10 @@ function Export-GlookoZipToXlsx {
         [string]$Path,
         
         [Parameter(Mandatory = $false)]
-        [string]$OutputPath
+        [string]$OutputPath,
+        
+        [Parameter(Mandatory = $false)]
+        [switch]$Force
     )
     
     begin {
@@ -119,10 +130,20 @@ For more information, visit: https://github.com/dfinke/ImportExcel
             
             Write-Verbose "Found $($datasets.Count) dataset(s) to export"
             
-            # Remove existing file if it exists
+            # Handle existing file
             if (Test-Path $OutputPath) {
-                Write-Verbose "Removing existing file: $OutputPath"
-                Remove-Item -Path $OutputPath -Force
+                if ($Force) {
+                    Write-Verbose "Removing existing file: $OutputPath"
+                    Remove-Item -Path $OutputPath -Force
+                } else {
+                    # Append timestamp to filename
+                    $timestamp = Get-Date -Format 'ddMMyy_HHmmss'
+                    $directory = Split-Path -Path $OutputPath -Parent
+                    $baseName = [System.IO.Path]::GetFileNameWithoutExtension($OutputPath)
+                    $extension = [System.IO.Path]::GetExtension($OutputPath)
+                    $OutputPath = Join-Path -Path $directory -ChildPath "${baseName}_${timestamp}${extension}"
+                    Write-Verbose "File exists, creating new file with timestamp: $OutputPath"
+                }
             }
             
             # Export each dataset to a separate worksheet
