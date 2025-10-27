@@ -13,8 +13,9 @@ AfterAll {
 Describe 'Build.ps1' {
     
     BeforeEach {
-        # Create a temporary directory for testing
-        $script:TestDir = New-Item -Path (Join-Path ([System.IO.Path]::GetTempPath()) ([System.Guid]::NewGuid())) -ItemType Directory
+        # Create a temporary directory for testing using Pester's TestDrive
+        # TestDrive provides automatic cleanup and isolation
+        $script:TestDir = New-Item -Path (Join-Path $TestDrive ([System.Guid]::NewGuid())) -ItemType Directory
         
         # Create minimal module structure for testing
         New-Item -Path (Join-Path $script:TestDir 'Public') -ItemType Directory | Out-Null
@@ -50,9 +51,7 @@ Describe 'Build.ps1' {
     AfterEach {
         # Clean up test directory
         Set-Location $script:OriginalLocation
-        if (Test-Path $script:TestDir) {
-            Remove-Item -Path $script:TestDir -Recurse -Force -ErrorAction SilentlyContinue
-        }
+        # TestDrive handles cleanup automatically, but we still need to restore location
     }
     
     Context 'First build' {
@@ -120,10 +119,10 @@ Describe 'Build.ps1' {
         }
         
         It 'Should increment from existing build number' {
-            # Simulate previous build
+            # Simulate previous build with fixed timestamp for deterministic testing
             @{
                 Version = '1.0.5'
-                BuildDate = (Get-Date).ToString('o')
+                BuildDate = '2023-01-01T00:00:00.0000000Z'
                 MajorMinor = '1.0'
                 BuildNumber = 5
             } | ConvertTo-Json | Set-Content './.version'
@@ -139,10 +138,10 @@ Describe 'Build.ps1' {
     Context 'Version change handling' {
         
         It 'Should reset build number when major.minor changes' {
-            # Simulate previous build with different version
+            # Simulate previous build with different version using fixed timestamp
             @{
                 Version = '1.0.10'
-                BuildDate = (Get-Date).ToString('o')
+                BuildDate = '2023-01-01T00:00:00.0000000Z'
                 MajorMinor = '1.0'
                 BuildNumber = 10
             } | ConvertTo-Json | Set-Content './.version'
