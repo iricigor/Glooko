@@ -40,7 +40,7 @@
     PrivateData = @{
         PSData = @{
             # Tags applied to this module. These help with module discovery in online galleries.
-            Tags = @('CSV', 'Data', 'Import', 'Glooko', 'PowerShell', 'Diabetes', 'BloodGlucose', 'T1D', 'Dexcom', 'Tandem', 'Windows', 'Linux', 'PSEdition_Core', 'CGM', 'InsulinPump', 'AutomatedInsulinDelivery', 'AID', 'BloodSugar', 'GlucoseMonitoring', 'Hypoglycemia', 'Hyperglycemia')
+            Tags = @('CSV', 'Data', 'Import', 'Glooko', 'PowerShell', 'Diabetes', 'BloodGlucose', 'T1D', 'Dexcom', 'Tandem', 'Windows', 'Linux', 'PSEdition_Core', 'CGM', 'ContinuousGlucoseMonitoring', 'InsulinPump', 'AutomatedInsulinDelivery', 'AID', 'BloodSugar', 'GlucoseMonitoring', 'Hypoglycemia', 'Hyperglycemia')
 
             # A URL to the license for this module.
             LicenseUri = 'https://opensource.org/licenses/MIT'
