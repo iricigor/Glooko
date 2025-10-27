@@ -6,6 +6,8 @@
 
 A PowerShell module for processing Glooko exports data. Not affiliated to [Glooko.com](https://glooko.com/about/)
 
+> **Note:** This module requires PowerShell 7.0 or later. It is not compatible with Windows PowerShell 5.1.
+
 ## Installation
 
 ### From GitHub
