@@ -85,6 +85,12 @@ Describe 'Export-GlookoZipToXlsx' {
         
         It 'Should use ZIP filename for XLSX filename by default' {
             $zipPath = $Script:TestZipFiles.SingleFileZip
+            $outputPath = [System.IO.Path]::ChangeExtension($zipPath, '.xlsx')
+            
+            # Ensure file doesn't exist before test
+            if (Test-Path $outputPath) {
+                Remove-Item $outputPath -Force
+            }
             
             $result = Export-GlookoZipToXlsx -Path $zipPath
             
