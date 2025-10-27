@@ -6,7 +6,7 @@
     ModuleVersion = '1.0'
 
     # Supported PSEditions
-    CompatiblePSEditions = @('Desktop', 'Core')
+    CompatiblePSEditions = @('Core')
 
     # ID used to uniquely identify this module
     GUID = '02ff76d0-8773-4042-a1c6-343cc40deba5'
@@ -15,13 +15,13 @@
     Author = 'iricigor'
 
     # Company or vendor of this module
-    CompanyName = 'Glooko'
+    CompanyName = 'iricigor'
 
     # Description of the functionality provided by this module
-    Description = 'PowerShell module for Glooko CSV data processing utilities'
+    Description = 'PowerShell module for processing Glooko diabetes CSV exported data'
 
     # Minimum version of the PowerShell engine required by this module
-    PowerShellVersion = '5.1'
+    PowerShellVersion = '7.0'
 
     # Functions to export from this module - uses wildcard to automatically export all public functions
     # The actual function list is controlled by Export-ModuleMember in Glooko.psm1
@@ -40,13 +40,13 @@
     PrivateData = @{
         PSData = @{
             # Tags applied to this module. These help with module discovery in online galleries.
-            Tags = @('CSV', 'Data', 'Import', 'Glooko', 'PowerShell')
+            Tags = @('CSV', 'Data', 'Import', 'Glooko', 'PowerShell', 'Diabetes', 'BloodGlucose', 'T1D', 'Dexcom', 'Tandem', 'Windows', 'Linux', 'PSEdition_Core', 'CGM', 'ContinuousGlucoseMonitoring', 'InsulinPump', 'AutomatedInsulinDelivery', 'AID', 'BloodSugar', 'GlucoseMonitoring', 'Hypoglycemia', 'Hyperglycemia')
 
             # A URL to the license for this module.
             LicenseUri = 'https://opensource.org/licenses/MIT'
 
             # A URL to the main website for this project.
-            # ProjectUri = ''
+            ProjectUri = 'https://github.com/iricigor/Glooko'
 
             # A URL to an icon representing this module.
             # IconUri = ''
