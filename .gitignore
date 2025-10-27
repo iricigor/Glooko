@@ -2,6 +2,10 @@
 Tests/TestResults.xml
 Tests/CodeCoverage.xml
 
+# Build output
+BuildOutput/
+.version
+
 # PowerShell temporary files
 *.tmp
 *.temp
