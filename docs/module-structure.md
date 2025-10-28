@@ -8,35 +8,45 @@ Glooko/
 ├── README.md                   # Main documentation
 ├── Glooko.psd1                 # Module manifest
 ├── Glooko.psm1                 # Module loader
+├── Build.ps1                   # Build script
+├── PesterConfig.ps1            # Pester configuration for code coverage
 ├── Public/                     # Public functions (exported)
 │   ├── Import-GlookoCSV.ps1    # Main CSV import function
-│   └── Import-GlookoFolder.ps1 # Folder import with dataset consolidation
+│   ├── Import-GlookoFolder.ps1 # Folder import with dataset consolidation
+│   ├── Import-GlookoZip.ps1    # Zip file import and processing
+│   └── Export-GlookoZipToXlsx.ps1  # Zip to Excel conversion
 ├── Private/                    # Private functions (internal use only)
 │   ├── Expand-GlookoMetadata.ps1  # Metadata parsing helper
 │   └── Merge-GlookoDatasets.ps1   # Dataset consolidation helper
 ├── Tests/                      # Pester test files
 │   ├── Import-GlookoCSV.Tests.ps1
 │   ├── Import-GlookoFolder.Tests.ps1
+│   ├── Import-GlookoZip.Tests.ps1
+│   ├── Export-GlookoZipToXlsx.Tests.ps1
 │   ├── Expand-GlookoMetadata.Tests.ps1
 │   ├── Merge-GlookoDatasets.Tests.ps1
+│   ├── Build.Tests.ps1         # Module structure validation
 │   ├── Helpers/                # Test helper functions
 │   │   ├── TestHelpers.ps1
 │   │   ├── New-TestCSVFile.ps1
-│   │   └── New-TestFolder.ps1
+│   │   ├── New-TestFolder.ps1
+│   │   └── New-TestZipFile.ps1
 │   └── Fixtures/               # Test data files
 ├── docs/                       # Additional documentation
 │   ├── quick-start-codespaces.md
 │   ├── alternative-import-methods.md
-│   ├── module-structure.md
-│   ├── testing.md
-│   └── functions/             # Function documentation
+│   ├── module-structure.md     # This file
+│   ├── testing.md              # Testing documentation
+│   ├── badge-setup.md          # Badge configuration guide
+│   └── functions/              # Function documentation
 │       ├── import-glookocsv.md
-│       └── import-glookofolder.md
+│       ├── import-glookofolder.md
+│       ├── import-glookozip.md
+│       └── export-glookozip-to-xlsx.md
 ├── .github/                    # GitHub automation
 │   └── workflows/
-│       └── test.yml           # Continuous integration
-├── .gitignore                  # Git ignore patterns
-└── PesterConfig.ps1            # Pester configuration for code coverage
+│       └── test.yml            # Continuous integration
+└── .gitignore                  # Git ignore patterns
 ```
 
 ## Key Components
