@@ -157,6 +157,13 @@ Import-GlookoCSV -Path path/to/file.csv
 - Update README.md for user-facing changes
 - Keep function help up to date with examples
 - Document breaking changes in release notes
+- **Keep `docs/testing.md` and `docs/module-structure.md` up-to-date** when:
+  - Adding new public or private functions (update both files)
+  - Adding new test files (update both files)
+  - Adding new helper functions in Tests/Helpers/ (update module-structure.md)
+  - Adding new documentation files in docs/ (update module-structure.md)
+  - Changing the module structure or file organization (update module-structure.md)
+  - Adding or modifying test coverage (update testing.md)
 
 ## Git Workflow
 - Work on feature branches
