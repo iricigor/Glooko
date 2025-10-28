@@ -1,5 +1,9 @@
 # Testing
 
+[![Run Pester Tests](https://github.com/iricigor/Glooko/actions/workflows/test.yml/badge.svg)](https://github.com/iricigor/Glooko/actions/workflows/test.yml)
+[![Linux Tests](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/iricigor/7d87b86e6e187d46c3d1da7b851e3207/raw/glooko-linux-tests.json)](https://github.com/iricigor/Glooko/actions/workflows/test.yml)
+[![Windows Tests](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/iricigor/7d87b86e6e187d46c3d1da7b851e3207/raw/glooko-windows-tests.json)](https://github.com/iricigor/Glooko/actions/workflows/test.yml)
+
 This module includes comprehensive Pester 5.x tests to ensure reliability and functionality.
 
 ## Prerequisites
@@ -27,17 +31,59 @@ Invoke-Pester -Path .\Tests\Import-GlookoCSV.Tests.ps1
 
 ## Test Coverage
 
-The test suite covers:
-- ✅ Basic CSV import functionality
-- ✅ First row skipping behavior
-- ✅ Automatic header detection from second row
-- ✅ Comma delimiter processing
-- ✅ UTF8 encoding support
-- ✅ Pipeline input support
-- ✅ Error handling for invalid files
-- ✅ Edge cases (empty files, single rows)
-- ✅ Special characters in data
-- ✅ Verbose output verification
+The test suite covers all public and private functions:
+
+### Public Functions
+- **Import-GlookoCSV** - CSV import with first row skipping
+  - ✅ Basic CSV import functionality
+  - ✅ First row skipping behavior
+  - ✅ Automatic header detection from second row
+  - ✅ Comma delimiter processing
+  - ✅ UTF8 encoding support
+  - ✅ Pipeline input support
+  - ✅ Error handling for invalid files
+  - ✅ Edge cases (empty files, single rows)
+  - ✅ Special characters in data
+  - ✅ Verbose output verification
+
+- **Import-GlookoFolder** - Import all CSV files from a folder
+  - ✅ Folder processing with multiple CSV files
+  - ✅ Dataset consolidation functionality
+  - ✅ Pipeline input support
+  - ✅ Error handling for invalid paths
+  - ✅ Empty folder handling
+
+- **Import-GlookoZip** - Import data from Glooko zip files
+  - ✅ Zip file extraction and processing
+  - ✅ CSV file discovery within zip archives
+  - ✅ Dataset consolidation from zip contents
+  - ✅ Error handling for invalid zip files
+  - ✅ Pipeline input support
+
+- **Export-GlookoZipToXlsx** - Convert Glooko zip to Excel
+  - ✅ Zip to Excel conversion functionality
+  - ✅ Summary worksheet generation
+  - ✅ Multiple dataset worksheets
+  - ✅ Error handling for invalid inputs
+  - ✅ Output file creation verification
+
+### Private Functions
+- **Expand-GlookoMetadata** - Metadata parsing helper
+  - ✅ Metadata extraction from CSV first row
+  - ✅ Key-value pair parsing
+  - ✅ Error handling for malformed metadata
+
+- **Merge-GlookoDatasets** - Dataset consolidation helper
+  - ✅ Multiple dataset merging
+  - ✅ Dataset type identification
+  - ✅ Property consolidation
+  - ✅ Error handling for incompatible datasets
+
+### Build and Module Tests
+- **Build.Tests.ps1** - Module structure validation
+  - ✅ Module manifest validation
+  - ✅ Function export verification
+  - ✅ Required module dependencies
 
 ## Continuous Integration
 
