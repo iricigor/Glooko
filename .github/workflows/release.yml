@@ -34,172 +34,35 @@ jobs:
     - name: Download build artifact
       shell: pwsh
       run: |
+        $params = @{
+          Repository = "${{ github.repository }}"
+          GH_TOKEN = $env:GH_TOKEN
+        }
         if ("${{ inputs.version }}" -ne "") {
-          Write-Host "Downloading specific version: ${{ inputs.version }}"
-          $version = "${{ inputs.version }}"
-          $artifactName = "Glooko-Module-$version"
-        } else {
-          Write-Host "Version not specified, will use latest build artifact from build workflow"
-          $artifactName = $null
+          $params.Version = "${{ inputs.version }}"
         }
-        
-        # Get the latest successful build workflow run
-        Write-Host "Finding latest successful build workflow run..."
-        $buildWorkflow = gh api "/repos/${{ github.repository }}/actions/workflows/build.yml/runs?status=success&per_page=10" | ConvertFrom-Json
-        
-        if ($buildWorkflow.workflow_runs.Count -eq 0) {
-          Write-Error "No successful build workflow runs found"
-          exit 1
-        }
-        
-        # Find the run with the matching artifact (if version specified) or just use the latest
-        $selectedRun = $null
-        $selectedArtifact = $null
-        
-        foreach ($run in $buildWorkflow.workflow_runs) {
-          Write-Host "Checking run $($run.id) from $($run.created_at)..."
-          
-          # Get artifacts from this run
-          $artifacts = gh api "/repos/${{ github.repository }}/actions/runs/$($run.id)/artifacts" | ConvertFrom-Json
-          
-          if ($artifactName) {
-            # Looking for specific version
-            $artifact = $artifacts.artifacts | Where-Object { $_.name -eq $artifactName } | Select-Object -First 1
-          } else {
-            # Looking for any Glooko-Module artifact
-            $artifact = $artifacts.artifacts | Where-Object { $_.name -like 'Glooko-Module-*' } | Select-Object -First 1
-          }
-          
-          if ($artifact) {
-            $selectedRun = $run
-            $selectedArtifact = $artifact
-            break
-          }
-        }
-        
-        if (-not $selectedArtifact) {
-          if ($artifactName) {
-            Write-Error "No artifact found with name: $artifactName"
-          } else {
-            Write-Error "No Glooko-Module artifact found in recent build runs"
-          }
-          exit 1
-        }
-        
-        Write-Host "Found artifact: $($selectedArtifact.name) from run $($selectedRun.id)"
-        
-        # Download the artifact
-        Write-Host "Downloading artifact..."
-        gh api "/repos/${{ github.repository }}/actions/artifacts/$($selectedArtifact.id)/zip" > artifact.zip
-        
-        # Extract the artifact
-        Write-Host "Extracting artifact..."
-        Expand-Archive -Path artifact.zip -DestinationPath ./BuildOutput -Force
-        Remove-Item artifact.zip
-        
-        Write-Host "Downloaded and extracted build artifact: $($selectedArtifact.name)"
+        ./Release/Download-BuildArtifact.ps1 @params
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
     - name: Verify build artifact
       shell: pwsh
-      run: |
-        Write-Host "Verifying build artifact..."
-        
-        if (-not (Test-Path "BuildOutput/Glooko.psd1")) {
-          Write-Error "Module manifest not found in BuildOutput"
-          exit 1
-        }
-        
-        if (-not (Test-Path "BuildOutput/BuildInfo.json")) {
-          Write-Error "BuildInfo.json not found in BuildOutput"
-          exit 1
-        }
-        
-        # Read version from BuildInfo
-        $buildInfo = Get-Content "BuildOutput/BuildInfo.json" | ConvertFrom-Json
-        $version = $buildInfo.Version
-        
-        Write-Host "Module version: $version"
-        
-        # Test that the module can be imported
-        Import-Module ./BuildOutput/Glooko.psd1 -Force
-        
-        $module = Get-Module Glooko
-        if (-not $module) {
-          Write-Error "Failed to load module"
-          exit 1
-        }
-        
-        Write-Host "Module loaded successfully"
-        Write-Host "Module version: $($module.Version)"
-        Write-Host "Exported functions: $($module.ExportedFunctions.Keys -join ', ')"
-        
-        # Save version for next step
-        "MODULE_VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+      run: ./Release/Verify-BuildArtifact.ps1 -OutputEnvFile $env:GITHUB_ENV
     
     - name: Publish to PowerShell Gallery (Dry Run)
       if: inputs.dry_run
       shell: pwsh
-      run: |
-        Write-Host "DRY RUN: Would publish module version $env:MODULE_VERSION to PowerShell Gallery"
-        Write-Host "Module path: ./BuildOutput"
-        
-        # Verify the module manifest
-        $manifest = Test-ModuleManifest -Path ./BuildOutput/Glooko.psd1
-        Write-Host "Module Name: $($manifest.Name)"
-        Write-Host "Module Version: $($manifest.Version)"
-        Write-Host "Module Description: $($manifest.Description)"
-        Write-Host "Module Author: $($manifest.Author)"
-        Write-Host "Module Functions: $($manifest.ExportedFunctions.Keys -join ', ')"
-        
-        Write-Host "`nDRY RUN COMPLETE - No actual publishing performed"
+      run: ./Release/Publish-ModuleDryRun.ps1 -ModuleVersion $env:MODULE_VERSION
     
     - name: Publish to PowerShell Gallery
       if: ${{ !inputs.dry_run }}
       shell: pwsh
       run: |
-        Write-Host "Publishing module version $env:MODULE_VERSION to PowerShell Gallery..."
-        
-        # Publish the module
-        try {
-          Publish-Module -Path ./BuildOutput -NuGetApiKey $env:PSGALLERY_KEY -Verbose -ErrorAction Stop
-          Write-Host "Successfully published module version $env:MODULE_VERSION to PowerShell Gallery!" -ForegroundColor Green
-        } catch {
-          Write-Error "Failed to publish module: $($_.Exception.Message)"
-          exit 1
-        }
+        ./Release/Publish-ModuleToGallery.ps1 -ModuleVersion $env:MODULE_VERSION -NuGetApiKey $env:PSGALLERY_KEY
       env:
         PSGALLERY_KEY: ${{ secrets.PSGALLERY_KEY }}
     
     - name: Create release summary
       shell: pwsh
       run: |
-        $summary = @"
-        # Release Summary
-        
-        **Module Version:** $env:MODULE_VERSION
-        **Published to:** PowerShell Gallery
-        **Dry Run:** ${{ inputs.dry_run }}
-        **Published by:** ${{ github.actor }}
-        **Published at:** $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss UTC')
-        
-        ## Installation
-        
-        Users can now install this module using:
-        
-        ``````powershell
-        Install-Module -Name Glooko -RequiredVersion $env:MODULE_VERSION
-        ``````
-        
-        Or update to the latest version:
-        
-        ``````powershell
-        Update-Module -Name Glooko
-        ``````
-        "@
-        
-        Write-Host $summary
-        
-        # Save to step summary
-        $summary | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+        ./Release/Create-ReleaseSummary.ps1 -ModuleVersion $env:MODULE_VERSION -DryRun "${{ inputs.dry_run }}" -PublishedBy "${{ github.actor }}" -OutputFile $env:GITHUB_STEP_SUMMARY
