@@ -67,6 +67,10 @@ For information about the module's organization and components, see [Module Stru
 
 This module includes comprehensive Pester 5.x tests. For detailed testing information, see [Testing](docs/testing.md).
 
+### Release Process
+
+For information about publishing releases to the PowerShell Gallery, see [Release Process](docs/release-process.md).
+
 ## License
 
 

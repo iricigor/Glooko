@@ -1,0 +1,68 @@
+name: Release to PowerShell Gallery
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish (leave empty for latest build artifact)'
+        required: false
+        type: string
+      dry_run:
+        description: 'Perform a dry run without publishing'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    name: Publish to PowerShell Gallery
+    
+    # Restrict to repository owner only
+    if: github.actor == 'iricigor'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Download build artifact
+      shell: pwsh
+      run: |
+        $params = @{
+          Repository = "${{ github.repository }}"
+          GH_TOKEN = $env:GH_TOKEN
+        }
+        if ("${{ inputs.version }}" -ne "") {
+          $params.Version = "${{ inputs.version }}"
+        }
+        ./Release/Download-BuildArtifact.ps1 @params
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Verify build artifact
+      shell: pwsh
+      run: ./Release/Verify-BuildArtifact.ps1 -OutputEnvFile $env:GITHUB_ENV
+    
+    - name: Publish to PowerShell Gallery (Dry Run)
+      if: inputs.dry_run
+      shell: pwsh
+      run: ./Release/Publish-ModuleDryRun.ps1 -ModuleVersion $env:MODULE_VERSION
+    
+    - name: Publish to PowerShell Gallery
+      if: ${{ !inputs.dry_run }}
+      shell: pwsh
+      run: |
+        ./Release/Publish-ModuleToGallery.ps1 -ModuleVersion $env:MODULE_VERSION -NuGetApiKey $env:PSGALLERY_KEY
+      env:
+        PSGALLERY_KEY: ${{ secrets.PSGALLERY_KEY }}
+    
+    - name: Create release summary
+      shell: pwsh
+      run: |
+        ./Release/Create-ReleaseSummary.ps1 -ModuleVersion $env:MODULE_VERSION -DryRun "${{ inputs.dry_run }}" -PublishedBy "${{ github.actor }}" -OutputFile $env:GITHUB_STEP_SUMMARY
