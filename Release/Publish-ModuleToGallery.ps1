@@ -32,8 +32,8 @@ $ErrorActionPreference = 'Stop'
 try {
     Write-Host "Publishing module version $ModuleVersion to PowerShell Gallery..."
     
-    # Publish the module
-    Publish-Module -Path ./BuildOutput -NuGetApiKey $NuGetApiKey -Verbose -ErrorAction Stop
+    # Publish the module from the Glooko subfolder
+    Publish-Module -Path ./BuildOutput/Glooko -NuGetApiKey $NuGetApiKey -Verbose -ErrorAction Stop
     Write-Host "Successfully published module version $ModuleVersion to PowerShell Gallery!" -ForegroundColor Green
     
     exit 0

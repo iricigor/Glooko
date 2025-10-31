@@ -25,10 +25,10 @@ $ErrorActionPreference = 'Stop'
 
 try {
     Write-Host "DRY RUN: Would publish module version $ModuleVersion to PowerShell Gallery"
-    Write-Host "Module path: ./BuildOutput"
+    Write-Host "Module path: ./BuildOutput/Glooko"
     
     # Verify the module manifest
-    $manifest = Test-ModuleManifest -Path ./BuildOutput/Glooko.psd1
+    $manifest = Test-ModuleManifest -Path ./BuildOutput/Glooko/Glooko.psd1
     Write-Host "Module Name: $($manifest.Name)"
     Write-Host "Module Version: $($manifest.Version)"
     Write-Host "Module Description: $($manifest.Description)"

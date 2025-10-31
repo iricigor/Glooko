@@ -26,24 +26,24 @@ $ErrorActionPreference = 'Stop'
 try {
     Write-Host "Verifying build artifact..."
     
-    if (-not (Test-Path "BuildOutput/Glooko.psd1")) {
-        Write-Error "Module manifest not found in BuildOutput"
+    if (-not (Test-Path "BuildOutput/Glooko/Glooko.psd1")) {
+        Write-Error "Module manifest not found in BuildOutput/Glooko"
         exit 1
     }
     
-    if (-not (Test-Path "BuildOutput/BuildInfo.json")) {
-        Write-Error "BuildInfo.json not found in BuildOutput"
+    if (-not (Test-Path "BuildOutput/Glooko/BuildInfo.json")) {
+        Write-Error "BuildInfo.json not found in BuildOutput/Glooko"
         exit 1
     }
     
     # Read version from BuildInfo
-    $buildInfo = Get-Content "BuildOutput/BuildInfo.json" | ConvertFrom-Json
+    $buildInfo = Get-Content "BuildOutput/Glooko/BuildInfo.json" | ConvertFrom-Json
     $version = $buildInfo.Version
     
     Write-Host "Module version: $version"
     
     # Test that the module can be imported
-    Import-Module ./BuildOutput/Glooko.psd1 -Force
+    Import-Module ./BuildOutput/Glooko/Glooko.psd1 -Force
     
     $module = Get-Module Glooko
     if (-not $module) {
