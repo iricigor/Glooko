@@ -1,0 +1,13 @@
+# Code Owners for Glooko PowerShell Module
+#
+# These owners will be automatically requested for review when someone
+# opens a pull request that modifies files matching the patterns below.
+#
+# For more information, see:
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Publishing pipeline and release workflow
+/.github/workflows/release.yml @iricigor
+
+# Publishing scripts in the Release directory
+/Release/*.ps1 @iricigor
