@@ -108,8 +108,8 @@ try {
     # Publish-Module requires the module to be in a folder with the same name as the module
     $glookoDir = "./BuildOutput/Glooko"
     New-Item -Path $glookoDir -ItemType Directory -Force | Out-Null
-    Move-Item -Path "$tempDir/*" -Destination $glookoDir -Force
-    Remove-Item $tempDir -Force
+    Get-ChildItem -Path $tempDir | Move-Item -Destination $glookoDir -Force
+    Remove-Item $tempDir -Recurse -Force
     
     Write-Host "Downloaded and extracted build artifact: $($selectedArtifact.name)"
     Write-Host "Module prepared in: $glookoDir"
