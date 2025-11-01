@@ -67,6 +67,20 @@ jobs:
       run: |
         ./Release/Create-ReleaseSummary.ps1 -ModuleVersion $env:MODULE_VERSION -DryRun "${{ inputs.dry_run }}" -PublishedBy "${{ github.actor }}" -OutputFile $env:GITHUB_STEP_SUMMARY
     
+    - name: Create release artifact
+      if: ${{ !inputs.dry_run }}
+      shell: pwsh
+      run: |
+        Write-Host "Creating release artifact zip..."
+        $version = $env:MODULE_VERSION
+        $zipPath = "Glooko-$version.zip"
+        
+        # Compress the module files from BuildOutput/Glooko
+        Compress-Archive -Path "BuildOutput/Glooko/*" -DestinationPath $zipPath -Force
+        
+        Write-Host "Created release artifact: $zipPath"
+        Get-Item $zipPath | Select-Object Name, Length
+    
     - name: Create GitHub Release
       if: ${{ !inputs.dry_run }}
       uses: ncipollo/release-action@v1
@@ -94,6 +108,7 @@ jobs:
           
           - [PowerShell Gallery](https://www.powershellgallery.com/packages/Glooko/${{ env.MODULE_VERSION }})
           - [Documentation](https://github.com/iricigor/Glooko#readme)
+        artifacts: "Glooko-${{ env.MODULE_VERSION }}.zip"
         draft: false
         prerelease: false
         makeLatest: true
