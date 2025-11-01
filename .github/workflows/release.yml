@@ -14,7 +14,7 @@ on:
         default: false
 
 permissions:
-  contents: read
+  contents: write
   actions: read
 
 jobs:
@@ -66,3 +66,34 @@ jobs:
       shell: pwsh
       run: |
         ./Release/Create-ReleaseSummary.ps1 -ModuleVersion $env:MODULE_VERSION -DryRun "${{ inputs.dry_run }}" -PublishedBy "${{ github.actor }}" -OutputFile $env:GITHUB_STEP_SUMMARY
+    
+    - name: Create GitHub Release
+      if: ${{ !inputs.dry_run }}
+      uses: ncipollo/release-action@v1
+      with:
+        tag: v${{ env.MODULE_VERSION }}
+        name: Release v${{ env.MODULE_VERSION }}
+        body: |
+          # Glooko PowerShell Module v${{ env.MODULE_VERSION }}
+          
+          This release has been published to the PowerShell Gallery.
+          
+          ## Installation
+          
+          ```powershell
+          Install-Module -Name Glooko -RequiredVersion ${{ env.MODULE_VERSION }}
+          ```
+          
+          Or update to the latest version:
+          
+          ```powershell
+          Update-Module -Name Glooko
+          ```
+          
+          ## Links
+          
+          - [PowerShell Gallery](https://www.powershellgallery.com/packages/Glooko/${{ env.MODULE_VERSION }})
+          - [Documentation](https://github.com/iricigor/Glooko#readme)
+        draft: false
+        prerelease: false
+        makeLatest: true
