@@ -74,9 +74,16 @@ jobs:
         Write-Host "Creating release artifact zip..."
         $version = $env:MODULE_VERSION
         $zipPath = "Glooko-$version.zip"
+        $modulePath = "BuildOutput/Glooko"
+        
+        # Verify module path exists
+        if (-not (Test-Path $modulePath)) {
+          Write-Error "Module path not found: $modulePath"
+          exit 1
+        }
         
         # Compress the module files from BuildOutput/Glooko
-        Compress-Archive -Path "BuildOutput/Glooko/*" -DestinationPath $zipPath -Force
+        Compress-Archive -Path "$modulePath/*" -DestinationPath $zipPath -Force
         
         Write-Host "Created release artifact: $zipPath"
         Get-Item $zipPath | Select-Object Name, Length
