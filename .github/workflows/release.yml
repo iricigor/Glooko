@@ -70,23 +70,7 @@ jobs:
     - name: Create release artifact
       if: ${{ !inputs.dry_run }}
       shell: pwsh
-      run: |
-        Write-Host "Creating release artifact zip..."
-        $version = $env:MODULE_VERSION
-        $zipPath = "Glooko-$version.zip"
-        $modulePath = "BuildOutput/Glooko"
-        
-        # Verify module path exists
-        if (-not (Test-Path $modulePath)) {
-          Write-Error "Module path not found: $modulePath"
-          exit 1
-        }
-        
-        # Compress the module files from BuildOutput/Glooko
-        Compress-Archive -Path "$modulePath/*" -DestinationPath $zipPath -Force
-        
-        Write-Host "Created release artifact: $zipPath"
-        Get-Item $zipPath | Select-Object Name, Length
+      run: ./Release/Create-ReleaseArtifact.ps1 -ModuleVersion $env:MODULE_VERSION
     
     - name: Create GitHub Release
       if: ${{ !inputs.dry_run }}
