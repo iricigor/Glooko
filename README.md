@@ -1,12 +1,17 @@
 # Glooko
 
+![github/release](https://img.shields.io/github/release/iricigor/Glooko.svg) ![last-release-date](https://img.shields.io/github/release-date/iricigor/Glooko.svg) ![commits-since-latest](https://img.shields.io/github/commits-since/iricigor/Glooko/latest.svg) ![last-commit](https://img.shields.io/github/last-commit/iricigor/Glooko.svg)
+
 [![Run Pester Tests](https://github.com/iricigor/Glooko/actions/workflows/test.yml/badge.svg)](https://github.com/iricigor/Glooko/actions/workflows/test.yml)
 [![Linux Tests](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/iricigor/7d87b86e6e187d46c3d1da7b851e3207/raw/glooko-linux-tests.json)](https://github.com/iricigor/Glooko/actions/workflows/test.yml)
 [![Windows Tests](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/iricigor/7d87b86e6e187d46c3d1da7b851e3207/raw/glooko-windows-tests.json)](https://github.com/iricigor/Glooko/actions/workflows/test.yml)
+![supported-OS](https://img.shields.io/powershellgallery/p/Glooko.svg?style=flat&logo=PowerShell)
 
 A PowerShell module for processing Glooko exports data. Not affiliated to [Glooko.com](https://glooko.com/about/)
 
 > **Note:** This module requires PowerShell 7.0 or later. It is not compatible with Windows PowerShell 5.1.
+
+[![downloads](https://img.shields.io/powershellgallery/dt/Glooko.svg?label=downloads&logo=PowerShell)](https://www.powershellgallery.com/packages/Glooko) ![GitHub](https://img.shields.io/github/license/iricigor/Glooko.svg?style=flat) ![GitHub top language](https://img.shields.io/github/languages/top/iricigor/Glooko.svg?style=flat) ![GitHub open issues](https://img.shields.io/github/issues/iricigor/Glooko.svg?style=flat) ![GitHub closed issues](https://img.shields.io/github/issues-closed/iricigor/Glooko.svg?style=flat) ![repo-stars](https://img.shields.io/github/stars/iricigor/Glooko.svg) ![repo-watchers](https://img.shields.io/github/watchers/iricigor/Glooko.svg)
 
 ## Installation
 
