@@ -15,6 +15,24 @@ A PowerShell module for processing Glooko exports data. Not affiliated to [Glook
 
 ## Installation
 
+### From PowerShell Gallery
+
+The recommended way to install this module is from the [PowerShell Gallery](https://www.powershellgallery.com/packages/Glooko):
+
+```powershell
+# Install the module
+Install-Module -Name Glooko
+
+# Verify the module is loaded
+Get-Module Glooko -ListAvailable
+```
+
+To update to the latest version:
+
+```powershell
+Update-Module -Name Glooko
+```
+
 ### From GitHub
 
 1. Clone the repository:
