@@ -87,7 +87,10 @@ The test suite covers all public and private functions:
 
 ## Continuous Integration
 
-The repository includes a GitHub Actions workflow that automatically runs Pester tests on every pull request and push to the main/master branch. Test results are displayed directly in the PR checks tab, showing:
+The repository includes GitHub Actions workflows that automatically run tests on every pull request and push to the main/master branch:
+
+### Pester Tests
+Test results are displayed directly in the PR checks tab, showing:
 
 - ✅ Individual test case results with pass/fail status
 - ✅ Detailed test names and execution times
@@ -95,6 +98,48 @@ The repository includes a GitHub Actions workflow that automatically runs Pester
 - ✅ Test artifacts for download
 
 The workflow uses [dorny/test-reporter](https://github.com/dorny/test-reporter) to parse JUnit XML test results and create detailed check runs in GitHub.
+
+### PSScriptAnalyzer
+The repository uses [PSScriptAnalyzer](https://github.com/PowerShell/PSScriptAnalyzer) to ensure code quality and adherence to PowerShell best practices. The analyzer checks for:
+
+- ✅ Security vulnerabilities
+- ✅ Code style issues
+- ✅ Best practice violations
+- ✅ Potential bugs
+
+#### Running PSScriptAnalyzer Locally
+
+```powershell
+# Install PSScriptAnalyzer
+Install-Module -Name PSScriptAnalyzer -Force -SkipPublisherCheck
+
+# Run analyzer on module code only
+.\Analyze.ps1 -Path Public,Private,Glooko.psm1
+
+# Run analyzer on all PowerShell files
+.\Analyze.ps1
+
+# Auto-fix issues where possible
+.\Analyze.ps1 -Fix
+```
+
+#### PSScriptAnalyzer Configuration
+
+The analyzer uses settings defined in `PSScriptAnalyzerSettings.psd1`. The following rules are excluded with detailed rationale:
+
+- **`PSAvoidTrailingWhitespace`** - This is a formatting issue better handled by editor settings (e.g., `.editorconfig`, VS Code format-on-save). Enforcing it in the analyzer would create noise without adding security or functional value.
+
+- **`PSUseSingularNouns`** - PowerShell best practices recommend singular nouns for cmdlet names, but this module intentionally uses plural nouns where it makes semantic sense. For example, `Merge-GlookoDatasets` operates on multiple datasets, making the plural form more descriptive and accurate.
+
+- **`PSAvoidUsingWriteHost`** - While `Write-Host` should be avoided in module functions (which use `Write-Verbose`, `Write-Warning`, etc.), it's perfectly acceptable in standalone scripts like `Build.ps1` and `Analyze.ps1` where direct console output is intended.
+
+- **`PSUseBOMForUnicodeEncodedFile`** - Byte Order Mark (BOM) is not required for UTF-8 files and can cause issues with some tools and platforms. Modern editors and PowerShell handle UTF-8 files without BOM correctly.
+
+- **`PSAvoidUsingPositionalParameters`** - In test files, positional parameters improve readability and are a common practice. For example, `Join-Path $root 'Public'` is clearer than `Join-Path -Path $root -ChildPath 'Public'` in test contexts.
+
+- **`PSUseDeclaredVarsMoreThanAssignments`** - In test files, variables are sometimes assigned for debugging or to improve test readability, even if not immediately used. This is acceptable in testing contexts.
+
+- **`PSUseOutputTypeCorrectly`** - This rule can produce false positives with dynamic return types or when functions return arrays of custom objects. Since PowerShell's type system is dynamic, enforcing strict output type declarations can be overly restrictive.
 
 ## Viewing Test Results
 

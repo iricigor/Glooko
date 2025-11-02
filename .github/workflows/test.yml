@@ -25,28 +25,7 @@ jobs:
     - name: Setup PowerShell modules
       shell: pwsh
       run: |
-        # Install Pester if not available or update to latest version
-        if (Get-Module -ListAvailable -Name Pester | Where-Object {$_.Version -ge '5.0.0'}) {
-          Write-Host "Pester 5.x is already installed"
-        } else {
-          Write-Host "Installing Pester 5.x"
-          Install-Module -Name Pester -Force -SkipPublisherCheck -MinimumVersion 5.0.0
-        }
-        
-        # Install ImportExcel module for Export-GlookoZipToXlsx tests
-        if (Get-Module -ListAvailable -Name ImportExcel) {
-          Write-Host "ImportExcel is already installed"
-        } else {
-          Write-Host "Installing ImportExcel"
-          Install-Module -Name ImportExcel -Force -SkipPublisherCheck -Scope CurrentUser
-        }
-        
-        # Import modules
-        Import-Module Pester -Force
-        Import-Module ImportExcel -Force
-        
-        # Display module versions
-        Get-Module Pester, ImportExcel | Select-Object Name, Version
+        & "$env:GITHUB_WORKSPACE/.github/scripts/Install-TestModules.ps1"
     
     - name: Run Pester Tests
       shell: pwsh
@@ -148,28 +127,7 @@ jobs:
     - name: Setup PowerShell modules
       shell: pwsh
       run: |
-        # Install Pester if not available or update to latest version
-        if (Get-Module -ListAvailable -Name Pester | Where-Object {$_.Version -ge '5.0.0'}) {
-          Write-Host "Pester 5.x is already installed"
-        } else {
-          Write-Host "Installing Pester 5.x"
-          Install-Module -Name Pester -Force -SkipPublisherCheck -MinimumVersion 5.0.0
-        }
-        
-        # Install ImportExcel module for Export-GlookoZipToXlsx tests
-        if (Get-Module -ListAvailable -Name ImportExcel) {
-          Write-Host "ImportExcel is already installed"
-        } else {
-          Write-Host "Installing ImportExcel"
-          Install-Module -Name ImportExcel -Force -SkipPublisherCheck -Scope CurrentUser
-        }
-        
-        # Import modules
-        Import-Module Pester -Force
-        Import-Module ImportExcel -Force
-        
-        # Display module versions
-        Get-Module Pester, ImportExcel | Select-Object Name, Version
+        & "$env:GITHUB_WORKSPACE/.github/scripts/Install-TestModules.ps1"
     
     - name: Run Pester Tests
       shell: pwsh

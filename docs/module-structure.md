@@ -9,7 +9,9 @@ Glooko/
 ├── Glooko.psd1                 # Module manifest
 ├── Glooko.psm1                 # Module loader
 ├── Build.ps1                   # Build script
+├── Analyze.ps1                 # PSScriptAnalyzer runner
 ├── PesterConfig.ps1            # Pester configuration for code coverage
+├── PSScriptAnalyzerSettings.psd1  # PSScriptAnalyzer configuration
 ├── Public/                     # Public functions (exported)
 │   ├── Import-GlookoCSV.ps1    # Main CSV import function
 │   ├── Import-GlookoFolder.ps1 # Folder import with dataset consolidation
@@ -26,6 +28,7 @@ Glooko/
 │   ├── Expand-GlookoMetadata.Tests.ps1
 │   ├── Merge-GlookoDatasets.Tests.ps1
 │   ├── Build.Tests.ps1         # Module structure validation
+│   ├── PSScriptAnalyzer.Tests.ps1  # Code quality tests
 │   ├── Helpers/                # Test helper functions
 │   │   ├── TestHelpers.ps1
 │   │   ├── New-TestCSVFile.ps1
@@ -44,8 +47,12 @@ Glooko/
 │       ├── import-glookozip.md
 │       └── export-glookozip-to-xlsx.md
 ├── .github/                    # GitHub automation
+│   ├── scripts/
+│   │   ├── Install-ModuleVerbose.ps1  # Reusable function to install PowerShell modules
+│   │   └── Install-TestModules.ps1    # Script to install required test modules
 │   └── workflows/
-│       └── test.yml            # Continuous integration
+│       ├── test.yml            # Continuous integration - Pester tests
+│       └── analyze.yml         # Continuous integration - PSScriptAnalyzer
 └── .gitignore                  # Git ignore patterns
 ```
 
@@ -73,3 +80,9 @@ Functions in the `Private/` folder are internal helper functions used by public 
 
 ### Tests
 The module uses Pester 5.x for comprehensive testing, with test files organized alongside the code they test.
+
+### Code Quality
+The module uses PSScriptAnalyzer to ensure code quality and adherence to PowerShell best practices:
+- **PSScriptAnalyzerSettings.psd1** - Configuration file with rules and exclusions
+- **Analyze.ps1** - Script to run PSScriptAnalyzer with custom settings
+- **Tests/PSScriptAnalyzer.Tests.ps1** - Automated tests to ensure code quality in CI/CD

@@ -1,0 +1,56 @@
+name: PSScriptAnalyzer
+
+on:
+  pull_request:
+    branches: [ main, master ]
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    name: PSScriptAnalyzer Code Quality Check
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup PSScriptAnalyzer
+      shell: pwsh
+      run: |
+        # Dot-source the Install-ModuleVerbose function
+        . "$env:GITHUB_WORKSPACE/.github/scripts/Install-ModuleVerbose.ps1"
+        
+        # Install PSScriptAnalyzer
+        Install-ModuleVerbose -Name 'PSScriptAnalyzer'
+        
+        # Import module
+        Import-Module PSScriptAnalyzer -Force
+        
+        # Display module version
+        Get-Module PSScriptAnalyzer | Select-Object Name, Version
+    
+    - name: Run PSScriptAnalyzer
+      shell: pwsh
+      run: |
+        # Run PSScriptAnalyzer on module code (Public, Private, root module)
+        ./Analyze.ps1 -Path Public,Private,Glooko.psm1
+        
+        # Check exit code
+        if ($LASTEXITCODE -ne 0) {
+          Write-Error "PSScriptAnalyzer found issues"
+          exit $LASTEXITCODE
+        }
+    
+    - name: Run PSScriptAnalyzer on all code
+      if: success() || failure()
+      shell: pwsh
+      run: |
+        # Run on all PowerShell files for informational purposes
+        Write-Host "`n=== Running PSScriptAnalyzer on all PowerShell files ===" -ForegroundColor Cyan
+        ./Analyze.ps1
