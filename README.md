@@ -1,6 +1,6 @@
 # Glooko
 
-![last-commit](https://img.shields.io/github/last-commit/iricigor/Glooko.svg)
+[![release](https://img.shields.io/github/v/release/iricigor/Glooko.svg?logo=github)](https://github.com/iricigor/Glooko/releases) [![release-date](https://img.shields.io/github/release-date/iricigor/Glooko.svg?logo=github)](https://github.com/iricigor/Glooko/releases) [![PSGallery](https://img.shields.io/powershellgallery/v/Glooko.svg?logo=PowerShell)](https://www.powershellgallery.com/packages/Glooko) ![last-commit](https://img.shields.io/github/last-commit/iricigor/Glooko.svg)
 
 [![Run Pester Tests](https://github.com/iricigor/Glooko/actions/workflows/test.yml/badge.svg)](https://github.com/iricigor/Glooko/actions/workflows/test.yml)
 [![Linux Tests](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/iricigor/7d87b86e6e187d46c3d1da7b851e3207/raw/glooko-linux-tests.json)](https://github.com/iricigor/Glooko/actions/workflows/test.yml)
