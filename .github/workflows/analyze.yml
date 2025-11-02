@@ -49,7 +49,7 @@ jobs:
         }
     
     - name: Run PSScriptAnalyzer on all code
-      if: always()
+      if: success() || failure()
       shell: pwsh
       run: |
         # Run on all PowerShell files for informational purposes
