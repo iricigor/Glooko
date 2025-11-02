@@ -12,6 +12,11 @@ Glooko/
 ├── Analyze.ps1                 # PSScriptAnalyzer runner
 ├── PesterConfig.ps1            # Pester configuration for code coverage
 ├── PSScriptAnalyzerSettings.psd1  # PSScriptAnalyzer configuration
+├── assets/                     # Module assets (icons, images)
+│   ├── README.md               # Asset documentation
+│   ├── icon.svg                # Module icon (SVG source)
+│   ├── icon.png                # Module icon (generated PNG)
+│   └── Generate-Icon.ps1       # Icon generation script
 ├── Public/                     # Public functions (exported)
 │   ├── Import-GlookoCSV.ps1    # Main CSV import function
 │   ├── Import-GlookoFolder.ps1 # Folder import with dataset consolidation
@@ -77,6 +82,14 @@ Functions in the `Public/` folder are automatically exported and available to us
 
 ### Private Functions
 Functions in the `Private/` folder are internal helper functions used by public functions but not exported to users.
+
+### Assets
+The `assets/` folder contains visual resources for the module:
+- **icon.svg** - The source SVG icon file (editable vector graphics)
+- **icon.png** - The generated PNG icon (referenced by the module manifest)
+- **Generate-Icon.ps1** - Script to regenerate the PNG from the SVG source
+
+The PNG icon is referenced in the module manifest via the `IconUri` property and is displayed in the PowerShell Gallery.
 
 ### Tests
 The module uses Pester 5.x for comprehensive testing, with test files organized alongside the code they test.
