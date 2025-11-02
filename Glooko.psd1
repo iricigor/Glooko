@@ -49,7 +49,7 @@
             ProjectUri = 'https://github.com/iricigor/Glooko'
 
             # A URL to an icon representing this module.
-            # IconUri = ''
+            IconUri = 'https://raw.githubusercontent.com/iricigor/Glooko/main/assets/icon.png'
 
             # ReleaseNotes of this module
             ReleaseNotes = 'Version 1.0 - Updated to use major.minor version format. Initial release with Import-GlookoCSV function for CSV processing with first row skipping capability. Released under MIT license.'

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <!-- Background Circle -->
+  <circle cx="128" cy="128" r="120" fill="#0078D4" stroke="#005A9E" stroke-width="4"/>
+  
+  <!-- CSV Document Icon -->
+  <g transform="translate(64, 48)">
+    <!-- Document background -->
+    <path d="M 0 10 C 0 5 5 0 10 0 L 108 0 L 128 20 L 128 150 C 128 155 123 160 118 160 L 10 160 C 5 160 0 155 0 150 Z" 
+          fill="#FFFFFF" stroke="#E1E1E1" stroke-width="2"/>
+    
+    <!-- Folded corner -->
+    <path d="M 108 0 L 108 20 L 128 20 Z" fill="#E1E1E1"/>
+    
+    <!-- CSV Text Lines -->
+    <line x1="20" y1="40" x2="108" y2="40" stroke="#0078D4" stroke-width="3" stroke-linecap="round"/>
+    <line x1="20" y1="60" x2="108" y2="60" stroke="#0078D4" stroke-width="3" stroke-linecap="round"/>
+    <line x1="20" y1="80" x2="108" y2="80" stroke="#0078D4" stroke-width="3" stroke-linecap="round"/>
+    <line x1="20" y1="100" x2="90" y2="100" stroke="#0078D4" stroke-width="3" stroke-linecap="round"/>
+    
+    <!-- Vertical separators to suggest columns -->
+    <line x1="50" y1="35" x2="50" y2="105" stroke="#66B3FF" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+    <line x1="78" y1="35" x2="78" y2="105" stroke="#66B3FF" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+    
+    <!-- Graph/Chart overlay (representing data analytics) -->
+    <g transform="translate(20, 115)">
+      <polyline points="0,25 22,15 44,20 66,8 88,12" 
+                fill="none" stroke="#28A745" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Data points -->
+      <circle cx="0" cy="25" r="3" fill="#28A745"/>
+      <circle cx="22" cy="15" r="3" fill="#28A745"/>
+      <circle cx="44" cy="20" r="3" fill="#28A745"/>
+      <circle cx="66" cy="8" r="3" fill="#28A745"/>
+      <circle cx="88" cy="12" r="3" fill="#28A745"/>
+    </g>
+  </g>
+</svg>

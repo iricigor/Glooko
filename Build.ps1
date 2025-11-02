@@ -129,6 +129,13 @@ try {
         Copy-Item -Path $LicensePath -Destination $OutputDir -Force
     }
     
+    # Copy icon file (PNG only, SVG is source)
+    $IconPath = Join-Path $RepoRoot 'assets/icon.png'
+    if (Test-Path $IconPath) {
+        Write-Verbose "Copying icon file..."
+        Copy-Item -Path $IconPath -Destination $OutputDir -Force
+    }
+    
     # Copy and update module manifest with full version
     Write-Verbose "Updating module manifest with version $FullVersion..."
     $ManifestOutput = Join-Path $OutputDir 'Glooko.psd1'
