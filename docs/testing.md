@@ -87,7 +87,10 @@ The test suite covers all public and private functions:
 
 ## Continuous Integration
 
-The repository includes a GitHub Actions workflow that automatically runs Pester tests on every pull request and push to the main/master branch. Test results are displayed directly in the PR checks tab, showing:
+The repository includes GitHub Actions workflows that automatically run tests on every pull request and push to the main/master branch:
+
+### Pester Tests
+Test results are displayed directly in the PR checks tab, showing:
 
 - ✅ Individual test case results with pass/fail status
 - ✅ Detailed test names and execution times
@@ -95,6 +98,40 @@ The repository includes a GitHub Actions workflow that automatically runs Pester
 - ✅ Test artifacts for download
 
 The workflow uses [dorny/test-reporter](https://github.com/dorny/test-reporter) to parse JUnit XML test results and create detailed check runs in GitHub.
+
+### PSScriptAnalyzer
+The repository uses [PSScriptAnalyzer](https://github.com/PowerShell/PSScriptAnalyzer) to ensure code quality and adherence to PowerShell best practices. The analyzer checks for:
+
+- ✅ Security vulnerabilities
+- ✅ Code style issues
+- ✅ Best practice violations
+- ✅ Potential bugs
+
+#### Running PSScriptAnalyzer Locally
+
+```powershell
+# Install PSScriptAnalyzer
+Install-Module -Name PSScriptAnalyzer -Force -SkipPublisherCheck
+
+# Run analyzer on module code only
+.\Analyze.ps1 -Path Public,Private,Glooko.psm1
+
+# Run analyzer on all PowerShell files
+.\Analyze.ps1
+
+# Auto-fix issues where possible
+.\Analyze.ps1 -Fix
+```
+
+#### PSScriptAnalyzer Configuration
+
+The analyzer uses settings defined in `PSScriptAnalyzerSettings.psd1`. Some rules are excluded because they don't apply to this project:
+
+- `PSAvoidTrailingWhitespace` - Handled by editor settings
+- `PSUseSingularNouns` - Plural nouns are intentional (e.g., Merge-GlookoDatasets)
+- `PSAvoidUsingWriteHost` - Write-Host is acceptable for scripts
+- `PSUseBOMForUnicodeEncodedFile` - BOM is not required for UTF-8
+- `PSUseOutputTypeCorrectly` - Dynamic type detection may not be accurate
 
 ## Viewing Test Results
 

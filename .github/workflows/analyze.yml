@@ -1,0 +1,57 @@
+name: PSScriptAnalyzer
+
+on:
+  pull_request:
+    branches: [ main, master ]
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    name: PSScriptAnalyzer Code Quality Check
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup PSScriptAnalyzer
+      shell: pwsh
+      run: |
+        # Install PSScriptAnalyzer if not available
+        if (Get-Module -ListAvailable -Name PSScriptAnalyzer) {
+          Write-Host "PSScriptAnalyzer is already installed"
+        } else {
+          Write-Host "Installing PSScriptAnalyzer"
+          Install-Module -Name PSScriptAnalyzer -Force -SkipPublisherCheck -Scope CurrentUser
+        }
+        
+        Import-Module PSScriptAnalyzer -Force
+        
+        # Display module version
+        Get-Module PSScriptAnalyzer | Select-Object Name, Version
+    
+    - name: Run PSScriptAnalyzer
+      shell: pwsh
+      run: |
+        # Run PSScriptAnalyzer on module code (Public, Private, root module)
+        ./Analyze.ps1 -Path Public,Private,Glooko.psm1
+        
+        # Check exit code
+        if ($LASTEXITCODE -ne 0) {
+          Write-Error "PSScriptAnalyzer found issues"
+          exit $LASTEXITCODE
+        }
+    
+    - name: Run PSScriptAnalyzer on all code
+      if: always()
+      shell: pwsh
+      run: |
+        # Run on all PowerShell files for informational purposes
+        Write-Host "`n=== Running PSScriptAnalyzer on all PowerShell files ===" -ForegroundColor Cyan
+        ./Analyze.ps1

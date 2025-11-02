@@ -90,6 +90,10 @@ For information about the module's organization and components, see [Module Stru
 
 This module includes comprehensive Pester 5.x tests. For detailed testing information, see [Testing](docs/testing.md).
 
+### Code Quality
+
+The module uses [PSScriptAnalyzer](https://github.com/PowerShell/PSScriptAnalyzer) to ensure code quality and adherence to PowerShell best practices. Run `./Analyze.ps1` to check code quality locally.
+
 ### Release Process
 
 For information about publishing releases to the PowerShell Gallery, see [Release Process](docs/release-process.md).

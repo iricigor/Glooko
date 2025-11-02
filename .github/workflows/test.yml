@@ -41,12 +41,21 @@ jobs:
           Install-Module -Name ImportExcel -Force -SkipPublisherCheck -Scope CurrentUser
         }
         
+        # Install PSScriptAnalyzer for code quality checks
+        if (Get-Module -ListAvailable -Name PSScriptAnalyzer) {
+          Write-Host "PSScriptAnalyzer is already installed"
+        } else {
+          Write-Host "Installing PSScriptAnalyzer"
+          Install-Module -Name PSScriptAnalyzer -Force -SkipPublisherCheck -Scope CurrentUser
+        }
+        
         # Import modules
         Import-Module Pester -Force
         Import-Module ImportExcel -Force
+        Import-Module PSScriptAnalyzer -Force
         
         # Display module versions
-        Get-Module Pester, ImportExcel | Select-Object Name, Version
+        Get-Module Pester, ImportExcel, PSScriptAnalyzer | Select-Object Name, Version
     
     - name: Run Pester Tests
       shell: pwsh
@@ -164,12 +173,21 @@ jobs:
           Install-Module -Name ImportExcel -Force -SkipPublisherCheck -Scope CurrentUser
         }
         
+        # Install PSScriptAnalyzer for code quality checks
+        if (Get-Module -ListAvailable -Name PSScriptAnalyzer) {
+          Write-Host "PSScriptAnalyzer is already installed"
+        } else {
+          Write-Host "Installing PSScriptAnalyzer"
+          Install-Module -Name PSScriptAnalyzer -Force -SkipPublisherCheck -Scope CurrentUser
+        }
+        
         # Import modules
         Import-Module Pester -Force
         Import-Module ImportExcel -Force
+        Import-Module PSScriptAnalyzer -Force
         
         # Display module versions
-        Get-Module Pester, ImportExcel | Select-Object Name, Version
+        Get-Module Pester, ImportExcel, PSScriptAnalyzer | Select-Object Name, Version
     
     - name: Run Pester Tests
       shell: pwsh
