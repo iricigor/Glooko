@@ -98,6 +98,10 @@ The module uses [PSScriptAnalyzer](https://github.com/PowerShell/PSScriptAnalyze
 
 For information about publishing releases to the PowerShell Gallery, see [Release Process](docs/release-process.md).
 
+## Changelog
+
+For a detailed list of changes, see the [CHANGELOG.md](CHANGELOG.md) file.
+
 ## License
 
 

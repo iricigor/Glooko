@@ -52,7 +52,7 @@
             # IconUri = ''
 
             # ReleaseNotes of this module
-            ReleaseNotes = 'Version 1.0 - Updated to use major.minor version format. Initial release with Import-GlookoCSV function for CSV processing with first row skipping capability. Released under MIT license.'
+            ReleaseNotes = 'See CHANGELOG.md for detailed release notes: https://github.com/iricigor/Glooko/blob/main/CHANGELOG.md'
         }
     }
 }
