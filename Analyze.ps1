@@ -112,7 +112,7 @@ try {
     }
 
     # Display results
-    if ($allResults) {
+    if ($allResults -and $allResults.Count -gt 0) {
         Write-Host "`nFound $($allResults.Count) issue(s):" -ForegroundColor Yellow
         $allResults | Format-Table -Property Severity, RuleName, ScriptName, Line, Message -AutoSize
 
@@ -131,10 +131,20 @@ try {
         }
 
         # Exit with error if there are errors or warnings
-        $errorGroup = $grouped | Where-Object { $_.Name -eq 'Error' }
-        $warningGroup = $grouped | Where-Object { $_.Name -eq 'Warning' }
-        $errorCount = if ($errorGroup) { $errorGroup.Count } else { 0 }
-        $warningCount = if ($warningGroup) { $warningGroup.Count } else { 0 }
+        $errorCount = 0
+        $warningCount = 0
+        
+        if ($grouped) {
+            $errorGroup = $grouped | Where-Object { $_.Name -eq 'Error' }
+            $warningGroup = $grouped | Where-Object { $_.Name -eq 'Warning' }
+            
+            if ($errorGroup) {
+                $errorCount = $errorGroup.Count
+            }
+            if ($warningGroup) {
+                $warningCount = $warningGroup.Count
+            }
+        }
         
         if ($errorCount -gt 0) {
             Write-Host "`n❌ Analysis failed with $errorCount error(s) and $warningCount warning(s)" -ForegroundColor Red
