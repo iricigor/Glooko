@@ -87,6 +87,58 @@ Describe 'Import-GlookoFolder' {
             # Should still only import the 3 CSV files
             $results | Should -HaveCount 3
         }
+        
+        It 'Should import CSV files recursively from subdirectories' {
+            # Create a test folder with subdirectories
+            $recursiveFolder = 'TestDrive:\recursive_folder'
+            New-Item -Path $recursiveFolder -ItemType Directory -Force | Out-Null
+            
+            # Create CSV in root
+            $rootFile = Join-Path $recursiveFolder 'root.csv'
+            @"
+Root metadata
+Name,Value
+RootData,100
+"@ | Out-File -FilePath $rootFile -Encoding UTF8
+            
+            # Create subdirectory with CSV files
+            $subdir1 = Join-Path $recursiveFolder 'subfolder1'
+            New-Item -Path $subdir1 -ItemType Directory -Force | Out-Null
+            $subFile1 = Join-Path $subdir1 'sub1.csv'
+            @"
+Sub1 metadata
+Name,Value
+Sub1Data,200
+"@ | Out-File -FilePath $subFile1 -Encoding UTF8
+            
+            # Create nested subdirectory with CSV files
+            $subdir2 = Join-Path $subdir1 'nested'
+            New-Item -Path $subdir2 -ItemType Directory -Force | Out-Null
+            $subFile2 = Join-Path $subdir2 'nested.csv'
+            @"
+Nested metadata
+Name,Value
+NestedData,300
+"@ | Out-File -FilePath $subFile2 -Encoding UTF8
+            
+            $results = Import-GlookoFolder -Path $recursiveFolder
+            
+            # Should import all 3 CSV files from root and subdirectories
+            $results | Should -HaveCount 3
+            
+            # Verify each file was imported
+            $rootResult = $results | Where-Object { $_.Metadata.FullName -eq 'root.csv' }
+            $rootResult | Should -Not -BeNullOrEmpty
+            $rootResult.Data[0].Name | Should -Be 'RootData'
+            
+            $sub1Result = $results | Where-Object { $_.Metadata.FullName -eq 'sub1.csv' }
+            $sub1Result | Should -Not -BeNullOrEmpty
+            $sub1Result.Data[0].Name | Should -Be 'Sub1Data'
+            
+            $nestedResult = $results | Where-Object { $_.Metadata.FullName -eq 'nested.csv' }
+            $nestedResult | Should -Not -BeNullOrEmpty
+            $nestedResult.Data[0].Name | Should -Be 'NestedData'
+        }
     }
     
     Context 'Error handling' {
