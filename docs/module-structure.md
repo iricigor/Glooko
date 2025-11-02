@@ -47,6 +47,8 @@ Glooko/
 │       ├── import-glookozip.md
 │       └── export-glookozip-to-xlsx.md
 ├── .github/                    # GitHub automation
+│   ├── scripts/
+│   │   └── Install-TestModules.ps1  # Script to install required test modules
 │   └── workflows/
 │       ├── test.yml            # Continuous integration - Pester tests
 │       └── analyze.yml         # Continuous integration - PSScriptAnalyzer
