@@ -133,16 +133,48 @@ The module uses a major.minor.build version format:
 - Example: `1.0.3` means major version 1, minor version 0, build 3
 
 To release a new minor version:
-1. Update the `ModuleVersion` in `Glooko.psd1` (e.g., from `1.0` to `1.1`)
-2. Update the `ReleaseNotes` in `Glooko.psd1`
+1. Update the `CHANGELOG.md` file:
+   - Move items from `[Unreleased]` section to a new version section
+   - Add the release date
+   - Update version comparison links at the bottom
+2. Update the `ModuleVersion` in `Glooko.psd1` (e.g., from `1.0` to `1.1`)
 3. Commit and push to main
 4. Wait for the build workflow to complete
 5. Run the release workflow
+
+## Maintaining the Changelog
+
+The project uses [CHANGELOG.md](../CHANGELOG.md) following the [Keep a Changelog](https://keepachangelog.com/) format to track all notable changes.
+
+### How to Update the Changelog
+
+When making changes to the codebase:
+
+1. Add your changes under the `[Unreleased]` section in the appropriate category:
+   - **Added** for new features
+   - **Changed** for changes in existing functionality
+   - **Deprecated** for soon-to-be removed features
+   - **Removed** for now removed features
+   - **Fixed** for any bug fixes
+   - **Security** for security-related changes
+
+2. Use clear, concise descriptions that help users understand the impact
+3. Include function names when relevant (e.g., "`Import-GlookoCSV` now supports...")
+
+### When Releasing
+
+Before creating a release:
+
+1. Review all items in the `[Unreleased]` section
+2. Create a new version section with the version number and date
+3. Move all unreleased items to the new version section
+4. Update the comparison links at the bottom of the file
+5. Leave the `[Unreleased]` section empty but ready for future changes
 
 ## Best Practices
 
 1. **Always test first**: Use the dry run option before publishing
 2. **Review the build**: Check the build workflow logs before releasing
-3. **Update release notes**: Ensure the module manifest has current release notes
+3. **Update the changelog**: Ensure CHANGELOG.md is current with all changes for the release
 4. **Communicate**: Update the README or create a GitHub release if needed
 5. **Verify publication**: After releasing, verify the module appears in PowerShell Gallery

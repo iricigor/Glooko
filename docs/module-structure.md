@@ -6,6 +6,7 @@ The Glooko PowerShell module follows a standard modular structure for PowerShell
 Glooko/
 ├── LICENSE                     # MIT License
 ├── README.md                   # Main documentation
+├── CHANGELOG.md                # Detailed release notes
 ├── Glooko.psd1                 # Module manifest
 ├── Glooko.psm1                 # Module loader
 ├── Build.ps1                   # Build script
