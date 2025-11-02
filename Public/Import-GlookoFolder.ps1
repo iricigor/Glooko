@@ -4,7 +4,7 @@ function Import-GlookoFolder {
         Imports all CSV files from a specified folder.
     
     .DESCRIPTION
-        This function imports all CSV files from a folder using Import-GlookoCSV,
+        This function imports all CSV files from a folder and its subdirectories using Import-GlookoCSV,
         returning an array of imported objects with metadata and data from each file.
         
         Files with the same Dataset and OriginalFirstLine metadata values are automatically
@@ -15,7 +15,7 @@ function Import-GlookoFolder {
     
     .EXAMPLE
         Import-GlookoFolder -Path "C:\data\exports"
-        Imports all CSV files from the specified folder.
+        Imports all CSV files from the specified folder and its subdirectories.
     
     .EXAMPLE
         "C:\data\exports" | Import-GlookoFolder
@@ -48,8 +48,8 @@ function Import-GlookoFolder {
         try {
             Write-Verbose "Processing folder: $Path"
             
-            # Get all CSV files in the folder
-            $csvFiles = Get-ChildItem -Path $Path -Filter "*.csv" -File
+            # Get all CSV files in the folder (recursively)
+            $csvFiles = Get-ChildItem -Path $Path -Filter "*.csv" -File -Recurse
             
             if ($csvFiles.Count -eq 0) {
                 Write-Warning "No CSV files found in folder: $Path"
