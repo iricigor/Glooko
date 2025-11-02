@@ -24,7 +24,8 @@ jobs:
       
     - name: Setup PowerShell modules
       shell: pwsh
-      run: ./.github/scripts/Install-TestModules.ps1
+      run: |
+        & "${{ github.workspace }}/.github/scripts/Install-TestModules.ps1"
     
     - name: Run Pester Tests
       shell: pwsh
@@ -125,7 +126,8 @@ jobs:
       
     - name: Setup PowerShell modules
       shell: pwsh
-      run: ./.github/scripts/Install-TestModules.ps1
+      run: |
+        & "${{ github.workspace }}/.github/scripts/Install-TestModules.ps1"
     
     - name: Run Pester Tests
       shell: pwsh
