@@ -15,8 +15,7 @@ Glooko/
 ├── assets/                     # Module assets (icons, images)
 │   ├── README.md               # Asset documentation
 │   ├── icon.svg                # Module icon (SVG source)
-│   ├── icon.png                # Module icon (generated PNG)
-│   └── Generate-Icon.ps1       # Icon generation script
+│   └── icon.png                # Module icon (PNG)
 ├── Public/                     # Public functions (exported)
 │   ├── Import-GlookoCSV.ps1    # Main CSV import function
 │   ├── Import-GlookoFolder.ps1 # Folder import with dataset consolidation
@@ -85,9 +84,8 @@ Functions in the `Private/` folder are internal helper functions used by public 
 
 ### Assets
 The `assets/` folder contains visual resources for the module:
-- **icon.svg** - The source SVG icon file (editable vector graphics)
-- **icon.png** - The generated PNG icon (referenced by the module manifest)
-- **Generate-Icon.ps1** - Script to regenerate the PNG from the SVG source
+- **icon.svg** - The source SVG icon file
+- **icon.png** - The PNG icon file (referenced by the module manifest)
 
 The PNG icon is referenced in the module manifest via the `IconUri` property and is displayed in the PowerShell Gallery.
 
