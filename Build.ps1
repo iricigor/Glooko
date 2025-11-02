@@ -129,6 +129,13 @@ try {
         Copy-Item -Path $LicensePath -Destination $OutputDir -Force
     }
     
+    # Copy CHANGELOG.md file
+    $ChangelogPath = Join-Path $RepoRoot 'CHANGELOG.md'
+    if (Test-Path $ChangelogPath) {
+        Write-Verbose "Copying CHANGELOG.md file..."
+        Copy-Item -Path $ChangelogPath -Destination $OutputDir -Force
+    }
+    
     # Copy and update module manifest with full version
     Write-Verbose "Updating module manifest with version $FullVersion..."
     $ManifestOutput = Join-Path $OutputDir 'Glooko.psd1'
