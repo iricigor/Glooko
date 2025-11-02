@@ -14,7 +14,6 @@ BeforeAll {
 Describe 'PSScriptAnalyzer Tests' {
     
     BeforeAll {
-        $ModuleRoot = Split-Path $PSScriptRoot -Parent
         $SettingsPath = Join-Path $ModuleRoot 'PSScriptAnalyzerSettings.psd1'
         
         # Paths to analyze

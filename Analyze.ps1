@@ -131,10 +131,10 @@ try {
         }
 
         # Exit with error if there are errors or warnings
-        $errors = $allResults | Where-Object { $_.Severity -eq 'Error' }
-        $warnings = $allResults | Where-Object { $_.Severity -eq 'Warning' }
-        $errorCount = if ($errors) { $errors.Count } else { 0 }
-        $warningCount = if ($warnings) { $warnings.Count } else { 0 }
+        $errorGroup = $grouped | Where-Object { $_.Name -eq 'Error' }
+        $warningGroup = $grouped | Where-Object { $_.Name -eq 'Warning' }
+        $errorCount = if ($errorGroup) { $errorGroup.Count } else { 0 }
+        $warningCount = if ($warningGroup) { $warningGroup.Count } else { 0 }
         
         if ($errorCount -gt 0) {
             Write-Host "`n❌ Analysis failed with $errorCount error(s) and $warningCount warning(s)" -ForegroundColor Red
