@@ -20,52 +20,8 @@ param()
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-function Install-ModuleVerbose {
-    <#
-    .SYNOPSIS
-        Installs a PowerShell module with verbose output if not already installed.
-    
-    .PARAMETER Name
-        The name of the module to install.
-    
-    .PARAMETER MinimumVersion
-        Optional minimum version required for the module.
-    #>
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [string]$Name,
-        
-        [Parameter()]
-        [string]$MinimumVersion
-    )
-    
-    $installed = Get-Module -ListAvailable -Name $Name
-    
-    if ($MinimumVersion) {
-        $installed = $installed | Where-Object { $_.Version -ge $MinimumVersion }
-    }
-    
-    if ($installed) {
-        Write-Host "$Name is already installed"
-    } else {
-        $installParams = @{
-            Name = $Name
-            Force = $true
-            SkipPublisherCheck = $true
-            Scope = 'CurrentUser'
-        }
-        
-        if ($MinimumVersion) {
-            Write-Host "Installing $Name $MinimumVersion"
-            $installParams['MinimumVersion'] = $MinimumVersion
-        } else {
-            Write-Host "Installing $Name"
-        }
-        
-        Install-Module @installParams
-    }
-}
+# Dot-source the Install-ModuleVerbose function
+. "$PSScriptRoot/Install-ModuleVerbose.ps1"
 
 # Install required modules
 Install-ModuleVerbose -Name 'Pester' -MinimumVersion '5.0.0'

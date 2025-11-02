@@ -23,14 +23,13 @@ jobs:
     - name: Setup PSScriptAnalyzer
       shell: pwsh
       run: |
-        # Install PSScriptAnalyzer if not available
-        if (Get-Module -ListAvailable -Name PSScriptAnalyzer) {
-          Write-Host "PSScriptAnalyzer is already installed"
-        } else {
-          Write-Host "Installing PSScriptAnalyzer"
-          Install-Module -Name PSScriptAnalyzer -Force -SkipPublisherCheck -Scope CurrentUser
-        }
+        # Dot-source the Install-ModuleVerbose function
+        . "$env:GITHUB_WORKSPACE/.github/scripts/Install-ModuleVerbose.ps1"
         
+        # Install PSScriptAnalyzer
+        Install-ModuleVerbose -Name 'PSScriptAnalyzer'
+        
+        # Import module
         Import-Module PSScriptAnalyzer -Force
         
         # Display module version
