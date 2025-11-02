@@ -20,29 +20,57 @@ param()
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-# Install Pester if not available or update to latest version
-if (Get-Module -ListAvailable -Name Pester | Where-Object {$_.Version -ge '5.0.0'}) {
-    Write-Host "Pester 5.x is already installed"
-} else {
-    Write-Host "Installing Pester 5.x"
-    Install-Module -Name Pester -Force -SkipPublisherCheck -MinimumVersion 5.0.0
+function Install-ModuleVerbose {
+    <#
+    .SYNOPSIS
+        Installs a PowerShell module with verbose output if not already installed.
+    
+    .PARAMETER Name
+        The name of the module to install.
+    
+    .PARAMETER MinimumVersion
+        Optional minimum version required for the module.
+    #>
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$Name,
+        
+        [Parameter()]
+        [string]$MinimumVersion
+    )
+    
+    $installed = Get-Module -ListAvailable -Name $Name
+    
+    if ($MinimumVersion) {
+        $installed = $installed | Where-Object { $_.Version -ge $MinimumVersion }
+    }
+    
+    if ($installed) {
+        Write-Host "$Name is already installed"
+    } else {
+        $installParams = @{
+            Name = $Name
+            Force = $true
+            SkipPublisherCheck = $true
+            Scope = 'CurrentUser'
+        }
+        
+        if ($MinimumVersion) {
+            Write-Host "Installing $Name $MinimumVersion"
+            $installParams['MinimumVersion'] = $MinimumVersion
+        } else {
+            Write-Host "Installing $Name"
+        }
+        
+        Install-Module @installParams
+    }
 }
 
-# Install ImportExcel module for Export-GlookoZipToXlsx tests
-if (Get-Module -ListAvailable -Name ImportExcel) {
-    Write-Host "ImportExcel is already installed"
-} else {
-    Write-Host "Installing ImportExcel"
-    Install-Module -Name ImportExcel -Force -SkipPublisherCheck -Scope CurrentUser
-}
-
-# Install PSScriptAnalyzer for code quality checks
-if (Get-Module -ListAvailable -Name PSScriptAnalyzer) {
-    Write-Host "PSScriptAnalyzer is already installed"
-} else {
-    Write-Host "Installing PSScriptAnalyzer"
-    Install-Module -Name PSScriptAnalyzer -Force -SkipPublisherCheck -Scope CurrentUser
-}
+# Install required modules
+Install-ModuleVerbose -Name 'Pester' -MinimumVersion '5.0.0'
+Install-ModuleVerbose -Name 'ImportExcel'
+Install-ModuleVerbose -Name 'PSScriptAnalyzer'
 
 # Import modules
 Import-Module Pester -Force
