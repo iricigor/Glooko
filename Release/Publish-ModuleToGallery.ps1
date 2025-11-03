@@ -32,6 +32,20 @@ $ErrorActionPreference = 'Stop'
 try {
     Write-Host "Publishing module version $ModuleVersion to PowerShell Gallery..."
     
+    # Check if this version already exists in PowerShell Gallery
+    Write-Host "Checking if version $ModuleVersion already exists in PowerShell Gallery..."
+    try {
+        $existingModule = Find-Module -Name Glooko -RequiredVersion $ModuleVersion -ErrorAction SilentlyContinue
+        if ($existingModule) {
+            Write-Error "Module version $ModuleVersion already exists in PowerShell Gallery. Please increment the version number before publishing."
+            exit 1
+        }
+        Write-Host "Version check passed - version $ModuleVersion does not exist in PowerShell Gallery"
+    } catch {
+        # If Find-Module fails for any reason other than "not found", we should still continue
+        Write-Verbose "Version check completed (module not found in gallery or check failed)"
+    }
+    
     # Publish the module from the Glooko subfolder
     Publish-Module -Path ./BuildOutput/Glooko -NuGetApiKey $NuGetApiKey -Verbose -ErrorAction Stop
     Write-Host "Successfully published module version $ModuleVersion to PowerShell Gallery!" -ForegroundColor Green
