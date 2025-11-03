@@ -7,6 +7,8 @@
 [![Windows Tests](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/iricigor/7d87b86e6e187d46c3d1da7b851e3207/raw/glooko-windows-tests.json)](https://github.com/iricigor/Glooko/actions/workflows/test.yml)
 ![supported-OS](https://img.shields.io/powershellgallery/p/Glooko.svg?style=flat&logo=PowerShell)
 
+> 🎉 **Celebrating 100 Issues!** Thank you to all contributors and users who have helped this project reach this milestone!
+
 The Glooko PowerShell module streamlines the processing and conversion of exported diabetes data from Glooko into user-friendly formats.
 The module or the author are not affiliated to [Glooko.com](https://glooko.com/about/)
 

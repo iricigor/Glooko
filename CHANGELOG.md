@@ -8,11 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-### Changed
-### Deprecated
-### Removed
-### Fixed
-### Security
+- 🎉 Celebrating issue #100! Thank you to all contributors and users who have helped this project reach this milestone!
 
 ## [1.0] - 2024-11-02
 
