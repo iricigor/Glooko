@@ -18,7 +18,7 @@
     CompanyName = 'iricigor'
 
     # Description of the functionality provided by this module
-    Description = 'The Glooko PowerShell module enables tech-savvy users to import, consolidate, and analyze personal diabetes data exported from Glooko, with advanced Excel export and support for PowerShell 7+. Future releases will build on issues like #84 to add static analysis and CGM statistics, but this tool is intended solely for personal data exploration and is not a replacement for professional medical advice.'
+    Description = 'The Glooko PowerShell module enables tech-savvy users to import, consolidate, and analyze personal diabetes data exported from Glooko, with advanced Excel export and support for PowerShell 7+. Future releases will provide static analysis and CGM statistics, but this tool is intended solely for personal data exploration and is not a replacement for professional medical advice.'
 
     # Minimum version of the PowerShell engine required by this module
     PowerShellVersion = '7.0'
@@ -57,3 +57,4 @@
     }
 
 }
+
