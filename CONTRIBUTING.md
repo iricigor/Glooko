@@ -29,31 +29,64 @@ By participating in this project, you are expected to uphold our commitment to a
 
 ### Quick Start Options
 
-1. **GitHub Codespaces** (Recommended for fastest setup): See [Quick Start with GitHub Codespaces](docs/quick-start-codespaces.md)
+#### Option 1: GitHub Codespaces (Recommended for fastest setup)
 
-2. **Local Development**:
-   ```powershell
-   # Clone the repository
-   git clone https://github.com/iricigor/Glooko.git
-   cd Glooko
-   
-   # Install Pester 5.x (if not already installed)
-   Install-Module -Name Pester -MinimumVersion 5.0.0 -Force -SkipPublisherCheck
-   
-   # Import the module
-   Import-Module ./Glooko.psd1 -Force
-   
-   # Verify it loaded
-   Get-Module Glooko
-   ```
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=iricigor/Glooko)
+
+The fastest way to get started:
+
+1. **Click the badge above** or go to the repository and click "Code" → "Create codespace on main"
+2. **Wait for setup** (~2-3 minutes) - PowerShell, Pester, and all tools will be automatically installed
+3. **Start developing** - The module will be pre-loaded and ready to use
+
+**What You Get with Codespaces:**
+- ✅ **PowerShell 7.4** with optimized settings
+- ✅ **Pester 5.x** for testing
+- ✅ **PSScriptAnalyzer** for code quality
+- ✅ **VS Code** with PowerShell extensions
+- ✅ **Pre-configured tasks** for build, test, and analysis
+- ✅ **Debug configurations** ready to use
+- ✅ **Sample data** for testing
+
+**Quick Test in Codespaces:**
+```powershell
+# The module is auto-loaded, try it immediately:
+Import-GlookoCSV -Path "Tests/sample-data.csv" -Verbose
+
+# Run tests
+Test-Module
+
+# Build and validate everything
+Build-Module
+```
+
+#### Option 2: Local Development
+
+```powershell
+# Clone the repository
+git clone https://github.com/iricigor/Glooko.git
+cd Glooko
+
+# Install Pester 5.x (if not already installed)
+Install-Module -Name Pester -MinimumVersion 5.0.0 -Force -SkipPublisherCheck
+
+# Import the module
+Import-Module ./Glooko.psd1 -Force
+
+# Verify it loaded
+Get-Module Glooko
+```
 
 ### Understanding the Codebase
 
 Before making changes, familiarize yourself with:
 
-- [Module Structure](docs/module-structure.md) - Organization and components
+- [Module Structure](docs/module-structure.md) - Module organization and components
 - [Testing Documentation](docs/testing.md) - Testing framework and standards
+- [Release Process](docs/release-process.md) - Publishing to PowerShell Gallery
 - [README.md](README.md) - User-facing documentation
+
+The module uses [PSScriptAnalyzer](https://github.com/PowerShell/PSScriptAnalyzer) to ensure code quality and Pester 5.x for comprehensive testing. All contributions must pass tests and code analysis before being merged.
 
 ## Development Environment
 

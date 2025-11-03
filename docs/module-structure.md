@@ -40,7 +40,6 @@ Glooko/
 │   │   └── New-TestZipFile.ps1
 │   └── Fixtures/               # Test data files
 ├── docs/                       # Additional documentation
-│   ├── quick-start-codespaces.md
 │   ├── alternative-import-methods.md
 │   ├── module-structure.md     # This file
 │   ├── testing.md              # Testing documentation

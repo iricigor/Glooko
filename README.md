@@ -91,15 +91,7 @@ Export-GlookoZipToXlsx -Path "C:\data\export.zip"
 
 ## Contributing
 
-We welcome contributions! This module includes comprehensive documentation for contributors:
-
-- **[Contributing Guide](CONTRIBUTING.md)** - Complete guide for contributing to this project
-- **[Quick Start with GitHub Codespaces](docs/quick-start-codespaces.md)** - Fastest way to get started
-- **[Module Structure](docs/module-structure.md)** - Module organization and components
-- **[Testing](docs/testing.md)** - Testing framework and standards
-- **[Release Process](docs/release-process.md)** - Publishing to PowerShell Gallery
-
-The module uses [PSScriptAnalyzer](https://github.com/PowerShell/PSScriptAnalyzer) to ensure code quality and Pester 5.x for comprehensive testing. All contributions must pass tests and code analysis before being merged.
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for detailed information on how to contribute to this project.
 
 ## Changelog
 
