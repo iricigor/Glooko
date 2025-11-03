@@ -145,20 +145,20 @@ function Get-CategoryFromLabels {
         return 'Removed'
     } elseif ($Title) {
         # Fallback: Use title to determine category if no labels matched
-        # Check for common title prefixes and keywords
-        if ($Title -match '^\s*fix(\(|:|\s)' -or $Title -match '^\s*bug(\(|:|\s)') {
+        # Check for common title prefixes and keywords (case-insensitive)
+        if ($Title -imatch '^\s*fix\b(\(|:|\s)' -or $Title -imatch '^\s*bug\b(\(|:|\s)') {
             return 'Fixed'
-        } elseif ($Title -match '^\s*(feat|feature|add)(\(|:|\s)') {
+        } elseif ($Title -imatch '^\s*(feat|feature|add)\b(\(|:|\s)') {
             return 'Added'
-        } elseif ($Title -match '^\s*(docs?|documentation)(\(|:|\s)') {
+        } elseif ($Title -imatch '^\s*(docs?|documentation)\b(\(|:|\s)') {
             return 'Documentation'
-        } elseif ($Title -match '^\s*security(\(|:|\s)') {
+        } elseif ($Title -imatch '^\s*security\b(\(|:|\s)') {
             return 'Security'
-        } elseif ($Title -match '^\s*(breaking|break)(\(|:|\s)') {
+        } elseif ($Title -imatch '^\s*(breaking|break)\b(\(|:|\s)') {
             return 'Changed'
-        } elseif ($Title -match '^\s*deprecat(e|ed|ing)(\(|:|\s)') {
+        } elseif ($Title -imatch '^\s*deprecat(e|ed|ing)\b(\(|:|\s)') {
             return 'Deprecated'
-        } elseif ($Title -match '^\s*remov(e|ed|ing)(\(|:|\s)') {
+        } elseif ($Title -imatch '^\s*remov(e|ed|ing)\b(\(|:|\s)') {
             return 'Removed'
         } else {
             return 'Changed'

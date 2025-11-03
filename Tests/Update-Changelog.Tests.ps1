@@ -163,6 +163,11 @@ Describe 'Update-Changelog.ps1' {
             $result | Should -Be 'Fixed'
         }
         
+        It 'Get-CategoryFromLabels should categorize by title when labels are empty - FIX prefix (case insensitive)' {
+            $result = Get-CategoryFromLabels -Labels @() -Title 'FIX: resolve issue with X'
+            $result | Should -Be 'Fixed'
+        }
+        
         It 'Get-CategoryFromLabels should categorize by title when labels are empty - feat prefix' {
             $result = Get-CategoryFromLabels -Labels @() -Title 'feat: add new feature'
             $result | Should -Be 'Added'
@@ -171,6 +176,11 @@ Describe 'Update-Changelog.ps1' {
         It 'Get-CategoryFromLabels should categorize by title when labels are empty - Add prefix' {
             $result = Get-CategoryFromLabels -Labels @() -Title 'Add automated changelog generation'
             $result | Should -Be 'Added'
+        }
+        
+        It 'Get-CategoryFromLabels should NOT categorize "addition" as Added (word boundary check)' {
+            $result = Get-CategoryFromLabels -Labels @() -Title 'addition of new items'
+            $result | Should -Be 'Changed'
         }
         
         It 'Get-CategoryFromLabels should categorize by title when labels are empty - docs prefix' {
