@@ -49,7 +49,7 @@
             ProjectUri = 'https://github.com/iricigor/Glooko'
 
             # A URL to an icon representing this module.
-            # IconUri = ''
+            IconUri = 'https://raw.githubusercontent.com/iricigor/Glooko/main/assets/Glooko.ico'
 
             # ReleaseNotes of this module
             ReleaseNotes = 'See CHANGELOG.md for detailed release notes: https://github.com/iricigor/Glooko/blob/main/CHANGELOG.md'
