@@ -180,12 +180,14 @@ function Update-ChangelogFile {
     
     # Generate new changelog sections
     $newSections = @()
+    $latestVersions = @()
     foreach ($majorMinor in ($grouped.Keys | Sort-Object -Descending)) {
         $versionEntries = $grouped[$majorMinor] | Sort-Object { [version]$_.Version } -Descending
         $latestEntry = $versionEntries[0]
+        $latestVersions += $latestEntry.Version
         
         $section = @"
-## [$majorMinor] - $($latestEntry.Date)
+## [$($latestEntry.Version)] - $($latestEntry.Date)
 
 ### Changed
 "@
@@ -204,7 +206,8 @@ function Update-ChangelogFile {
         $newContent = $content -replace $unreleasedPattern, ($Matches[1] + "`n`n" + ($newSections -join "`n`n") + "`n")
         
         # Update comparison links at the bottom
-        $firstVersion = ($grouped.Keys | Sort-Object -Descending | Select-Object -First 1)
+        # Use the latest full version instead of just major.minor
+        $firstVersion = ($latestVersions | Sort-Object -Descending | Select-Object -First 1)
         if ($firstVersion) {
             $linkPattern = "\[Unreleased\]: https://github\.com/.+?/compare/v(.+?)\.\.\.HEAD"
             $newContent = $newContent -replace $linkPattern, "[Unreleased]: https://github.com/$Repository/compare/v$firstVersion...HEAD"
@@ -212,7 +215,7 @@ function Update-ChangelogFile {
             # Add version comparison links
             # Wrap in @() to ensure $versions is always an array, even if empty.
             # This prevents "Count property not found" errors in strict mode.
-            $versions = @($grouped.Keys | Sort-Object -Descending)
+            $versions = @($latestVersions | Sort-Object -Descending)
             for ($i = 0; $i -lt $versions.Count - 1; $i++) {
                 $current = $versions[$i]
                 $previous = $versions[$i + 1]
