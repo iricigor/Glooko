@@ -418,6 +418,8 @@ Example:
 - Error handling in `Import-GlookoCSV` for malformed files
 ```
 
+**Note**: The repository owner can also use the automated "Update Changelog" workflow to generate changelog entries from build workflow runs and their associated pull requests. This is particularly useful before creating a new release to catch up on all changes since the last version.
+
 For more details, see [Release Process](docs/release-process.md).
 
 ## Common Tasks

@@ -1,0 +1,112 @@
+name: Update Changelog
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Perform a dry run without creating PR'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: read
+
+jobs:
+  update-changelog:
+    runs-on: ubuntu-latest
+    name: Update Changelog from Builds
+    
+    # Restrict to repository owner only
+    if: github.actor == 'iricigor'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Update changelog
+      id: update
+      shell: pwsh
+      run: |
+        $params = @{
+          Repository = "${{ github.repository }}"
+          GH_TOKEN = $env:GH_TOKEN
+          Verbose = $true
+        }
+        
+        if ("${{ inputs.dry_run }}" -eq "true") {
+          $params.DryRun = $true
+          Write-Host "Running in DRY RUN mode"
+        }
+        
+        ./Release/Update-Changelog.ps1 @params
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Check for changes
+      if: ${{ !inputs.dry_run }}
+      id: changes
+      run: |
+        if git diff --quiet CHANGELOG.md; then
+          echo "has_changes=false" >> $GITHUB_OUTPUT
+          echo "No changes to CHANGELOG.md"
+        else
+          echo "has_changes=true" >> $GITHUB_OUTPUT
+          echo "CHANGELOG.md has been updated"
+        fi
+    
+    - name: Create Pull Request
+      if: ${{ !inputs.dry_run && steps.changes.outputs.has_changes == 'true' }}
+      uses: peter-evans/create-pull-request@v6
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        commit-message: 'docs: update CHANGELOG.md with recent releases'
+        branch: changelog-update-${{ github.run_number }}
+        delete-branch: true
+        title: 'Update CHANGELOG.md with recent releases'
+        body: |
+          ## Automated Changelog Update
+          
+          This PR updates CHANGELOG.md with entries from recent build workflow runs.
+          
+          The changelog has been automatically generated based on:
+          - Build workflow runs since the last GitHub release
+          - Associated pull requests and their titles
+          - Version information from build artifacts
+          
+          Please review the changes and merge if they look correct.
+          
+          ---
+          
+          *This PR was automatically created by the Update Changelog workflow.*
+        labels: |
+          documentation
+          automated
+    
+    - name: Create summary
+      if: always()
+      shell: pwsh
+      run: |
+        $summary = @"
+        # Changelog Update Summary
+        
+        **Workflow Run:** [${{ github.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+        **Triggered by:** @${{ github.actor }}
+        **Mode:** $(if ("${{ inputs.dry_run }}" -eq "true") { "Dry Run" } else { "Live" })
+        
+        "@
+        
+        if ("${{ steps.changes.outputs.has_changes }}" -eq "true") {
+          $summary += "`n✅ CHANGELOG.md was updated and a PR has been created."
+        } elseif ("${{ inputs.dry_run }}" -eq "true") {
+          $summary += "`n🔍 Dry run completed. Check the logs for proposed changes."
+        } else {
+          $summary += "`nℹ️ No changes were needed to CHANGELOG.md."
+        }
+        
+        $summary | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8

@@ -33,6 +33,7 @@ Glooko/
 │   ├── Merge-GlookoDatasets.Tests.ps1
 │   ├── Build.Tests.ps1         # Module structure validation
 │   ├── PSScriptAnalyzer.Tests.ps1  # Code quality tests
+│   ├── Update-Changelog.Tests.ps1  # Changelog automation tests
 │   ├── Helpers/                # Test helper functions
 │   │   ├── TestHelpers.ps1
 │   │   ├── New-TestCSVFile.ps1
@@ -41,6 +42,7 @@ Glooko/
 │   └── Fixtures/               # Test data files
 ├── docs/                       # Additional documentation
 │   ├── alternative-import-methods.md
+│   ├── automated-changelog.md # Automated changelog updates guide
 │   ├── module-structure.md     # This file
 │   ├── testing.md              # Testing documentation
 │   ├── badge-setup.md          # Badge configuration guide
@@ -56,7 +58,18 @@ Glooko/
 │   │   └── Install-TestModules.ps1    # Script to install required test modules
 │   └── workflows/
 │       ├── test.yml            # Continuous integration - Pester tests
-│       └── analyze.yml         # Continuous integration - PSScriptAnalyzer
+│       ├── analyze.yml         # Continuous integration - PSScriptAnalyzer
+│       ├── build.yml           # Build module artifacts
+│       ├── release.yml         # Release to PowerShell Gallery
+│       └── update-changelog.yml # Automated changelog updates
+├── Release/                    # Release automation scripts
+│   ├── Create-ReleaseArtifact.ps1
+│   ├── Create-ReleaseSummary.ps1
+│   ├── Download-BuildArtifact.ps1
+│   ├── Publish-ModuleDryRun.ps1
+│   ├── Publish-ModuleToGallery.ps1
+│   ├── Update-Changelog.ps1    # Automated changelog generation
+│   └── Verify-BuildArtifact.ps1
 └── .gitignore                  # Git ignore patterns
 ```
 

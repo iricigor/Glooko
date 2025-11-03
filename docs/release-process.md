@@ -13,7 +13,39 @@ Before releasing, ensure:
 
 ## Release Workflow
 
-The release process is automated using the [Release to PowerShell Gallery workflow](../.github/workflows/release.yml).
+The release process is automated using two workflows:
+
+1. [Update Changelog workflow](../.github/workflows/update-changelog.yml) - Automatically generates changelog entries from builds
+2. [Release to PowerShell Gallery workflow](../.github/workflows/release.yml) - Publishes the module
+
+### Two-Stage Release Process
+
+The recommended release process has two stages:
+
+#### Stage 1: Update Changelog (Automated)
+
+Before releasing, run the "Update Changelog" workflow to automatically generate changelog entries:
+
+1. Navigate to the [Actions tab](https://github.com/iricigor/Glooko/actions)
+2. Select the "Update Changelog" workflow
+3. Click "Run workflow"
+4. Choose whether to do a dry run:
+   - **Dry run checked**: Shows what would be added without creating a PR
+   - **Dry run unchecked**: Creates a PR with changelog updates
+
+The workflow will:
+- Query GitHub API for the latest release
+- Find all build workflow runs with SemVer changes after that release
+- Map each build to its associated pull request
+- Extract PR titles for changelog entries
+- Generate changelog entries in the format: "version - change"
+- Create a pull request with the updated CHANGELOG.md
+
+**Review and merge the PR** before proceeding to Stage 2.
+
+#### Stage 2: Release to PowerShell Gallery
+
+After the changelog is updated, proceed with the release workflow as described below.
 
 ### Triggering a Release
 
@@ -146,7 +178,30 @@ To release a new minor version:
 
 The project uses [CHANGELOG.md](../CHANGELOG.md) following the [Keep a Changelog](https://keepachangelog.com/) format to track all notable changes.
 
-### How to Update the Changelog
+### Automated Changelog Updates (Recommended)
+
+The "Update Changelog" workflow can automatically generate changelog entries from build workflow runs and their associated pull requests.
+
+**When to use:**
+- Before creating a new release
+- When you want to quickly catch up on changes since the last release
+
+**How it works:**
+1. Queries GitHub API for the latest release
+2. Finds all successful build workflow runs since that release
+3. Extracts version information from build artifacts
+4. Maps builds to their associated pull requests
+5. Generates changelog entries with PR titles and links
+6. Groups entries by major.minor version
+7. Creates a pull request with the updated CHANGELOG.md
+
+**To use:**
+1. Navigate to Actions → "Update Changelog" workflow
+2. Click "Run workflow"
+3. Choose dry run if you want to preview changes first
+4. Review the generated PR and merge it
+
+### Manual Changelog Updates
 
 When making changes to the codebase:
 

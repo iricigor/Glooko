@@ -85,6 +85,13 @@ The test suite covers all public and private functions:
   - ✅ Function export verification
   - ✅ Required module dependencies
 
+- **Update-Changelog.Tests.ps1** - Changelog automation tests
+  - ✅ Script validation and syntax checking
+  - ✅ Function definitions verification
+  - ✅ Helper function logic tests
+  - ✅ Error handling verification
+  - ✅ DryRun functionality tests
+
 ## Continuous Integration
 
 The repository includes GitHub Actions workflows that automatically run tests on every pull request and push to the main/master branch:
