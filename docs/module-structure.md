@@ -6,6 +6,7 @@ The Glooko PowerShell module follows a standard modular structure for PowerShell
 Glooko/
 ├── LICENSE                     # MIT License
 ├── README.md                   # Main documentation
+├── CONTRIBUTING.md             # Contribution guidelines
 ├── CHANGELOG.md                # Detailed release notes
 ├── Glooko.psd1                 # Module manifest
 ├── Glooko.psm1                 # Module loader
@@ -39,11 +40,11 @@ Glooko/
 │   │   └── New-TestZipFile.ps1
 │   └── Fixtures/               # Test data files
 ├── docs/                       # Additional documentation
-│   ├── quick-start-codespaces.md
 │   ├── alternative-import-methods.md
 │   ├── module-structure.md     # This file
 │   ├── testing.md              # Testing documentation
 │   ├── badge-setup.md          # Badge configuration guide
+│   ├── release-process.md      # Release and publishing guide
 │   └── functions/              # Function documentation
 │       ├── import-glookocsv.md
 │       ├── import-glookofolder.md
