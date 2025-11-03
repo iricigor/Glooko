@@ -81,7 +81,7 @@ function Get-BuildsSinceRelease {
     Write-Host "Found $($relevantBuilds.Count) build runs since last release"
     
     # Use Write-Output -NoEnumerate to prevent PowerShell from unwrapping empty arrays to $null
-    Write-Output -NoEnumerate $relevantBuilds
+    Write-Output -NoEnumerate -InputObject $relevantBuilds
 }
 
 function Get-BuildVersion {
