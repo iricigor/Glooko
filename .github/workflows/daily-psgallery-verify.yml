@@ -1,0 +1,210 @@
+name: Daily PowerShell Gallery Verification
+
+on:
+  schedule:
+    # Run daily at 06:00 UTC (4 hours after build test)
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-psgallery-linux:
+    runs-on: ubuntu-latest
+    name: Verify PS Gallery Install on Linux
+    
+    steps:
+    - name: Install module from PowerShell Gallery
+      shell: pwsh
+      run: |
+        Write-Host "Installing Glooko module from PowerShell Gallery..."
+        Install-Module -Name Glooko -Force -Scope CurrentUser -AllowClobber
+        
+        $module = Get-Module -Name Glooko -ListAvailable | Select-Object -First 1
+        if (-not $module) {
+          Write-Error "Failed to install module from PowerShell Gallery"
+          exit 1
+        }
+        
+        Write-Host "✓ Module installed successfully"
+        Write-Host "Version: $($module.Version)"
+        Write-Host "Path: $($module.ModuleBase)"
+        
+        # Set version for badge
+        "MODULE_VERSION=$($module.Version)" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+    
+    - name: Import and verify module
+      shell: pwsh
+      run: |
+        Write-Host "Importing Glooko module..."
+        Import-Module -Name Glooko -Force
+        
+        $module = Get-Module -Name Glooko
+        if (-not $module) {
+          Write-Error "Failed to import module"
+          exit 1
+        }
+        
+        Write-Host "✓ Module imported successfully"
+        Write-Host "Exported Functions:"
+        $module.ExportedFunctions.Keys | Sort-Object | ForEach-Object {
+          Write-Host "  - $_"
+        }
+        
+        # Count functions for verification
+        $functionCount = $module.ExportedFunctions.Count
+        "FUNCTION_COUNT=$functionCount" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        
+        if ($functionCount -eq 0) {
+          Write-Error "No functions exported from module"
+          exit 1
+        }
+        
+        Write-Host "`n✓ $functionCount functions exported"
+    
+    - name: Test core functionality
+      shell: pwsh
+      run: |
+        Write-Host "Testing core module functionality..."
+        
+        # Create test CSV file
+        $testCsvPath = Join-Path ([System.IO.Path]::GetTempPath()) "test-glooko.csv"
+        $csvContent = @'
+        Metadata row to skip
+        Column1,Column2,Column3
+        Value1,Value2,Value3
+        Value4,Value5,Value6
+        '@
+        $csvContent | Out-File -FilePath $testCsvPath -Encoding utf8
+        
+        Write-Host "Test CSV created at: $testCsvPath"
+        
+        # Test Import-GlookoCSV
+        try {
+          Write-Host "`nTesting Import-GlookoCSV..."
+          $result = Import-GlookoCSV -Path $testCsvPath
+          
+          if ($result.Data.Count -ne 2) {
+            Write-Error "Expected 2 data rows, got $($result.Data.Count)"
+            exit 1
+          }
+          
+          if ($result.Data[0].Column1 -ne 'Value1') {
+            Write-Error "Expected 'Value1', got '$($result.Data[0].Column1)'"
+            exit 1
+          }
+          
+          Write-Host "✓ Import-GlookoCSV works correctly"
+        }
+        catch {
+          Write-Error "Import-GlookoCSV test failed: $_"
+          exit 1
+        }
+        finally {
+          Remove-Item -Path $testCsvPath -ErrorAction SilentlyContinue
+        }
+        
+        Write-Host "`n✓ All core functionality tests passed"
+    
+    - name: Update PS Gallery verification badge
+      uses: schneegans/dynamic-badges-action@v1.7.0
+      if: always()
+      with:
+        auth: ${{ secrets.GIST_TOKEN }}
+        gistID: 7d87b86e6e187d46c3d1da7b851e3207
+        filename: glooko-psgallery-verify.json
+        label: PS Gallery
+        message: v${{ env.MODULE_VERSION }} verified
+        color: ${{ job.status == 'success' && 'success' || 'critical' }}
+
+  verify-psgallery-windows:
+    runs-on: windows-latest
+    name: Verify PS Gallery Install on Windows
+    
+    steps:
+    - name: Install module from PowerShell Gallery
+      shell: pwsh
+      run: |
+        Write-Host "Installing Glooko module from PowerShell Gallery..."
+        Install-Module -Name Glooko -Force -Scope CurrentUser -AllowClobber
+        
+        $module = Get-Module -Name Glooko -ListAvailable | Select-Object -First 1
+        if (-not $module) {
+          Write-Error "Failed to install module from PowerShell Gallery"
+          exit 1
+        }
+        
+        Write-Host "✓ Module installed successfully"
+        Write-Host "Version: $($module.Version)"
+        Write-Host "Path: $($module.ModuleBase)"
+    
+    - name: Import and verify module
+      shell: pwsh
+      run: |
+        Write-Host "Importing Glooko module..."
+        Import-Module -Name Glooko -Force
+        
+        $module = Get-Module -Name Glooko
+        if (-not $module) {
+          Write-Error "Failed to import module"
+          exit 1
+        }
+        
+        Write-Host "✓ Module imported successfully"
+        Write-Host "Exported Functions:"
+        $module.ExportedFunctions.Keys | Sort-Object | ForEach-Object {
+          Write-Host "  - $_"
+        }
+        
+        $functionCount = $module.ExportedFunctions.Count
+        if ($functionCount -eq 0) {
+          Write-Error "No functions exported from module"
+          exit 1
+        }
+        
+        Write-Host "`n✓ $functionCount functions exported"
+    
+    - name: Test core functionality
+      shell: pwsh
+      run: |
+        Write-Host "Testing core module functionality..."
+        
+        # Create test CSV file
+        $testCsvPath = Join-Path ([System.IO.Path]::GetTempPath()) "test-glooko.csv"
+        $csvContent = @'
+        Metadata row to skip
+        Column1,Column2,Column3
+        Value1,Value2,Value3
+        Value4,Value5,Value6
+        '@
+        $csvContent | Out-File -FilePath $testCsvPath -Encoding utf8
+        
+        Write-Host "Test CSV created at: $testCsvPath"
+        
+        # Test Import-GlookoCSV
+        try {
+          Write-Host "`nTesting Import-GlookoCSV..."
+          $result = Import-GlookoCSV -Path $testCsvPath
+          
+          if ($result.Data.Count -ne 2) {
+            Write-Error "Expected 2 data rows, got $($result.Data.Count)"
+            exit 1
+          }
+          
+          if ($result.Data[0].Column1 -ne 'Value1') {
+            Write-Error "Expected 'Value1', got '$($result.Data[0].Column1)'"
+            exit 1
+          }
+          
+          Write-Host "✓ Import-GlookoCSV works correctly"
+        }
+        catch {
+          Write-Error "Import-GlookoCSV test failed: $_"
+          exit 1
+        }
+        finally {
+          Remove-Item -Path $testCsvPath -ErrorAction SilentlyContinue
+        }
+        
+        Write-Host "`n✓ All core functionality tests passed"
