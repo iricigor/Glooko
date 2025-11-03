@@ -12,7 +12,8 @@ The module or the author are not affiliated to [Glooko.com](https://glooko.com/a
 
 It provides robust import functions for Glooko CSV files, zipped data sets, and entire folders, consolidating and parsing metadata to simplify analysis for technically inclined users.
 The module includes advanced export capabilities to generate detailed Excel summaries with separate worksheets for each dataset. 
-Internal helper functions ensure accurate merging and transformation of data, while a comprehensive test suite and code analysis maintain reliability across Windows, Linux, and macOS. Designed for PowerShell 7+, this module is ideal for personal data exploration and custom analytics by tech-savvy individuals.
+Internal helper functions ensure accurate merging and transformation of data, while a comprehensive test suite and code analysis maintain reliability across Windows, Linux, and macOS.
+Designed for PowerShell 7+, this module is ideal for personal data exploration and custom analytics by tech-savvy individuals.
 
 Looking ahead, future versions will build upon ongoing work to provide static analysis of imported data—including advanced CGM (Continuous Glucose Monitoring) statistics.
 This will enable automated quality checks, anomaly detection, and more insightful glucose metrics, further enhancing the analytical capabilities of the module.
@@ -118,5 +119,6 @@ For a detailed list of changes, see the [CHANGELOG.md](CHANGELOG.md) file.
 
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
 
 
