@@ -13,6 +13,8 @@ Glooko/
 ├── Analyze.ps1                 # PSScriptAnalyzer runner
 ├── PesterConfig.ps1            # Pester configuration for code coverage
 ├── PSScriptAnalyzerSettings.psd1  # PSScriptAnalyzer configuration
+├── assets/                     # Module assets
+│   └── Glooko.ico              # Module icon
 ├── Public/                     # Public functions (exported)
 │   ├── Import-GlookoCSV.ps1    # Main CSV import function
 │   ├── Import-GlookoFolder.ps1 # Folder import with dataset consolidation
