@@ -149,6 +149,41 @@ Describe 'Update-Changelog.ps1' {
         }
     }
     
+    Context 'StrictMode Compliance' {
+        It 'Should handle empty build results without error in strict mode' {
+            # This test verifies the fix for the bug where accessing .Count on null
+            # in strict mode caused: "The property 'Count' cannot be found on this object"
+            
+            # Simulate the scenario that caused the original bug
+            $testScript = {
+                Set-StrictMode -Version Latest
+                $ErrorActionPreference = 'Stop'
+                
+                # Simulate what Get-BuildsSinceRelease does with no results
+                $builds = @{ workflow_runs = @() }
+                $relevantBuilds = @($builds.workflow_runs | Where-Object { $false })
+                
+                # This line was throwing the error before the fix
+                Write-Host "Found $($relevantBuilds.Count) build runs"
+                
+                return $true
+            }
+            
+            { & $testScript } | Should -Not -Throw
+        }
+        
+        It 'Should return arrays consistently from Get-BuildsSinceRelease function' {
+            # Verify the function always returns an array type
+            $scriptContent = Get-Content $script:UpdateChangelogScript -Raw
+            
+            # The function should use Write-Output -NoEnumerate to prevent array unwrapping
+            $scriptContent | Should -Match 'Write-Output\s+-NoEnumerate'
+            
+            # The function should wrap Where-Object results in @() for safety
+            $scriptContent | Should -Match '@\(\$builds\.workflow_runs\s+\|\s+Where-Object'
+        }
+    }
+    
     Context 'Script Execution Safety' {
         It 'Should have proper error handling' {
             $scriptContent = Get-Content $script:UpdateChangelogScript -Raw

@@ -73,13 +73,15 @@ function Get-BuildsSinceRelease {
     Write-Verbose "Fetching successful build workflow runs since $SinceDate..."
     $builds = gh api "/repos/$Repo/actions/workflows/build.yml/runs?status=success&per_page=100" | ConvertFrom-Json
     
-    $relevantBuilds = $builds.workflow_runs | Where-Object {
+    $relevantBuilds = @($builds.workflow_runs | Where-Object {
         $runDate = [datetime]::Parse($_.created_at)
         $runDate -gt $SinceDate
-    }
+    })
     
     Write-Host "Found $($relevantBuilds.Count) build runs since last release"
-    return $relevantBuilds
+    
+    # Use Write-Output -NoEnumerate to prevent PowerShell from unwrapping empty arrays to $null
+    Write-Output -NoEnumerate -InputObject $relevantBuilds
 }
 
 function Get-BuildVersion {
