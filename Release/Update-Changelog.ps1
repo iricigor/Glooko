@@ -29,13 +29,13 @@
     Shows what would be added to the changelog without making changes
 #>
 
-[CmdletBinding()]
+[CmdletBinding(SupportsShouldProcess)]
 param(
     [Parameter(Mandatory)]
     [string]$Repository,
 
     [Parameter(Mandatory)]
-    [string]$GH_TOKEN,
+    [string]$GH_TOKEN,  # Used as environment variable for gh CLI commands throughout the script
 
     [Parameter()]
     [switch]$DryRun,
@@ -46,6 +46,9 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+
+# Set GH_TOKEN as environment variable for gh CLI
+$env:GH_TOKEN = $GH_TOKEN
 
 function Get-LatestRelease {
     param([string]$Repo)
@@ -154,6 +157,7 @@ function Group-ByMajorMinor {
 }
 
 function Update-ChangelogFile {
+    [CmdletBinding(SupportsShouldProcess)]
     param(
         [string]$ChangelogPath,
         [array]$NewEntries,

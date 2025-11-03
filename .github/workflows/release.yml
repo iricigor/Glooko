@@ -31,6 +31,13 @@ jobs:
       with:
         fetch-depth: 0
     
+    - name: Check changelog status
+      shell: pwsh
+      run: |
+        Write-Host "ℹ️ Note: Consider running the 'Update Changelog' workflow first to ensure CHANGELOG.md is up to date."
+        Write-Host "This workflow does not automatically update the changelog."
+        Write-Host ""
+    
     - name: Download build artifact
       shell: pwsh
       run: |
