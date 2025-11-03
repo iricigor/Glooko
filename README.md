@@ -89,27 +89,17 @@ Export-GlookoZipToXlsx -Path "C:\data\export.zip"
 # - Each dataset in a separate worksheet
 ```
 
-## Development
+## Contributing
 
-### 🚀 Quick Start
+We welcome contributions! This module includes comprehensive documentation for contributors:
 
-For the fastest way to get started, see the [Quick Start with GitHub Codespaces](docs/quick-start-codespaces.md) guide.
+- **[Contributing Guide](CONTRIBUTING.md)** - Complete guide for contributing to this project
+- **[Quick Start with GitHub Codespaces](docs/quick-start-codespaces.md)** - Fastest way to get started
+- **[Module Structure](docs/module-structure.md)** - Module organization and components
+- **[Testing](docs/testing.md)** - Testing framework and standards
+- **[Release Process](docs/release-process.md)** - Publishing to PowerShell Gallery
 
-### Module Structure
-
-For information about the module's organization and components, see [Module Structure](docs/module-structure.md).
-
-### Testing
-
-This module includes comprehensive Pester 5.x tests. For detailed testing information, see [Testing](docs/testing.md).
-
-### Code Quality
-
-The module uses [PSScriptAnalyzer](https://github.com/PowerShell/PSScriptAnalyzer) to ensure code quality and adherence to PowerShell best practices. Run `./Analyze.ps1` to check code quality locally.
-
-### Release Process
-
-For information about publishing releases to the PowerShell Gallery, see [Release Process](docs/release-process.md).
+The module uses [PSScriptAnalyzer](https://github.com/PowerShell/PSScriptAnalyzer) to ensure code quality and Pester 5.x for comprehensive testing. All contributions must pass tests and code analysis before being merged.
 
 ## Changelog
 
