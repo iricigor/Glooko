@@ -41,8 +41,9 @@ Describe 'Update-Changelog.ps1' {
     
     Context 'Function Definitions' {
         BeforeAll {
-            # Dot-source the script to load functions (in a safe way for testing)
-            # Note: We'll mock the actual execution parts
+            # Note: We extract function definitions using regex for validation purposes only.
+            # This is acceptable in tests as we're only checking that functions are defined,
+            # not executing or parsing complex logic.
             $scriptContent = Get-Content $script:UpdateChangelogScript -Raw
             
             # Extract just the function definitions for testing
@@ -88,7 +89,12 @@ Describe 'Update-Changelog.ps1' {
     
     Context 'Helper Functions Logic' {
         BeforeAll {
-            # Create a test context by loading the function definitions
+            # Note: We use Invoke-Expression here in a controlled test environment
+            # to extract and test specific helper functions in isolation.
+            # The input is from a trusted source (our own script file) and the 
+            # regex pattern ensures we only execute function definitions.
+            # This approach is acceptable in tests for validating function logic
+            # without requiring the full script execution context.
             $scriptContent = Get-Content $script:UpdateChangelogScript -Raw
             
             # Extract and execute only the Format-ChangelogEntry function for testing
