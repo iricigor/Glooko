@@ -66,18 +66,47 @@ After the PR is created:
 Each version gets an entry like:
 
 ```markdown
-## [1.0] - 2024-11-03
+## [1.1.5] - 2024-11-03
 
-### Changed
+### Added
 - Add Import-GlookoFolder function ([#99](https://github.com/iricigor/Glooko/pull/99))
+- Add new configuration option ([#100](https://github.com/iricigor/Glooko/pull/100))
+
+### Fixed
 - Fix error handling in Import-GlookoCSV ([#98](https://github.com/iricigor/Glooko/pull/98))
+
+### Documentation
+- Update README with new examples ([#101](https://github.com/iricigor/Glooko/pull/101))
 ```
+
+### Automatic Categorization
+
+Changelog entries are automatically categorized based on PR labels:
+
+- **Added** - PRs with labels: `feature`, `enhancement`, `new-feature`
+- **Changed** - PRs with labels: `breaking-change`, `breaking`, or no matching labels (default)
+- **Fixed** - PRs with labels: `bug`, `fix`, `bugfix`
+- **Security** - PRs with labels: `security`
+- **Deprecated** - PRs with labels: `deprecated`
+- **Removed** - PRs with labels: `removed`
+- **Documentation** - PRs with labels: `documentation`, `docs`
+
+**Label priority**: If a PR has multiple labels, the categorization follows this priority order:
+1. Bug/Fix labels → Fixed
+2. Feature/Enhancement labels → Added
+3. Documentation labels → Documentation
+4. Security labels → Security
+5. Breaking change labels → Changed
+6. Deprecated labels → Deprecated
+7. Removed labels → Removed
+8. No matching labels → Changed (default)
 
 ### Grouping by Version
 
 - Entries are grouped by major.minor version
 - Multiple builds with the same major.minor are listed together
 - Versions are sorted in descending order (newest first)
+- Within each version, entries are organized by category following the [Keep a Changelog](https://keepachangelog.com/) format
 
 ### Links
 
@@ -102,12 +131,16 @@ The workflow:
    - Parses the version number from the artifact name
 4. **Maps commits to PRs**
    - Uses GitHub API to find PRs associated with each commit
-   - Extracts PR number, title, and URL
-5. **Generates changelog entries**
+   - Extracts PR number, title, URL, and labels
+5. **Categorizes entries**
+   - Automatically categorizes based on PR labels
+   - Applies priority rules when multiple labels exist
+6. **Generates changelog entries**
    - Groups by major.minor version
+   - Organizes entries by category within each version
    - Formats with date and PR links
    - Updates comparison links
-6. **Creates a PR** with the changes (unless dry run)
+7. **Creates a PR** with the changes (unless dry run)
 
 ### Version Detection
 
@@ -127,24 +160,28 @@ If no PR is found, the entry will still be created but without a PR link.
 
 ## Customization
 
+### Using Labels for Categorization
+
+To ensure your PRs are categorized correctly in the changelog:
+
+1. **Add appropriate labels to your PRs** before merging
+2. Use standard labels like `bug`, `feature`, `enhancement`, `documentation`, etc.
+3. The changelog will automatically categorize entries based on these labels
+
+**Best practices:**
+- Use `bug` or `fix` for bug fixes
+- Use `feature` or `enhancement` for new features
+- Use `documentation` for documentation changes
+- Use `security` for security-related changes
+- Use `breaking-change` for breaking changes
+
 ### Manual Editing
 
 After the PR is created, you can manually edit the CHANGELOG.md file in the PR to:
 - Adjust entry descriptions
 - Add more context
 - Reorganize entries
-- Add sections (Added, Fixed, Security, etc.)
-
-### Categorization
-
-By default, all entries go under "### Changed". You may want to manually categorize them:
-
-- **Added** - New features
-- **Changed** - Changes in existing functionality
-- **Fixed** - Bug fixes
-- **Security** - Security-related changes
-- **Deprecated** - Soon-to-be removed features
-- **Removed** - Removed features
+- Move entries to different categories if needed
 
 ## Troubleshooting
 
@@ -198,15 +235,15 @@ See [Release Process](release-process.md) for complete details.
 - Only processes builds from the last 100 workflow runs
 - Requires builds to have properly named artifacts
 - PR mapping depends on commits being associated with PRs
-- Does not automatically categorize changes (all go under "Changed")
+- Categorization depends on PRs having appropriate labels
 
 ## Future Enhancements
 
 Potential improvements for the future:
-- Automatic categorization based on PR labels
 - Support for multiple PR associations per version
-- Better handling of breaking changes
+- Better handling of breaking changes with special formatting
 - Integration with GitHub Releases notes
+- More sophisticated label mapping and customization
 
 ## Related Documentation
 

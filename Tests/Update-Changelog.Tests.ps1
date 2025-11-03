@@ -81,6 +81,11 @@ Describe 'Update-Changelog.ps1' {
             $scriptContent | Should -Match 'function Group-ByMajorMinor'
         }
         
+        It 'Should define Get-CategoryFromLabels function' {
+            $scriptContent = Get-Content $script:UpdateChangelogScript -Raw
+            $scriptContent | Should -Match 'function Get-CategoryFromLabels'
+        }
+        
         It 'Should define Update-ChangelogFile function' {
             $scriptContent = Get-Content $script:UpdateChangelogScript -Raw
             $scriptContent | Should -Match 'function Update-ChangelogFile'
@@ -97,6 +102,11 @@ Describe 'Update-Changelog.ps1' {
             # without requiring the full script execution context.
             $scriptContent = Get-Content $script:UpdateChangelogScript -Raw
             
+            # Extract and execute the Get-CategoryFromLabels function
+            if ($scriptContent -match '(function Get-CategoryFromLabels\s*\{(?:[^{}]|(?<open>\{)|(?<-open>\}))+(?(open)(?!))\})') {
+                Invoke-Expression $Matches[1]
+            }
+            
             # Extract and execute only the Format-ChangelogEntry function for testing
             if ($scriptContent -match '(function Format-ChangelogEntry\s*\{(?:[^{}]|(?<open>\{)|(?<-open>\}))+(?(open)(?!))\})') {
                 Invoke-Expression $Matches[1]
@@ -106,6 +116,41 @@ Describe 'Update-Changelog.ps1' {
             if ($scriptContent -match '(function Group-ByMajorMinor\s*\{(?:[^{}]|(?<open>\{)|(?<-open>\}))+(?(open)(?!))\})') {
                 Invoke-Expression $Matches[1]
             }
+        }
+        
+        It 'Get-CategoryFromLabels should categorize bug labels as Fixed' {
+            $result = Get-CategoryFromLabels -Labels @('bug', 'other')
+            $result | Should -Be 'Fixed'
+        }
+        
+        It 'Get-CategoryFromLabels should categorize feature labels as Added' {
+            $result = Get-CategoryFromLabels -Labels @('feature')
+            $result | Should -Be 'Added'
+        }
+        
+        It 'Get-CategoryFromLabels should categorize enhancement labels as Added' {
+            $result = Get-CategoryFromLabels -Labels @('enhancement')
+            $result | Should -Be 'Added'
+        }
+        
+        It 'Get-CategoryFromLabels should categorize documentation labels as Documentation' {
+            $result = Get-CategoryFromLabels -Labels @('documentation')
+            $result | Should -Be 'Documentation'
+        }
+        
+        It 'Get-CategoryFromLabels should categorize security labels as Security' {
+            $result = Get-CategoryFromLabels -Labels @('security')
+            $result | Should -Be 'Security'
+        }
+        
+        It 'Get-CategoryFromLabels should default to Changed for unknown labels' {
+            $result = Get-CategoryFromLabels -Labels @('something-else')
+            $result | Should -Be 'Changed'
+        }
+        
+        It 'Get-CategoryFromLabels should default to Changed for empty labels' {
+            $result = Get-CategoryFromLabels -Labels @()
+            $result | Should -Be 'Changed'
         }
         
         It 'Format-ChangelogEntry should format entry correctly with PR' {
@@ -121,6 +166,31 @@ Describe 'Update-Changelog.ps1' {
             $result.Date | Should -Be '2024-11-03'
             $result.Title | Should -Be 'Test PR Title'
             $result.PRLink | Should -Match '\[#123\]'
+        }
+        
+        It 'Format-ChangelogEntry should include category with PR labels' {
+            $pr = @{
+                number = 123
+                title = 'Test PR Title'
+                html_url = 'https://github.com/test/repo/pull/123'
+                labels = @('bug')
+            }
+            
+            $result = Format-ChangelogEntry -Version '1.0.1' -Date '2024-11-03T10:00:00Z' -PR $pr
+            
+            $result.Category | Should -Be 'Fixed'
+        }
+        
+        It 'Format-ChangelogEntry should default category to Changed without labels' {
+            $pr = @{
+                number = 123
+                title = 'Test PR Title'
+                html_url = 'https://github.com/test/repo/pull/123'
+            }
+            
+            $result = Format-ChangelogEntry -Version '1.0.1' -Date '2024-11-03T10:00:00Z' -PR $pr
+            
+            $result.Category | Should -Be 'Changed'
         }
         
         It 'Format-ChangelogEntry should handle missing PR' {
@@ -146,6 +216,92 @@ Describe 'Update-Changelog.ps1' {
             $result.ContainsKey('1.1') | Should -Be $true
             $result['1.0'].Count | Should -Be 2
             $result['1.1'].Count | Should -Be 2
+        }
+    }
+    
+    Context 'Category Grouping' {
+        BeforeAll {
+            # Create a temporary test changelog
+            $script:TestDrive = Join-Path ([System.IO.Path]::GetTempPath()) "PesterTest-$(New-Guid)"
+            New-Item -Path $script:TestDrive -ItemType Directory -Force | Out-Null
+            $script:TestChangelog = Join-Path $script:TestDrive "CHANGELOG.md"
+            
+            $initialContent = @"
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+## [Unreleased]
+
+### Added
+### Changed
+
+## [1.0] - 2024-11-02
+
+### Added
+- Initial release
+
+[Unreleased]: https://github.com/iricigor/Glooko/compare/v1.0...HEAD
+[1.0]: https://github.com/iricigor/Glooko/releases/tag/v1.0
+"@
+            Set-Content -Path $script:TestChangelog -Value $initialContent
+            
+            # Set repository for tests
+            $script:Repository = 'iricigor/Glooko'
+            
+            # Extract and execute the Update-ChangelogFile function
+            $scriptContent = Get-Content $script:UpdateChangelogScript -Raw
+            if ($scriptContent -match '(function Update-ChangelogFile\s*\{(?:[^{}]|(?<open>\{)|(?<-open>\}))+(?(open)(?!))\})') {
+                Invoke-Expression $Matches[1]
+            }
+            if ($scriptContent -match '(function Group-ByMajorMinor\s*\{(?:[^{}]|(?<open>\{)|(?<-open>\}))+(?(open)(?!))\})') {
+                Invoke-Expression $Matches[1]
+            }
+        }
+        
+        AfterAll {
+            if (Test-Path $script:TestDrive) {
+                Remove-Item $script:TestDrive -Recurse -Force
+            }
+        }
+        
+        It 'Should group changelog entries by category' {
+            $entries = @(
+                @{ Version = '1.0.1'; Date = '2025-11-03'; Title = 'Add new feature'; PRLink = ' ([#101](https://example.com))'; Category = 'Added' }
+                @{ Version = '1.0.2'; Date = '2025-11-03'; Title = 'Fix bug'; PRLink = ' ([#102](https://example.com))'; Category = 'Fixed' }
+                @{ Version = '1.0.3'; Date = '2025-11-03'; Title = 'Update docs'; PRLink = ' ([#103](https://example.com))'; Category = 'Documentation' }
+            )
+            
+            $result = Update-ChangelogFile -ChangelogPath $script:TestChangelog -NewEntries $entries
+            
+            # Should have separate category sections
+            $result | Should -Match '### Added'
+            $result | Should -Match '### Fixed'
+            $result | Should -Match '### Documentation'
+            
+            # Should have entries under correct categories
+            $result | Should -Match '### Added\s+- Add new feature'
+            $result | Should -Match '### Fixed\s+- Fix bug'
+            $result | Should -Match '### Documentation\s+- Update docs'
+        }
+        
+        It 'Should maintain category order: Added, Changed, Fixed, etc.' {
+            $entries = @(
+                @{ Version = '1.0.1'; Date = '2025-11-03'; Title = 'Fix something'; PRLink = ''; Category = 'Fixed' }
+                @{ Version = '1.0.2'; Date = '2025-11-03'; Title = 'Add feature'; PRLink = ''; Category = 'Added' }
+                @{ Version = '1.0.3'; Date = '2025-11-03'; Title = 'Change behavior'; PRLink = ''; Category = 'Changed' }
+            )
+            
+            $result = Update-ChangelogFile -ChangelogPath $script:TestChangelog -NewEntries $entries
+            
+            # Find positions of each category
+            $addedPos = $result.IndexOf('### Added')
+            $changedPos = $result.IndexOf('### Changed')
+            $fixedPos = $result.IndexOf('### Fixed')
+            
+            # Added should come before Changed, which should come before Fixed
+            $addedPos | Should -BeLessThan $changedPos
+            $changedPos | Should -BeLessThan $fixedPos
         }
     }
     
