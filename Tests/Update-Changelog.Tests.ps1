@@ -267,9 +267,9 @@ All notable changes to this project will be documented in this file.
         
         It 'Should group changelog entries by category' {
             $entries = @(
-                @{ Version = '1.0.1'; Date = '2025-11-03'; Title = 'Add new feature'; PRLink = ' ([#101](https://example.com))'; Category = 'Added' }
-                @{ Version = '1.0.2'; Date = '2025-11-03'; Title = 'Fix bug'; PRLink = ' ([#102](https://example.com))'; Category = 'Fixed' }
-                @{ Version = '1.0.3'; Date = '2025-11-03'; Title = 'Update docs'; PRLink = ' ([#103](https://example.com))'; Category = 'Documentation' }
+                @{ Version = '1.0.1'; Date = '2024-11-03'; Title = 'Add new feature'; PRLink = ' ([#101](https://example.com))'; Category = 'Added' }
+                @{ Version = '1.0.2'; Date = '2024-11-03'; Title = 'Fix bug'; PRLink = ' ([#102](https://example.com))'; Category = 'Fixed' }
+                @{ Version = '1.0.3'; Date = '2024-11-03'; Title = 'Update docs'; PRLink = ' ([#103](https://example.com))'; Category = 'Documentation' }
             )
             
             $result = Update-ChangelogFile -ChangelogPath $script:TestChangelog -NewEntries $entries
@@ -287,9 +287,9 @@ All notable changes to this project will be documented in this file.
         
         It 'Should maintain category order: Added, Changed, Fixed, etc.' {
             $entries = @(
-                @{ Version = '1.0.1'; Date = '2025-11-03'; Title = 'Fix something'; PRLink = ''; Category = 'Fixed' }
-                @{ Version = '1.0.2'; Date = '2025-11-03'; Title = 'Add feature'; PRLink = ''; Category = 'Added' }
-                @{ Version = '1.0.3'; Date = '2025-11-03'; Title = 'Change behavior'; PRLink = ''; Category = 'Changed' }
+                @{ Version = '1.0.1'; Date = '2024-11-03'; Title = 'Fix something'; PRLink = ''; Category = 'Fixed' }
+                @{ Version = '1.0.2'; Date = '2024-11-03'; Title = 'Add feature'; PRLink = ''; Category = 'Added' }
+                @{ Version = '1.0.3'; Date = '2024-11-03'; Title = 'Change behavior'; PRLink = ''; Category = 'Changed' }
             )
             
             $result = Update-ChangelogFile -ChangelogPath $script:TestChangelog -NewEntries $entries

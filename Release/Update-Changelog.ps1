@@ -127,7 +127,7 @@ function Get-CategoryFromLabels {
     )
     
     # Map labels to changelog categories
-    # Priority order: bug/fix -> feature/enhancement -> documentation -> other
+    # Priority order: bug/fix -> feature/enhancement -> documentation -> security -> breaking-change -> deprecated -> removed -> default (Changed)
     if ($Labels -contains 'bug' -or $Labels -contains 'fix' -or $Labels -contains 'bugfix') {
         return 'Fixed'
     } elseif ($Labels -contains 'feature' -or $Labels -contains 'enhancement' -or $Labels -contains 'new-feature') {
