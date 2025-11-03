@@ -176,6 +176,9 @@ All notable changes to this project will be documented in this file.
 "@
             Set-Content -Path $script:TestChangelog -Value $initialContent
             
+            # Set repository for tests
+            $script:Repository = 'iricigor/Glooko'
+            
             # Extract and execute the Update-ChangelogFile function
             $scriptContent = Get-Content $script:UpdateChangelogScript -Raw
             if ($scriptContent -match '(function Update-ChangelogFile\s*\{(?:[^{}]|(?<open>\{)|(?<-open>\}))+(?(open)(?!))\})') {
@@ -199,7 +202,6 @@ All notable changes to this project will be documented in this file.
                 @{ Version = '1.0.16'; Date = '2025-11-03'; Title = 'Yet another fix'; PRLink = ' ([#109](https://example.com))' }
             )
             
-            $script:Repository = 'iricigor/Glooko'
             $result = Update-ChangelogFile -ChangelogPath $script:TestChangelog -NewEntries $entries
             
             # The header should use the latest full version (1.0.16), not just the major.minor (1.0)
@@ -213,7 +215,6 @@ All notable changes to this project will be documented in this file.
                 @{ Version = '1.0.15'; Date = '2025-11-03'; Title = 'Fix two'; PRLink = ' ([#108](https://example.com))' }
             )
             
-            $script:Repository = 'iricigor/Glooko'
             $result = Update-ChangelogFile -ChangelogPath $script:TestChangelog -NewEntries $entries
             
             # Links should reference full versions
