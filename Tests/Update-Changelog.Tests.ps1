@@ -149,6 +149,80 @@ Describe 'Update-Changelog.ps1' {
         }
     }
     
+    Context 'Changelog Header Version Format' {
+        BeforeAll {
+            # Create a temporary test changelog
+            $script:TestDrive = Join-Path ([System.IO.Path]::GetTempPath()) "PesterTest-$(New-Guid)"
+            New-Item -Path $script:TestDrive -ItemType Directory -Force | Out-Null
+            $script:TestChangelog = Join-Path $script:TestDrive "CHANGELOG.md"
+            
+            $initialContent = @"
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+## [Unreleased]
+
+### Added
+### Changed
+
+## [1.0] - 2024-11-02
+
+### Added
+- Initial release
+
+[Unreleased]: https://github.com/iricigor/Glooko/compare/v1.0...HEAD
+[1.0]: https://github.com/iricigor/Glooko/releases/tag/v1.0
+"@
+            Set-Content -Path $script:TestChangelog -Value $initialContent
+            
+            # Set repository for tests
+            $script:Repository = 'iricigor/Glooko'
+            
+            # Extract and execute the Update-ChangelogFile function
+            $scriptContent = Get-Content $script:UpdateChangelogScript -Raw
+            if ($scriptContent -match '(function Update-ChangelogFile\s*\{(?:[^{}]|(?<open>\{)|(?<-open>\}))+(?(open)(?!))\})') {
+                Invoke-Expression $Matches[1]
+            }
+            if ($scriptContent -match '(function Group-ByMajorMinor\s*\{(?:[^{}]|(?<open>\{)|(?<-open>\}))+(?(open)(?!))\})') {
+                Invoke-Expression $Matches[1]
+            }
+        }
+        
+        AfterAll {
+            if (Test-Path $script:TestDrive) {
+                Remove-Item $script:TestDrive -Recurse -Force
+            }
+        }
+        
+        It 'Should use full version number in changelog header, not just major.minor' {
+            $entries = @(
+                @{ Version = '1.0.14'; Date = '2025-11-03'; Title = 'Fix Update-Changelog.ps1'; PRLink = ' ([#107](https://example.com))' }
+                @{ Version = '1.0.15'; Date = '2025-11-03'; Title = 'Another fix'; PRLink = ' ([#108](https://example.com))' }
+                @{ Version = '1.0.16'; Date = '2025-11-03'; Title = 'Yet another fix'; PRLink = ' ([#109](https://example.com))' }
+            )
+            
+            $result = Update-ChangelogFile -ChangelogPath $script:TestChangelog -NewEntries $entries
+            
+            # The header should use the latest full version (1.0.16), not just the major.minor (1.0)
+            $result | Should -Match '## \[1\.0\.16\] - 2025-11-03'
+            $result | Should -Not -Match '## \[1\.0\] - 2025-11-03'
+        }
+        
+        It 'Should update version comparison links with full version numbers' {
+            $entries = @(
+                @{ Version = '1.0.14'; Date = '2025-11-03'; Title = 'Fix one'; PRLink = ' ([#107](https://example.com))' }
+                @{ Version = '1.0.15'; Date = '2025-11-03'; Title = 'Fix two'; PRLink = ' ([#108](https://example.com))' }
+            )
+            
+            $result = Update-ChangelogFile -ChangelogPath $script:TestChangelog -NewEntries $entries
+            
+            # Links should reference full versions
+            $result | Should -Match '\[Unreleased\]: https://github\.com/iricigor/Glooko/compare/v1\.0\.15\.\.\.HEAD'
+            $result | Should -Match '\[1\.0\.15\]: https://github\.com/iricigor/Glooko/releases/tag/v1\.0\.15'
+        }
+    }
+    
     Context 'StrictMode Compliance' {
         It 'Should handle empty build results without error in strict mode' {
             # This test verifies the fix for the bug where accessing .Count on null
