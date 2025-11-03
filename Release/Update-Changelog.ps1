@@ -147,7 +147,8 @@ function Group-ByMajorMinor {
     
     foreach ($entry in $Entries) {
         # Match both two-part (e.g., 1.0) and three-part (e.g., 1.0.14) versions
-        if ($entry.Version -match '^(\d+\.\d+)(?:\.|$)') {
+        # Regex: ^(\d+\.\d+) captures major.minor, followed by optional patch number
+        if ($entry.Version -match '^(\d+\.\d+)(?:\.\d+)?$') {
             $majorMinor = $Matches[1]
             if (-not $grouped.ContainsKey($majorMinor)) {
                 $grouped[$majorMinor] = @()
@@ -209,6 +210,8 @@ function Update-ChangelogFile {
             $newContent = $newContent -replace $linkPattern, "[Unreleased]: https://github.com/$Repository/compare/v$firstVersion...HEAD"
             
             # Add version comparison links
+            # Wrap in @() to ensure $versions is always an array, even if empty.
+            # This prevents "Count property not found" errors in strict mode.
             $versions = @($grouped.Keys | Sort-Object -Descending)
             for ($i = 0; $i -lt $versions.Count - 1; $i++) {
                 $current = $versions[$i]
