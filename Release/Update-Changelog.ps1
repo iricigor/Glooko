@@ -113,11 +113,37 @@ function Get-PRForCommit {
     
     Write-Verbose "Finding PR for commit $CommitSha..."
     try {
-        $prs = gh api "/repos/$Repo/commits/$CommitSha/pulls" --jq '.[0] | {number, title, merged_at, html_url}' | ConvertFrom-Json
+        $prs = gh api "/repos/$Repo/commits/$CommitSha/pulls" --jq '.[0] | {number, title, merged_at, html_url, labels: [.labels[].name]}' | ConvertFrom-Json
         return $prs
     } catch {
         Write-Verbose "No PR found for commit $CommitSha"
         return $null
+    }
+}
+
+function Get-CategoryFromLabels {
+    param(
+        [array]$Labels
+    )
+    
+    # Map labels to changelog categories
+    # Priority order: bug/fix -> feature/enhancement -> documentation -> security -> breaking-change -> deprecated -> removed -> default (Changed)
+    if ($Labels -contains 'bug' -or $Labels -contains 'fix' -or $Labels -contains 'bugfix') {
+        return 'Fixed'
+    } elseif ($Labels -contains 'feature' -or $Labels -contains 'enhancement' -or $Labels -contains 'new-feature') {
+        return 'Added'
+    } elseif ($Labels -contains 'documentation' -or $Labels -contains 'docs') {
+        return 'Documentation'
+    } elseif ($Labels -contains 'security') {
+        return 'Security'
+    } elseif ($Labels -contains 'breaking-change' -or $Labels -contains 'breaking') {
+        return 'Changed'
+    } elseif ($Labels -contains 'deprecated') {
+        return 'Deprecated'
+    } elseif ($Labels -contains 'removed') {
+        return 'Removed'
+    } else {
+        return 'Changed'
     }
 }
 
@@ -132,11 +158,18 @@ function Format-ChangelogEntry {
     $prLink = if ($PR) { " ([#$($PR.number)]($($PR.html_url)))" } else { "" }
     $prTitle = if ($PR) { $PR.title } else { "Build $Version" }
     
+    # Determine category from PR labels
+    $category = 'Changed'  # Default category
+    if ($PR -and $PR.labels) {
+        $category = Get-CategoryFromLabels -Labels $PR.labels
+    }
+    
     return @{
         Version = $Version
         Date = $formattedDate
         Title = $prTitle
         PRLink = $prLink
+        Category = $category
     }
 }
 
@@ -186,15 +219,34 @@ function Update-ChangelogFile {
         $latestEntry = $versionEntries[0]
         $latestVersions += $latestEntry.Version
         
-        $section = @"
-## [$($latestEntry.Version)] - $($latestEntry.Date)
-
-### Changed
-"@
+        # Start the version section
+        $section = "## [$($latestEntry.Version)] - $($latestEntry.Date)`n"
         
+        # Group entries by category
+        $categorized = @{}
         foreach ($entry in $versionEntries) {
-            $section += "`n- $($entry.Title)$($entry.PRLink)"
+            $category = if ($entry.Category) { $entry.Category } else { 'Changed' }
+            if (-not $categorized.ContainsKey($category)) {
+                $categorized[$category] = @()
+            }
+            $categorized[$category] += $entry
         }
+        
+        # Define the order of categories to maintain consistency with Keep a Changelog format
+        $categoryOrder = @('Added', 'Changed', 'Deprecated', 'Removed', 'Fixed', 'Security', 'Documentation')
+        
+        # Add entries for each category in order
+        foreach ($category in $categoryOrder) {
+            if ($categorized.ContainsKey($category)) {
+                $section += "`n### $category`n"
+                foreach ($entry in $categorized[$category]) {
+                    $section += "- $($entry.Title)$($entry.PRLink)`n"
+                }
+            }
+        }
+        
+        # Remove trailing newline
+        $section = $section.TrimEnd("`n")
         
         $newSections += $section
     }
