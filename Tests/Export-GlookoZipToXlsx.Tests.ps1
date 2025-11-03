@@ -273,6 +273,23 @@ Describe 'Export-GlookoZipToXlsx' {
             $result | Should -Not -BeNullOrEmpty
             Test-Path $result.FullName | Should -Be $true
         }
+        
+        It 'Should not show excessive ImportExcel verbose output' {
+            # Remove ImportExcel module if loaded to test fresh import behavior
+            Remove-Module ImportExcel -Force -ErrorAction SilentlyContinue
+            
+            # Capture verbose output (stream 4)
+            $verboseOutput = Export-GlookoZipToXlsx -Path $Script:TestZipFiles.SingleFileZip -Verbose 4>&1
+            
+            # Count verbose messages that look like ImportExcel function exports/imports
+            $importExcelFunctionMessages = $verboseOutput | Where-Object { 
+                $_ -like "*Exporting function*" -or $_ -like "*Importing function*" 
+            } | Measure-Object | Select-Object -ExpandProperty Count
+            
+            # Should have very few (ideally 0) ImportExcel function export/import messages
+            # A couple of module loading messages from PowerShell infrastructure are acceptable
+            $importExcelFunctionMessages | Should -BeLessThan 10
+        }
     }
     
     Context 'Worksheet naming' {

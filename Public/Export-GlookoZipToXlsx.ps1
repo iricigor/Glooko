@@ -96,7 +96,7 @@ For more information, visit: https://github.com/dfinke/ImportExcel
         
         # Import the ImportExcel module if not already loaded
         if (-not $importExcelLoaded) {
-            Import-Module ImportExcel -ErrorAction Stop
+            Import-Module ImportExcel -ErrorAction Stop -Verbose:$false
             Write-Verbose "ImportExcel module loaded successfully"
         } else {
             Write-Verbose "ImportExcel module already loaded"
