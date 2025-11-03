@@ -136,6 +136,14 @@ try {
         Copy-Item -Path $ChangelogPath -Destination $OutputDir -Force
     }
     
+    # Copy assets folder
+    $AssetsDir = Join-Path $RepoRoot 'assets'
+    $OutAssetsDir = Join-Path $OutputDir 'assets'
+    if (Test-Path $AssetsDir) {
+        Write-Verbose "Copying assets folder..."
+        Copy-Item -Path $AssetsDir -Destination $OutAssetsDir -Recurse -Force
+    }
+    
     # Copy and update module manifest with full version
     Write-Verbose "Updating module manifest with version $FullVersion..."
     $ManifestOutput = Join-Path $OutputDir 'Glooko.psd1'
