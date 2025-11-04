@@ -76,6 +76,23 @@ This module provides the following functions:
 - **`Import-GlookoZip`** - Imports data from a Glooko zip file by extracting and processing CSV files, see [detailed documentation](docs/functions/import-glookozip.md).
 - **`Export-GlookoZipToXlsx`** - Converts a Glooko zip file to an Excel (XLSX) file with a Summary worksheet as the first tab, followed by each dataset in a separate worksheet, see [detailed documentation](docs/functions/export-glookozip-to-xlsx.md).
 
+### Getting Help
+
+All functions include comprehensive help documentation. Use PowerShell's built-in help system:
+
+```powershell
+# View basic help
+Get-Help Import-GlookoCSV
+
+# View examples
+Get-Help Import-GlookoCSV -Examples
+
+# View detailed help
+Get-Help Import-GlookoCSV -Full
+```
+
+For information about help file generation, see [Help Generation Documentation](docs/help-generation.md).
+
 ### Quick Example
 
 ```powershell

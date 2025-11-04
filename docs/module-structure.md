@@ -11,11 +11,14 @@ Glooko/
 ├── Glooko.psd1                 # Module manifest
 ├── Glooko.psm1                 # Module loader
 ├── Build.ps1                   # Build script
+├── Build-Help.ps1              # Help file generation script
 ├── Analyze.ps1                 # PSScriptAnalyzer runner
 ├── PesterConfig.ps1            # Pester configuration for code coverage
 ├── PSScriptAnalyzerSettings.psd1  # PSScriptAnalyzer configuration
 ├── assets/                     # Module assets
 │   └── Glooko.ico              # Module icon
+├── en-US/                      # XML help files
+│   └── Glooko-help.xml         # External MAML help for all exported functions
 ├── Public/                     # Public functions (exported)
 │   ├── Import-GlookoCSV.ps1    # Main CSV import function
 │   ├── Import-GlookoFolder.ps1 # Folder import with dataset consolidation
@@ -43,15 +46,21 @@ Glooko/
 ├── docs/                       # Additional documentation
 │   ├── alternative-import-methods.md
 │   ├── automated-changelog.md # Automated changelog updates guide
+│   ├── help-generation.md      # Help file generation guide
 │   ├── module-structure.md     # This file
 │   ├── testing.md              # Testing documentation
 │   ├── badge-setup.md          # Badge configuration guide
 │   ├── release-process.md      # Release and publishing guide
-│   └── functions/              # Function documentation
-│       ├── import-glookocsv.md
-│       ├── import-glookofolder.md
-│       ├── import-glookozip.md
-│       └── export-glookozip-to-xlsx.md
+│   ├── functions/              # Function documentation
+│   │   ├── import-glookocsv.md
+│   │   ├── import-glookofolder.md
+│   │   ├── import-glookozip.md
+│   │   └── export-glookozip-to-xlsx.md
+│   └── help/                   # platyPS markdown help files
+│       ├── Import-GlookoCSV.md
+│       ├── Import-GlookoFolder.md
+│       ├── Import-GlookoZip.md
+│       └── Export-GlookoZipToXlsx.md
 ├── .github/                    # GitHub automation
 │   ├── scripts/
 │   │   ├── Install-ModuleVerbose.ps1  # Reusable function to install PowerShell modules
@@ -94,6 +103,14 @@ Functions in the `Public/` folder are automatically exported and available to us
 
 ### Private Functions
 Functions in the `Private/` folder are internal helper functions used by public functions but not exported to users.
+
+### Help Files
+The module includes XML help files for all exported functions:
+- **en-US/Glooko-help.xml** - External MAML help file that provides comprehensive help accessible via `Get-Help`
+- **docs/help/** - platyPS-formatted markdown files generated from comment-based help
+- **Build-Help.ps1** - Script to regenerate help files from comment-based help using platyPS
+
+For more information about help file generation and maintenance, see [Help Generation Documentation](help-generation.md).
 
 ### Tests
 The module uses Pester 5.x for comprehensive testing, with test files organized alongside the code they test.
