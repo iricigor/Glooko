@@ -2,6 +2,15 @@
 
 This document describes how to release the Glooko PowerShell module to the PowerShell Gallery.
 
+## Quick Reference: Correct Release Order
+
+⚠️ **Important: Follow this order to avoid changelog synchronization issues**
+
+1. **Update Changelog**: Run "Update Changelog" workflow → Review PR → **Merge to main**
+2. **Release Module**: Run "Release to PowerShell Gallery" workflow → Creates GitHub release with changelog
+
+**Why this order?** The Release workflow creates a GitHub release that references the CHANGELOG.md from main. Merging the changelog PR first ensures the GitHub release includes the changelog content. See [Alternative Workflow Considerations](#alternative-workflow-considerations) for details.
+
 ## Prerequisites
 
 Before releasing, ensure:
@@ -41,11 +50,17 @@ The workflow will:
 - Generate changelog entries in the format: "version - change"
 - Create a pull request with the updated CHANGELOG.md
 
-**Review and merge the PR** before proceeding to Stage 2.
+**⚠️ IMPORTANT: Review and merge the changelog PR BEFORE proceeding to Stage 2.**
+
+**Why this order matters:**
+- The Release workflow (Stage 2) creates a GitHub release that references the CHANGELOG.md content from the main branch
+- If you release before merging the changelog PR, the GitHub release will not include the changelog entries
+- This creates a synchronization issue where PS Gallery has the new version but the GitHub release lacks proper changelog documentation
+- Future improvement: Issue [#115](https://github.com/iricigor/Glooko/issues/115) proposes adding validation to prevent releasing without an updated changelog
 
 #### Stage 2: Release to PowerShell Gallery
 
-After the changelog is updated, proceed with the release workflow as described below.
+After the changelog PR is merged to main, proceed with the release workflow as described below.
 
 ### Triggering a Release
 
@@ -226,10 +241,47 @@ Before creating a release:
 4. Update the comparison links at the bottom of the file
 5. Leave the `[Unreleased]` section empty but ready for future changes
 
+## Alternative Workflow Considerations
+
+### Why Not: Prepare Changelog → Release → Merge Changelog?
+
+You might consider this alternative workflow:
+1. Prepare changelog update (create PR but don't merge)
+2. Release the module to PS Gallery
+3. Merge the changelog PR
+
+**This workflow is NOT recommended** because:
+
+- **GitHub Release Synchronization**: The Release workflow creates a GitHub release that references the CHANGELOG.md from the main branch. If the changelog PR isn't merged first, the GitHub release will be created without the changelog content, creating a documentation gap.
+- **Release Artifacts**: The GitHub release artifact and PowerShell Gallery package would be published before the changelog documents them, creating a timing mismatch.
+- **Rollback Complexity**: If the release fails, you'd need to decide whether to merge or close the changelog PR, creating additional coordination overhead.
+
+**Recommended Workflow Instead:**
+1. Run "Update Changelog" workflow to create PR
+2. Review and merge the changelog PR to main
+3. Run "Release to PowerShell Gallery" workflow
+4. The release workflow will create a GitHub release that includes the merged changelog content
+
+This ensures that:
+- ✅ PS Gallery publication and GitHub release happen together
+- ✅ GitHub release references the correct changelog content
+- ✅ All documentation is synchronized at release time
+- ✅ Future validation (issue #115) can verify changelog is ready
+
+### Future Improvements
+
+**Issue [#115](https://github.com/iricigor/Glooko/issues/115)** proposes adding validation to the Release workflow to check that CHANGELOG.md contains a header for the version being released. This would:
+- Prevent accidental releases without updated changelog
+- Provide early feedback if changelog update was forgotten
+- Reduce the risk of synchronization issues
+
+Once implemented, this validation will make the recommended workflow even more robust.
+
 ## Best Practices
 
 1. **Always test first**: Use the dry run option before publishing
 2. **Review the build**: Check the build workflow logs before releasing
-3. **Update the changelog**: Ensure CHANGELOG.md is current with all changes for the release
-4. **Communicate**: Update the README or create a GitHub release if needed
-5. **Verify publication**: After releasing, verify the module appears in PowerShell Gallery
+3. **Update the changelog FIRST**: Always merge changelog updates before releasing
+4. **Follow the two-stage process**: Use the "Update Changelog" workflow, merge the PR, then use the "Release" workflow
+5. **Communicate**: Update the README or create a GitHub release if needed
+6. **Verify publication**: After releasing, verify the module appears in PowerShell Gallery
