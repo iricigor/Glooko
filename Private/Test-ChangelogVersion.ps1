@@ -44,7 +44,14 @@ function Test-ChangelogVersion {
         # The pattern matches: ## [version] followed by optional whitespace and dash
         $pattern = "^##\s+\[$([regex]::Escape($Version))\]\s*-"
         
-        $found = $content -match $pattern -or ($content -split "`n" | Where-Object { $_ -match $pattern }).Count -gt 0
+        # Check if pattern matches in the content
+        if ($content -match $pattern) {
+            $found = $true
+        } else {
+            # Check line by line
+            $matchingLines = @($content -split "`n" | Where-Object { $_ -match $pattern })
+            $found = $matchingLines.Count -gt 0
+        }
         
         if ($found) {
             Write-Verbose "Found version $Version in changelog"

@@ -7,7 +7,8 @@ $PesterConfig.Run.Path = @(
     'Tests/Build.Tests.ps1',
     'Tests/Publish-ModuleDryRun.Tests.ps1',
     'Tests/Publish-ModuleToGallery.Tests.ps1',
-    'Tests/Update-Changelog.Tests.ps1'
+    'Tests/Update-Changelog.Tests.ps1',
+    'Tests/Test-ChangelogVersion.Tests.ps1'
 )
 
 $PesterConfig.TestResult.Enabled = $true
