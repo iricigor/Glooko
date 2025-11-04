@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Documentation
-- Clarify release process order to prevent changelog/release synchronization issues
+- Clarify release process order: prepare changelog PR → release to PS Gallery → merge changelog PR (prevents version mismatch due to auto-incrementing builds)
 
 ## [1.0.25] - 2025-11-04
 
