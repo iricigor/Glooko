@@ -73,6 +73,21 @@ Describe 'Test-ChangelogVersion' {
             $result | Should -Be $true
         }
         
+        It 'Should return true when version header has no date' {
+            $changelogContent = @'
+# Changelog
+
+## [1.0.25]
+
+### Added
+- Some feature
+'@
+            Set-Content -Path $script:TestChangelogPath -Value $changelogContent
+            
+            $result = Test-ChangelogVersion -Version '1.0.25' -ChangelogPath $script:TestChangelogPath
+            $result | Should -Be $true
+        }
+        
         It 'Should return true for two-part version numbers' {
             $changelogContent = @'
 # Changelog

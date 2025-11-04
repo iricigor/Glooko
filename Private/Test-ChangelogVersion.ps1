@@ -40,18 +40,12 @@ function Test-ChangelogVersion {
     try {
         $content = Get-Content $ChangelogPath -Raw
         
-        # Look for version header in format: ## [1.0.25] - 2025-11-04
-        # The pattern matches: ## [version] followed by optional whitespace and dash
-        $pattern = "^##\s+\[$([regex]::Escape($Version))\]\s*-"
+        # Look for version header in format: ## [1.0.25] or ## [1.0.25] - 2025-11-04
+        # The pattern matches: ## [version] optionally followed by whitespace, dash, and date
+        # Using multiline mode to match line starts in the full content
+        $pattern = "(?m)^##\s+\[$([regex]::Escape($Version))\](\s*-.*)?$"
         
-        # Check if pattern matches in the content
-        if ($content -match $pattern) {
-            $found = $true
-        } else {
-            # Check line by line
-            $matchingLines = @($content -split "`n" | Where-Object { $_ -match $pattern })
-            $found = $matchingLines.Count -gt 0
-        }
+        $found = $content -match $pattern
         
         if ($found) {
             Write-Verbose "Found version $Version in changelog"
