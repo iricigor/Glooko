@@ -59,11 +59,14 @@ function Merge-GlookoDatasets {
             
             Write-Verbose "Merged total of $($mergedData.Count) data rows"
             
-            # Return consolidated object
-            [PSCustomObject]@{
+            # Return consolidated object with custom type
+            $result = [PSCustomObject]@{
                 Metadata = $baseMetadata
                 Data     = $mergedData
             }
+            $result.PSObject.TypeNames.Insert(0, 'Glooko.Dataset')
+            
+            $result
         }
     }
     
