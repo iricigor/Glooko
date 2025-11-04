@@ -20,6 +20,10 @@ The workflow requires a Personal Access Token (PAT) with permission to create pu
 
 **Setting up the CHANGELOG_PAT secret:**
 
+For detailed step-by-step instructions, see [Setting Up CHANGELOG_PAT](setup-changelog-pat.md).
+
+**Quick setup:**
+
 1. **Create a Personal Access Token** (classic or fine-grained):
    - Go to [GitHub Settings → Developer settings → Personal access tokens](https://github.com/settings/tokens)
    - For **classic tokens**: Grant `repo` scope (full control of private repositories)
@@ -214,7 +218,7 @@ After the PR is created, you can manually edit the CHANGELOG.md file in the PR t
 
 **Cause:** The workflow is using the default `GITHUB_TOKEN` which doesn't have permission to create pull requests.
 
-**Solution:** Configure the `CHANGELOG_PAT` secret as described in the [Prerequisites](#required-secret-changelog_pat) section above.
+**Solution:** Configure the `CHANGELOG_PAT` secret as described in the [Prerequisites](#required-secret-changelog_pat) section above. For detailed instructions, see [Setting Up CHANGELOG_PAT](setup-changelog-pat.md).
 
 **Workaround:** If you cannot create a PAT immediately:
 1. The workflow will still update CHANGELOG.md and push the branch
