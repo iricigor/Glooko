@@ -1,0 +1,78 @@
+name: Run Other Tests (Build, Publishing, Utilities)
+
+on:
+  pull_request:
+    branches: [ main, master ]
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: read
+  checks: write
+  pull-requests: write
+
+jobs:
+  test-other-linux:
+    runs-on: ubuntu-latest
+    name: Test Other on Linux-PowerShell7
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup PowerShell modules
+      shell: pwsh
+      run: |
+        & "$env:GITHUB_WORKSPACE/.github/scripts/Install-TestModules.ps1"
+    
+    - name: Run Other Tests
+      shell: pwsh
+      run: |
+        # Change to the repository root
+        Set-Location $env:GITHUB_WORKSPACE
+        
+        # Run tests using the PesterConfig.Other.ps1
+        ./PesterConfig.Other.ps1
+        
+        # Check if tests passed
+        if ($LASTEXITCODE -ne 0) {
+          Write-Error "Tests failed with exit code $LASTEXITCODE"
+          exit $LASTEXITCODE
+        }
+    
+    - name: Extract Test Statistics
+      shell: pwsh
+      run: |
+        if (Test-Path "Tests/TestResults.xml") {
+          [xml]$results = Get-Content "Tests/TestResults.xml"
+          $total = [int]$results.testsuites.tests
+          $failures = [int]$results.testsuites.failures
+          $errors = [int]$results.testsuites.errors
+          $passed = $total - $failures - $errors
+          
+          Write-Host "::notice::Other Tests (Linux): $passed/$total passed"
+          
+          # Set outputs for badge
+          "TESTS_TOTAL=$total" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "TESTS_PASSED=$passed" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "TESTS_FAILED=$($failures + $errors)" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        }
+    
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results-Other-Linux-PowerShell7
+        path: Tests/TestResults.xml
+        retention-days: 30
+    
+    - name: Publish Test Results
+      uses: dorny/test-reporter@v1
+      if: always()
+      with:
+        name: Pester Test Results (Other-Linux-PowerShell7)
+        path: Tests/TestResults.xml
+        reporter: java-junit
+        fail-on-error: false

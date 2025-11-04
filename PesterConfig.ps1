@@ -1,9 +1,17 @@
-# Pester 5.x Configuration for Glooko Module Tests
+# Pester 5.x Configuration for Glooko Module - Core Tests (Module and Public/Private functions)
 
 $PesterConfig = New-PesterConfiguration
 
-# Test Discovery
-$PesterConfig.Run.Path = @('Tests')
+# Test Discovery - Only core functionality tests
+$PesterConfig.Run.Path = @(
+    'Tests/Import-GlookoCSV.Tests.ps1',
+    'Tests/Import-GlookoFolder.Tests.ps1',
+    'Tests/Import-GlookoZip.Tests.ps1',
+    'Tests/Export-GlookoZipToXlsx.Tests.ps1',
+    'Tests/Expand-GlookoMetadata.Tests.ps1',
+    'Tests/Merge-GlookoDatasets.Tests.ps1',
+    'Tests/Glooko.Dataset.Tests.ps1'
+)
 $PesterConfig.TestResult.Enabled = $true
 $PesterConfig.TestResult.OutputPath = 'Tests/TestResults.xml'
 $PesterConfig.TestResult.OutputFormat = 'JUnitXml'
