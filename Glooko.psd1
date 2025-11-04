@@ -23,6 +23,12 @@
     # Minimum version of the PowerShell engine required by this module
     PowerShellVersion = '7.0'
 
+    # Type files (.ps1xml) to be loaded when importing this module
+    TypesToProcess = @('Glooko.Types.ps1xml')
+
+    # Format files (.ps1xml) to be loaded when importing this module
+    FormatsToProcess = @('Glooko.Format.ps1xml')
+
     # Functions to export from this module - uses wildcard to automatically export all public functions
     # The actual function list is controlled by Export-ModuleMember in Glooko.psm1
     FunctionsToExport = '*'

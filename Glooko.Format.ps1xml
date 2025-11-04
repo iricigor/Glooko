@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Configuration>
+  <ViewDefinitions>
+    <View>
+      <Name>Glooko.Dataset</Name>
+      <ViewSelectedBy>
+        <TypeName>Glooko.Dataset</TypeName>
+      </ViewSelectedBy>
+      <ListControl>
+        <ListEntries>
+          <ListEntry>
+            <ListItems>
+              <ListItem>
+                <Label>Dataset</Label>
+                <ScriptBlock>
+                  if ($_.Metadata.Dataset) { 
+                    $_.Metadata.Dataset 
+                  } elseif ($_.Metadata.FullName) {
+                    $_.Metadata.FullName
+                  } else {
+                    'Unknown'
+                  }
+                </ScriptBlock>
+              </ListItem>
+              <ListItem>
+                <Label>Records</Label>
+                <ScriptBlock>
+                  if ($_.Data) { $_.Data.Count } else { 0 }
+                </ScriptBlock>
+              </ListItem>
+              <ListItem>
+                <Label>Name</Label>
+                <ScriptBlock>$_.Metadata.Name</ScriptBlock>
+              </ListItem>
+              <ListItem>
+                <Label>DateRange</Label>
+                <ScriptBlock>$_.Metadata.DateRange</ScriptBlock>
+              </ListItem>
+              <ListItem>
+                <Label>FileName</Label>
+                <ScriptBlock>$_.Metadata.FullName</ScriptBlock>
+              </ListItem>
+              <ListItem>
+                <Label>Metadata</Label>
+                <PropertyName>Metadata</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>Data</Label>
+                <ScriptBlock>
+                  if ($_.Data -and $_.Data.Count -gt 0) {
+                    "[$($_.Data.Count) records]"
+                  } else {
+                    "[0 records]"
+                  }
+                </ScriptBlock>
+              </ListItem>
+            </ListItems>
+          </ListEntry>
+        </ListEntries>
+      </ListControl>
+    </View>
+  </ViewDefinitions>
+</Configuration>
