@@ -123,7 +123,8 @@ function Get-PRForCommit {
 
 function Get-CategoryFromLabels {
     param(
-        [array]$Labels
+        [array]$Labels,
+        [string]$Title
     )
     
     # Map labels to changelog categories
@@ -142,6 +143,26 @@ function Get-CategoryFromLabels {
         return 'Deprecated'
     } elseif ($Labels -contains 'removed') {
         return 'Removed'
+    } elseif ($Title) {
+        # Fallback: Use title to determine category if no labels matched
+        # Check for common title prefixes and keywords (case-insensitive)
+        if ($Title -imatch '^\s*fix\b(\(|:|\s)' -or $Title -imatch '^\s*bug\b(\(|:|\s)') {
+            return 'Fixed'
+        } elseif ($Title -imatch '^\s*(feat|feature|add)\b(\(|:|\s)') {
+            return 'Added'
+        } elseif ($Title -imatch '^\s*(docs?|documentation)\b(\(|:|\s)') {
+            return 'Documentation'
+        } elseif ($Title -imatch '^\s*security\b(\(|:|\s)') {
+            return 'Security'
+        } elseif ($Title -imatch '^\s*(breaking|break)\b(\(|:|\s)') {
+            return 'Changed'
+        } elseif ($Title -imatch '^\s*deprecat(e|ed|ing)\b(\(|:|\s)') {
+            return 'Deprecated'
+        } elseif ($Title -imatch '^\s*remov(e|ed|ing)\b(\(|:|\s)') {
+            return 'Removed'
+        } else {
+            return 'Changed'
+        }
     } else {
         return 'Changed'
     }
@@ -158,10 +179,10 @@ function Format-ChangelogEntry {
     $prLink = if ($PR) { " ([#$($PR.number)]($($PR.html_url)))" } else { "" }
     $prTitle = if ($PR) { $PR.title } else { "Build $Version" }
     
-    # Determine category from PR labels
+    # Determine category from PR labels and title
     $category = 'Changed'  # Default category
-    if ($PR -and $PR.labels) {
-        $category = Get-CategoryFromLabels -Labels $PR.labels
+    if ($PR) {
+        $category = Get-CategoryFromLabels -Labels $PR.labels -Title $PR.title
     }
     
     return @{

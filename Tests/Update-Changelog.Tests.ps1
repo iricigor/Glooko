@@ -153,6 +153,46 @@ Describe 'Update-Changelog.ps1' {
             $result | Should -Be 'Changed'
         }
         
+        It 'Get-CategoryFromLabels should categorize by title when labels are empty - fix prefix' {
+            $result = Get-CategoryFromLabels -Labels @() -Title 'fix: resolve issue with X'
+            $result | Should -Be 'Fixed'
+        }
+        
+        It 'Get-CategoryFromLabels should categorize by title when labels are empty - Fix prefix' {
+            $result = Get-CategoryFromLabels -Labels @() -Title 'Fix Update-Changelog.ps1 strict mode error'
+            $result | Should -Be 'Fixed'
+        }
+        
+        It 'Get-CategoryFromLabels should categorize by title when labels are empty - FIX prefix (case insensitive)' {
+            $result = Get-CategoryFromLabels -Labels @() -Title 'FIX: resolve issue with X'
+            $result | Should -Be 'Fixed'
+        }
+        
+        It 'Get-CategoryFromLabels should categorize by title when labels are empty - feat prefix' {
+            $result = Get-CategoryFromLabels -Labels @() -Title 'feat: add new feature'
+            $result | Should -Be 'Added'
+        }
+        
+        It 'Get-CategoryFromLabels should categorize by title when labels are empty - Add prefix' {
+            $result = Get-CategoryFromLabels -Labels @() -Title 'Add automated changelog generation'
+            $result | Should -Be 'Added'
+        }
+        
+        It 'Get-CategoryFromLabels should NOT categorize "addition" as Added (word boundary check)' {
+            $result = Get-CategoryFromLabels -Labels @() -Title 'addition of new items'
+            $result | Should -Be 'Changed'
+        }
+        
+        It 'Get-CategoryFromLabels should categorize by title when labels are empty - docs prefix' {
+            $result = Get-CategoryFromLabels -Labels @() -Title 'docs: update README'
+            $result | Should -Be 'Documentation'
+        }
+        
+        It 'Get-CategoryFromLabels should prioritize labels over title' {
+            $result = Get-CategoryFromLabels -Labels @('bug') -Title 'feat: add something'
+            $result | Should -Be 'Fixed'
+        }
+        
         It 'Format-ChangelogEntry should format entry correctly with PR' {
             $pr = @{
                 number = 123
