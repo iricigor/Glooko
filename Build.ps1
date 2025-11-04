@@ -150,6 +150,17 @@ try {
     if (Test-Path $HelpDir) {
         Write-Verbose "Copying en-US help files..."
         Copy-Item -Path $HelpDir -Destination $OutHelpDir -Recurse -Force
+    # Copy .ps1xml type and format files
+    $TypesFile = Join-Path $RepoRoot 'Glooko.Types.ps1xml'
+    if (Test-Path $TypesFile) {
+        Write-Verbose "Copying types file..."
+        Copy-Item -Path $TypesFile -Destination $OutputDir -Force
+    }
+    
+    $FormatFile = Join-Path $RepoRoot 'Glooko.Format.ps1xml'
+    if (Test-Path $FormatFile) {
+        Write-Verbose "Copying format file..."
+        Copy-Item -Path $FormatFile -Destination $OutputDir -Force
     }
     
     # Copy and update module manifest with full version

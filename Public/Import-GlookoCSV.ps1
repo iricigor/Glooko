@@ -53,10 +53,13 @@ function Import-GlookoCSV {
                 $firstLine = if ($allLines) { $allLines | Select-Object -First 1 } else { '' }
                 $fileName = Split-Path -Path $Path -Leaf
                 
-                return [PSCustomObject]@{
+                $result = [PSCustomObject]@{
                     Metadata = Expand-GlookoMetadata -FileName $fileName -FirstLine $firstLine
                     Data     = @()
                 }
+                $result.PSObject.TypeNames.Insert(0, 'Glooko.Dataset')
+                
+                return $result
             }
             
             # Capture metadata (first line) and data lines
@@ -85,11 +88,14 @@ function Import-GlookoCSV {
             
             Write-Verbose "Successfully processed $($data.Count) data rows"
             
-            # Return structured object
-            return [PSCustomObject]@{
+            # Return structured object with custom type
+            $result = [PSCustomObject]@{
                 Metadata = $metadata
                 Data     = $data
             }
+            $result.PSObject.TypeNames.Insert(0, 'Glooko.Dataset')
+            
+            return $result
         }
         catch {
             Write-Error "Error processing CSV file: $($_.Exception.Message)"
