@@ -85,7 +85,7 @@ try {
             
             # Calculate checksum for this version
             # Save-Module creates Glooko/<version>/ structure
-            $versionModulePath = Join-Path $tempDir "Glooko" | Join-Path -ChildPath $version.Version
+            $versionModulePath = Join-Path -Path (Join-Path -Path $tempDir -ChildPath 'Glooko') -ChildPath $version.Version
             $versionChecksum = & "$PSScriptRoot/Get-ModuleChecksum.ps1" -ModulePath $versionModulePath -ErrorAction Stop
             
             Write-Verbose "Version $($version.Version) checksum: $($versionChecksum.Checksum)"

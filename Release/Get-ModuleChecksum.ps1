@@ -88,7 +88,8 @@ try {
         if ($file.Name -eq 'Glooko.psd1') {
             Write-Verbose "Stripping version from module manifest"
             # Replace version with a constant placeholder to make checksum version-independent
-            $content = $content -replace "(ModuleVersion\s*=\s*')[\d\.]+(')", "`${1}0.0.0`$2"
+            # Match semantic versions like 1.0, 1.0.0, 1.2.3, etc.
+            $content = $content -replace "(ModuleVersion\s*=\s*')\d+\.\d+(\.\d+)?(')", "`${1}0.0.0`$3"
         }
         
         # Convert content to bytes
