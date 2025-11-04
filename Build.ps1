@@ -144,6 +144,14 @@ try {
         Copy-Item -Path $AssetsDir -Destination $OutAssetsDir -Recurse -Force
     }
     
+    # Copy en-US help files
+    $HelpDir = Join-Path $RepoRoot 'en-US'
+    $OutHelpDir = Join-Path $OutputDir 'en-US'
+    if (Test-Path $HelpDir) {
+        Write-Verbose "Copying en-US help files..."
+        Copy-Item -Path $HelpDir -Destination $OutHelpDir -Recurse -Force
+    }
+    
     # Copy .ps1xml type and format files
     $TypesFile = Join-Path $RepoRoot 'Glooko.Types.ps1xml'
     if (Test-Path $TypesFile) {
@@ -197,10 +205,10 @@ try {
     Write-Host "`nArtifact contents:"
     Get-ChildItem -Path $OutputDir -Recurse | Select-Object -ExpandProperty FullName | ForEach-Object {
         Write-Host "  - $($_.Replace($OutputDir, '.'))"
-}
+    }
 
-# Explicitly exit with success code
-exit 0
+    # Explicitly exit with success code
+    exit 0
 
 } catch {
     Write-Error "Build failed: $($_.Exception.Message)"
