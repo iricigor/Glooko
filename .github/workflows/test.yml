@@ -1,4 +1,4 @@
-name: Run Pester Tests
+name: Run Core Tests
 
 on:
   pull_request:
@@ -16,7 +16,7 @@ permissions:
 jobs:
   test-linux-pwsh7:
     runs-on: ubuntu-latest
-    name: Test on Linux-PowerShell7
+    name: Test Core on Linux-PowerShell7
     
     steps:
     - name: Checkout code
@@ -27,13 +27,13 @@ jobs:
       run: |
         & "$env:GITHUB_WORKSPACE/.github/scripts/Install-TestModules.ps1"
     
-    - name: Run Pester Tests
+    - name: Run Core Tests
       shell: pwsh
       run: |
         # Change to the repository root
         Set-Location $env:GITHUB_WORKSPACE
         
-        # Run tests using the PesterConfig.ps1
+        # Run core tests using the PesterConfig.ps1
         ./PesterConfig.ps1
         
         # Check if tests passed
@@ -52,7 +52,7 @@ jobs:
           $errors = [int]$results.testsuites.errors
           $passed = $total - $failures - $errors
           
-          Write-Host "::notice::Linux Tests: $passed/$total passed"
+          Write-Host "::notice::Linux Core Tests: $passed/$total passed"
           
           # Set outputs for badge
           "TESTS_TOTAL=$total" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
@@ -75,7 +75,7 @@ jobs:
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: test-results-Linux-PowerShell7
+        name: test-results-Core-Linux-PowerShell7
         path: |
           Tests/TestResults.xml
           Tests/CodeCoverage.xml
@@ -85,7 +85,7 @@ jobs:
       uses: dorny/test-reporter@v1
       if: always()
       with:
-        name: Pester Test Results (Linux-PowerShell7)
+        name: Pester Test Results (Core-Linux-PowerShell7)
         path: Tests/TestResults.xml
         reporter: java-junit
         fail-on-error: false
@@ -118,7 +118,7 @@ jobs:
 
   test-windows-pwsh7:
     runs-on: windows-latest
-    name: Test on Windows-PowerShell7
+    name: Test Core on Windows-PowerShell7
     
     steps:
     - name: Checkout code
@@ -129,13 +129,13 @@ jobs:
       run: |
         & "$env:GITHUB_WORKSPACE/.github/scripts/Install-TestModules.ps1"
     
-    - name: Run Pester Tests
+    - name: Run Core Tests
       shell: pwsh
       run: |
         # Change to the repository root
         Set-Location $env:GITHUB_WORKSPACE
         
-        # Run tests using the PesterConfig.ps1
+        # Run core tests using the PesterConfig.ps1
         ./PesterConfig.ps1
         
         # Check if tests passed
@@ -154,7 +154,7 @@ jobs:
           $errors = [int]$results.testsuites.errors
           $passed = $total - $failures - $errors
           
-          Write-Host "::notice::Windows Tests: $passed/$total passed"
+          Write-Host "::notice::Windows Core Tests: $passed/$total passed"
           
           # Set outputs for badge
           "TESTS_TOTAL=$total" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
@@ -177,7 +177,7 @@ jobs:
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: test-results-Windows-PowerShell7
+        name: test-results-Core-Windows-PowerShell7
         path: |
           Tests/TestResults.xml
           Tests/CodeCoverage.xml
@@ -187,7 +187,7 @@ jobs:
       uses: dorny/test-reporter@v1
       if: always()
       with:
-        name: Pester Test Results (Windows-PowerShell7)
+        name: Pester Test Results (Core-Windows-PowerShell7)
         path: Tests/TestResults.xml
         reporter: java-junit
         fail-on-error: false
