@@ -23,9 +23,22 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+# Import helper function
+. (Join-Path $PSScriptRoot '..' 'Private' 'Test-ChangelogVersion.ps1')
+
 try {
     Write-Host "DRY RUN: Would publish module version $ModuleVersion to PowerShell Gallery"
     Write-Host "Module path: ./BuildOutput/Glooko"
+    
+    # Check if changelog contains this version
+    Write-Host "`nChecking if CHANGELOG.md contains version $ModuleVersion..."
+    if (-not (Test-ChangelogVersion -Version $ModuleVersion)) {
+        Write-Warning "CHANGELOG.md does not contain an entry for version $ModuleVersion!"
+        Write-Warning "You must update the changelog before publishing."
+        Write-Host "`nDRY RUN FAILED - Changelog not updated" -ForegroundColor Red
+        exit 1
+    }
+    Write-Host "Changelog check passed - version $ModuleVersion found in CHANGELOG.md" -ForegroundColor Green
     
     # Verify the module manifest
     $manifest = Test-ModuleManifest -Path ./BuildOutput/Glooko/Glooko.psd1

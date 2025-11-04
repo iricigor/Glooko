@@ -56,6 +56,32 @@ Get-ChildItem -Path $PSScriptRoot/Public/*.ps1 | ForEach-Object {
         Set-Location $script:OriginalLocation
     }
     
+    Context 'Changelog verification in dry run' {
+        
+        It 'Should check if version exists in CHANGELOG.md' {
+            $scriptContent = Get-Content $script:DryRunScript -Raw
+            $scriptContent | Should -Match 'Test-ChangelogVersion'
+        }
+        
+        It 'Should import the Test-ChangelogVersion helper function' {
+            $scriptContent = Get-Content $script:DryRunScript -Raw
+            $scriptContent | Should -Match "Test-ChangelogVersion\.ps1"
+        }
+        
+        It 'Should contain warning message about missing changelog entry' {
+            $scriptContent = Get-Content $script:DryRunScript -Raw
+            $scriptContent | Should -Match 'CHANGELOG.md does not contain an entry'
+        }
+        
+        It 'Should exit with error when changelog check fails' {
+            $scriptContent = Get-Content $script:DryRunScript -Raw
+            
+            # Verify the script has the logic to check changelog and error if not found
+            $scriptContent | Should -Match 'Test-ChangelogVersion'
+            $scriptContent | Should -Match 'exit 1'
+        }
+    }
+    
     Context 'Version checking in dry run' {
         
         It 'Should check if version exists in PowerShell Gallery' {

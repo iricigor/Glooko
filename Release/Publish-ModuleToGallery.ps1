@@ -29,8 +29,19 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+# Import helper function
+. (Join-Path $PSScriptRoot '..' 'Private' 'Test-ChangelogVersion.ps1')
+
 try {
     Write-Host "Publishing module version $ModuleVersion to PowerShell Gallery..."
+    
+    # Check if changelog contains this version
+    Write-Host "Checking if CHANGELOG.md contains version $ModuleVersion..."
+    if (-not (Test-ChangelogVersion -Version $ModuleVersion)) {
+        Write-Error "CHANGELOG.md does not contain an entry for version $ModuleVersion. Please update the changelog before publishing."
+        exit 1
+    }
+    Write-Host "Changelog check passed - version $ModuleVersion found in CHANGELOG.md" -ForegroundColor Green
     
     # Check if this version already exists in PowerShell Gallery
     Write-Host "Checking if version $ModuleVersion already exists in PowerShell Gallery..."
