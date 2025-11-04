@@ -123,17 +123,22 @@ The workflow will perform all steps except the actual publishing to PowerShell G
 
 The release workflow:
 
-1. **Downloads Build Artifact**: Retrieves the specified (or latest) build artifact from successful build workflow runs
-2. **Verifies Module**: 
+1. **Verifies Changelog**: 
+   - Checks that CHANGELOG.md contains an entry for the version being released
+   - Ensures the changelog has been updated before publishing
+   - Exits with an error if the version is not found in the changelog
+2. **Downloads Build Artifact**: Retrieves the specified (or latest) build artifact from successful build workflow runs
+3. **Verifies Module**: 
    - Checks that the module manifest exists
    - Validates the module can be loaded
    - Displays module version and exported functions
-3. **Publishes to PowerShell Gallery** (unless dry run):
+4. **Checks PowerShell Gallery**: Verifies the version doesn't already exist in PowerShell Gallery
+5. **Publishes to PowerShell Gallery** (unless dry run):
    - Uses the `PSGALLERY_KEY` secret for authentication
    - Publishes the module from the BuildOutput directory
    - Reports success or failure
-4. **Creates GitHub Release**: Creates a GitHub release with the version tag
-5. **Creates Summary**: Generates a release summary with installation instructions
+6. **Creates GitHub Release**: Creates a GitHub release with the version tag
+7. **Creates Summary**: Generates a release summary with installation instructions
 
 #### Stage 3: Merge Changelog PR
 
@@ -176,9 +181,10 @@ If the module verification step fails:
 
 If publishing to PowerShell Gallery fails:
 - Verify the `PSGALLERY_KEY` secret is correctly configured
+- Ensure the changelog has been updated with the version being released
 - Check that the module version doesn't already exist in the gallery
 - Review the error message for specific issues
-- Try a dry run first to validate the module
+- Try a dry run first to validate the module and changelog
 
 ### After Release
 
@@ -285,7 +291,7 @@ Before creating a release:
 - ✅ Released versions are always documented in the changelog
 - ✅ PowerShell Gallery and changelog stay synchronized
 - ✅ GitHub releases reference the correct version information
-- ✅ Future improvement (issue [#115](https://github.com/iricigor/Glooko/issues/115)) can add validation
+- ✅ Changelog verification prevents accidental release of undocumented versions
 
 ## Best Practices
 

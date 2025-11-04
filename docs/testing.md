@@ -99,6 +99,13 @@ The test suite covers all public and private functions:
   - ✅ Property consolidation
   - ✅ Error handling for incompatible datasets
 
+- **Test-ChangelogVersion** - Changelog version verification helper
+  - ✅ Version header detection in changelog
+  - ✅ Support for two-part and three-part version numbers
+  - ✅ Error handling for missing changelog
+  - ✅ Edge cases with special characters and whitespace
+  - ✅ Verbose output verification
+
 ### Type and Formatting Tests
 - **Glooko.Dataset.Tests.ps1** - Custom type and formatting tests
   - ✅ Type assignment to Import-GlookoCSV results
@@ -120,6 +127,24 @@ The test suite covers all public and private functions:
   - ✅ Helper function logic tests
   - ✅ Error handling verification
   - ✅ DryRun functionality tests
+
+- **Test-ChangelogVersion.Tests.ps1** - Changelog verification tests
+  - ✅ Version header detection in various formats
+  - ✅ Validation of missing changelog entries
+  - ✅ Error handling for non-existent files
+  - ✅ Edge cases and special character handling
+
+- **Publish-ModuleDryRun.Tests.ps1** - Dry run publishing tests
+  - ✅ Script structure validation
+  - ✅ Changelog verification in publish workflow
+  - ✅ Version checking logic
+  - ✅ Error handling for invalid scenarios
+
+- **Publish-ModuleToGallery.Tests.ps1** - Publishing tests
+  - ✅ Script structure validation
+  - ✅ Changelog verification before publishing
+  - ✅ PowerShell Gallery version checking
+  - ✅ Error handling and exit codes
 
 ## Continuous Integration
 

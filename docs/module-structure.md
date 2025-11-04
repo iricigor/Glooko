@@ -29,7 +29,8 @@ Glooko/
 │   └── Export-GlookoZipToXlsx.ps1  # Zip to Excel conversion
 ├── Private/                    # Private functions (internal use only)
 │   ├── Expand-GlookoMetadata.ps1  # Metadata parsing helper
-│   └── Merge-GlookoDatasets.ps1   # Dataset consolidation helper
+│   ├── Merge-GlookoDatasets.ps1   # Dataset consolidation helper
+│   └── Test-ChangelogVersion.ps1  # Changelog version verification helper
 ├── Tests/                      # Pester test files
 │   ├── Import-GlookoCSV.Tests.ps1
 │   ├── Import-GlookoFolder.Tests.ps1
@@ -40,7 +41,10 @@ Glooko/
 │   ├── Glooko.Dataset.Tests.ps1  # Type and formatting tests
 │   ├── Build.Tests.ps1         # Module structure validation
 │   ├── PSScriptAnalyzer.Tests.ps1  # Code quality tests
+│   ├── Publish-ModuleDryRun.Tests.ps1  # Dry run publishing tests
+│   ├── Publish-ModuleToGallery.Tests.ps1  # Publishing tests
 │   ├── Update-Changelog.Tests.ps1  # Changelog automation tests
+│   ├── Test-ChangelogVersion.Tests.ps1  # Changelog verification tests
 │   ├── Helpers/                # Test helper functions
 │   │   ├── TestHelpers.ps1
 │   │   ├── New-TestCSVFile.ps1
