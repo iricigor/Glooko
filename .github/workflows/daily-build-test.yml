@@ -1,0 +1,179 @@
+name: Daily Build and Test Verification
+
+on:
+  schedule:
+    # Run daily at 02:00 UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: read
+  checks: write
+
+jobs:
+  daily-build:
+    runs-on: ubuntu-latest
+    name: Daily Build Verification
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Build module
+      shell: pwsh
+      run: |
+        $ErrorActionPreference = 'Stop'
+        Write-Host "Building Glooko module..."
+        ./Build.ps1 -Verbose
+    
+    - name: Display build information
+      shell: pwsh
+      run: |
+        if (Test-Path "BuildOutput/BuildInfo.json") {
+          $buildInfo = Get-Content "BuildOutput/BuildInfo.json" | ConvertFrom-Json
+          Write-Host "Built version: $($buildInfo.Version)"
+          Write-Host "Build date: $($buildInfo.BuildDate)"
+          Write-Host "Major.Minor: $($buildInfo.MajorMinor)"
+          Write-Host "Build number: $($buildInfo.BuildNumber)"
+          
+          # Set outputs for badge
+          "VERSION=$($buildInfo.Version)" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        }
+    
+    - name: Test module loads
+      shell: pwsh
+      run: |
+        Write-Host "Testing module can be loaded..."
+        Import-Module ./BuildOutput/Glooko.psd1 -Force
+        
+        $module = Get-Module Glooko
+        if (-not $module) {
+          Write-Error "Module failed to load"
+          exit 1
+        }
+        
+        Write-Host "Module loaded successfully!"
+        Write-Host "Module version: $($module.Version)"
+        Write-Host "Exported functions: $($module.ExportedFunctions.Keys -join ', ')"
+    
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v4
+      if: success()
+      with:
+        name: Daily-Build-${{ env.VERSION }}
+        path: BuildOutput/
+        retention-days: 7
+
+  daily-test-linux:
+    runs-on: ubuntu-latest
+    name: Daily Test on Linux
+    needs: daily-build
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup PowerShell modules
+      shell: pwsh
+      run: |
+        & "$env:GITHUB_WORKSPACE/.github/scripts/Install-TestModules.ps1"
+    
+    - name: Run Pester Tests
+      shell: pwsh
+      run: |
+        Set-Location $env:GITHUB_WORKSPACE
+        ./PesterConfig.ps1
+        
+        if ($LASTEXITCODE -ne 0) {
+          Write-Error "Tests failed with exit code $LASTEXITCODE"
+          exit $LASTEXITCODE
+        }
+    
+    - name: Extract Test Statistics
+      shell: pwsh
+      run: |
+        if (Test-Path "Tests/TestResults.xml") {
+          [xml]$results = Get-Content "Tests/TestResults.xml"
+          $total = [int]$results.testsuites.tests
+          $failures = [int]$results.testsuites.failures
+          $errors = [int]$results.testsuites.errors
+          $passed = $total - $failures - $errors
+          
+          Write-Host "::notice::Daily Linux Tests: $passed/$total passed"
+          
+          "TESTS_TOTAL=$total" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "TESTS_PASSED=$passed" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "TESTS_FAILED=$($failures + $errors)" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        }
+    
+    - name: Update Daily Test Badge
+      uses: schneegans/dynamic-badges-action@v1.7.0
+      if: always()
+      with:
+        auth: ${{ secrets.GIST_TOKEN }}
+        gistID: 7d87b86e6e187d46c3d1da7b851e3207
+        filename: glooko-daily-tests.json
+        label: Daily tests
+        message: ${{ env.TESTS_PASSED }}/${{ env.TESTS_TOTAL }} passed
+        color: ${{ env.TESTS_FAILED == '0' && 'success' || 'critical' }}
+    
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: daily-test-results-linux
+        path: |
+          Tests/TestResults.xml
+          Tests/CodeCoverage.xml
+        retention-days: 7
+
+  daily-test-windows:
+    runs-on: windows-latest
+    name: Daily Test on Windows
+    needs: daily-build
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup PowerShell modules
+      shell: pwsh
+      run: |
+        & "$env:GITHUB_WORKSPACE/.github/scripts/Install-TestModules.ps1"
+    
+    - name: Run Pester Tests
+      shell: pwsh
+      run: |
+        Set-Location $env:GITHUB_WORKSPACE
+        ./PesterConfig.ps1
+        
+        if ($LASTEXITCODE -ne 0) {
+          Write-Error "Tests failed with exit code $LASTEXITCODE"
+          exit $LASTEXITCODE
+        }
+    
+    - name: Extract Test Statistics
+      shell: pwsh
+      run: |
+        if (Test-Path "Tests/TestResults.xml") {
+          [xml]$results = Get-Content "Tests/TestResults.xml"
+          $total = [int]$results.testsuites.tests
+          $failures = [int]$results.testsuites.failures
+          $errors = [int]$results.testsuites.errors
+          $passed = $total - $failures - $errors
+          
+          Write-Host "::notice::Daily Windows Tests: $passed/$total passed"
+        }
+    
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: daily-test-results-windows
+        path: |
+          Tests/TestResults.xml
+          Tests/CodeCoverage.xml
+        retention-days: 7
