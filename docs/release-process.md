@@ -78,6 +78,7 @@ The release workflow can only be triggered manually by the repository owner (iri
 4. Configure the release options:
    - **Version**: Leave empty to publish the latest build artifact, or specify a version (e.g., `1.0.0`) to publish a specific artifact
    - **Dry run**: Check this to perform a test run without actually publishing to PowerShell Gallery
+   - **Force release**: Check this to bypass checksum verification (see [Checksum Verification](#checksum-verification) below)
 
 ### Release Options
 
@@ -128,12 +129,65 @@ The release workflow:
    - Checks that the module manifest exists
    - Validates the module can be loaded
    - Displays module version and exported functions
-3. **Publishes to PowerShell Gallery** (unless dry run):
+3. **Verifies Module Checksum** (unless force_release is enabled):
+   - Calculates checksum of module runtime files (Public, Private, .psm1, .psd1, .ps1xml files)
+   - Strips version from module manifest before checksum calculation
+   - Downloads all published versions from PowerShell Gallery
+   - Compares checksum against all published versions
+   - Fails if checksum matches any published version (prevents duplicate releases)
+   - Can be bypassed with the **Force release** option
+4. **Publishes to PowerShell Gallery** (unless dry run):
    - Uses the `PSGALLERY_KEY` secret for authentication
    - Publishes the module from the BuildOutput directory
    - Reports success or failure
-4. **Creates GitHub Release**: Creates a GitHub release with the version tag
-5. **Creates Summary**: Generates a release summary with installation instructions
+5. **Creates GitHub Release**: Creates a GitHub release with the version tag
+6. **Creates Summary**: Generates a release summary with installation instructions
+
+### Checksum Verification
+
+Starting with this release, the workflow includes checksum verification to prevent publishing a module with identical runtime code to an already-published version.
+
+**What gets checksummed:**
+- All files in `Public/` and `Private/` directories
+- `Glooko.psm1` (root module file)
+- `Glooko.psd1` (module manifest, with version stripped)
+- `Glooko.Types.ps1xml` and `Glooko.Format.ps1xml` (type and format files)
+
+**What doesn't affect the checksum:**
+- Version number in the module manifest
+- Build metadata (BuildInfo.json)
+- Documentation files (CHANGELOG.md, LICENSE, README.md)
+- Help files (en-US directory)
+- Assets (icons, images)
+
+**Why this matters:**
+The checksum verification prevents accidentally publishing a new version when only the version number has changed but the runtime code is identical to a previous release. This ensures that each published version represents actual code changes.
+
+**When checksum verification fails:**
+
+If the workflow detects that the module code is identical to a published version, it will fail with a message like:
+
+```
+⚠️  CHECKSUM MATCH FOUND!
+Current module matches published version: 1.0.25
+
+The module runtime code is identical to version 1.0.25 already published in PowerShell Gallery.
+Publishing this would create a duplicate with only a version number change.
+
+Options:
+  1. Make code changes to the module runtime files
+  2. Use -Force flag to bypass this check and publish anyway
+```
+
+**When to use Force release:**
+
+Check the **Force release** option when:
+- You need to republish due to a publishing error (e.g., network failure during upload)
+- You've made changes outside of runtime files (e.g., documentation, assets) that you want to release
+- You've updated the module manifest metadata (description, tags, etc.) without code changes
+- You understand the checksum matched but still want to proceed with the release
+
+**Note:** Using Force release bypasses all checksum verification and allows the release to proceed regardless of whether the code matches a published version.
 
 #### Stage 3: Merge Changelog PR
 
@@ -171,6 +225,21 @@ If the module verification step fails:
 - Check the build workflow logs for any issues
 - Ensure all required files are included in the build artifact
 - Verify the module manifest is valid
+
+#### Checksum Verification Fails
+
+If the checksum verification step fails with "CHECKSUM MATCH FOUND":
+- **Review the changes**: Verify that you actually made code changes to the module runtime files
+- **Check what changed**: Compare your changes to the published version to understand what (if anything) is different
+- **If code hasn't changed**: Consider whether a new release is necessary
+- **If only version changed**: This is expected - the checksum prevents duplicate releases with only version bumps
+- **If metadata changed**: Use the **Force release** option to publish the new metadata
+- **If you need to override**: Use the **Force release** option, but ensure you understand why the checksum matched
+
+To use Force release:
+1. Re-run the workflow
+2. Check the **Force release** checkbox
+3. Complete the release as normal
 
 #### Publishing Fails
 

@@ -114,6 +114,21 @@ The test suite covers all public and private functions:
   - ✅ Function export verification
   - ✅ Required module dependencies
 
+- **Get-ModuleChecksum.Tests.ps1** - Module checksum calculation tests
+  - ✅ Checksum calculation for module source files
+  - ✅ Consistent checksums for same files
+  - ✅ Correct runtime files included in checksum
+  - ✅ Version stripping from module manifest
+  - ✅ Different checksums when code changes
+  - ✅ Error handling for invalid paths
+
+- **Verify-ModuleChecksum.Tests.ps1** - Checksum verification tests
+  - ✅ Force flag bypasses verification
+  - ✅ Checksum calculation for BuildOutput module
+  - ✅ Script structure validation
+  - ✅ Parameter acceptance verification
+  - ✅ PowerShell Gallery interaction checks
+
 - **Update-Changelog.Tests.ps1** - Changelog automation tests
   - ✅ Script validation and syntax checking
   - ✅ Function definitions verification
