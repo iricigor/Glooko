@@ -10,6 +10,8 @@ Glooko/
 ├── CHANGELOG.md                # Detailed release notes
 ├── Glooko.psd1                 # Module manifest
 ├── Glooko.psm1                 # Module loader
+├── Glooko.Types.ps1xml         # Custom type definitions
+├── Glooko.Format.ps1xml        # Custom formatting definitions
 ├── Build.ps1                   # Build script
 ├── Analyze.ps1                 # PSScriptAnalyzer runner
 ├── PesterConfig.ps1            # Pester configuration for code coverage
@@ -31,6 +33,7 @@ Glooko/
 │   ├── Export-GlookoZipToXlsx.Tests.ps1
 │   ├── Expand-GlookoMetadata.Tests.ps1
 │   ├── Merge-GlookoDatasets.Tests.ps1
+│   ├── Glooko.Dataset.Tests.ps1  # Type and formatting tests
 │   ├── Build.Tests.ps1         # Module structure validation
 │   ├── PSScriptAnalyzer.Tests.ps1  # Code quality tests
 │   ├── Update-Changelog.Tests.ps1  # Changelog automation tests
@@ -82,6 +85,8 @@ The module manifest defines metadata about the module including:
 - Required PowerShell version
 - Exported functions and cmdlets
 - Module dependencies
+- Type files (TypesToProcess)
+- Format files (FormatsToProcess)
 
 ### Module Loader (Glooko.psm1)
 The module loader:
@@ -94,6 +99,13 @@ Functions in the `Public/` folder are automatically exported and available to us
 
 ### Private Functions
 Functions in the `Private/` folder are internal helper functions used by public functions but not exported to users.
+
+### Type and Format Files
+The module includes custom type and format definitions:
+- **Glooko.Types.ps1xml** - Defines the `Glooko.Dataset` custom type with script properties
+- **Glooko.Format.ps1xml** - Defines custom formatting for `Glooko.Dataset` objects
+
+These files are automatically loaded when the module is imported via the `TypesToProcess` and `FormatsToProcess` settings in the module manifest.
 
 ### Tests
 The module uses Pester 5.x for comprehensive testing, with test files organized alongside the code they test.

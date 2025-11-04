@@ -79,6 +79,15 @@ The test suite covers all public and private functions:
   - ✅ Property consolidation
   - ✅ Error handling for incompatible datasets
 
+### Type and Formatting Tests
+- **Glooko.Dataset.Tests.ps1** - Custom type and formatting tests
+  - ✅ Type assignment to Import-GlookoCSV results
+  - ✅ Type assignment to Import-GlookoFolder results
+  - ✅ Type assignment to merged datasets
+  - ✅ Script property (RecordCount, DatasetName) functionality
+  - ✅ Custom formatting output verification
+  - ✅ Backward compatibility with existing code
+
 ### Build and Module Tests
 - **Build.Tests.ps1** - Module structure validation
   - ✅ Module manifest validation
