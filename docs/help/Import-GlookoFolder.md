@@ -1,0 +1,84 @@
+---
+external help file: Glooko-help.xml
+Module Name: Glooko
+online version:
+schema: 2.0.0
+---
+
+# Import-GlookoFolder
+
+## SYNOPSIS
+Imports all CSV files from a specified folder.
+
+## SYNTAX
+
+```
+Import-GlookoFolder [-Path] <String> [-ProgressAction <ActionPreference>] [<CommonParameters>]
+```
+
+## DESCRIPTION
+This function imports all CSV files from a folder and its subdirectories using Import-GlookoCSV,
+returning an array of imported objects with metadata and data from each file.
+
+Files with the same Dataset and OriginalFirstLine metadata values are automatically
+consolidated into a single dataset, with data merged in ascending Order.
+
+## EXAMPLES
+
+### EXAMPLE 1
+```
+Import-GlookoFolder -Path "C:\data\exports"
+Imports all CSV files from the specified folder and its subdirectories.
+```
+
+### EXAMPLE 2
+```
+"C:\data\exports" | Import-GlookoFolder
+Imports all CSV files via pipeline input.
+```
+
+## PARAMETERS
+
+### -Path
+The path to the folder containing CSV files to import.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: 1
+Default value: None
+Accept pipeline input: True (ByPropertyName, ByValue)
+Accept wildcard characters: False
+```
+
+### -ProgressAction
+{{ Fill ProgressAction Description }}
+
+```yaml
+Type: ActionPreference
+Parameter Sets: (All)
+Aliases: proga
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+
+## INPUTS
+
+## OUTPUTS
+
+### Array of PSCustomObject
+### Returns an array of objects, each with Metadata and Data properties from Import-GlookoCSV.
+### Multiple files with matching Dataset and OriginalFirstLine are consolidated into single objects.
+## NOTES
+
+## RELATED LINKS

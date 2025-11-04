@@ -144,6 +144,14 @@ try {
         Copy-Item -Path $AssetsDir -Destination $OutAssetsDir -Recurse -Force
     }
     
+    # Copy en-US help files
+    $HelpDir = Join-Path $RepoRoot 'en-US'
+    $OutHelpDir = Join-Path $OutputDir 'en-US'
+    if (Test-Path $HelpDir) {
+        Write-Verbose "Copying en-US help files..."
+        Copy-Item -Path $HelpDir -Destination $OutHelpDir -Recurse -Force
+    }
+    
     # Copy and update module manifest with full version
     Write-Verbose "Updating module manifest with version $FullVersion..."
     $ManifestOutput = Join-Path $OutputDir 'Glooko.psd1'

@@ -1,0 +1,82 @@
+---
+external help file: Glooko-help.xml
+Module Name: Glooko
+online version:
+schema: 2.0.0
+---
+
+# Import-GlookoZip
+
+## SYNOPSIS
+Imports data from a Glooko zip file by extracting and processing CSV files.
+
+## SYNTAX
+
+```
+Import-GlookoZip [-Path] <String> [-ProgressAction <ActionPreference>] [<CommonParameters>]
+```
+
+## DESCRIPTION
+This advanced function extracts a Glooko zip file to a temporary folder,
+imports all CSV files using Import-GlookoFolder, and then cleans up the
+temporary folder.
+This automates the manual process of unzipping and importing.
+
+## EXAMPLES
+
+### EXAMPLE 1
+```
+Import-GlookoZip -Path "C:\data\export.zip"
+Extracts the zip file and imports all CSV files from within.
+```
+
+### EXAMPLE 2
+```
+"C:\data\export.zip" | Import-GlookoZip
+Imports the zip file via pipeline input.
+```
+
+## PARAMETERS
+
+### -Path
+The path to the zip file to import.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: 1
+Default value: None
+Accept pipeline input: True (ByPropertyName, ByValue)
+Accept wildcard characters: False
+```
+
+### -ProgressAction
+{{ Fill ProgressAction Description }}
+
+```yaml
+Type: ActionPreference
+Parameter Sets: (All)
+Aliases: proga
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+
+## INPUTS
+
+## OUTPUTS
+
+### Array of PSCustomObject
+### Returns an array of objects with Metadata and Data properties from Import-GlookoFolder.
+## NOTES
+
+## RELATED LINKS
