@@ -12,6 +12,31 @@ The "Update Changelog" workflow automatically generates changelog entries by:
 
 This ensures the CHANGELOG.md file stays up-to-date with minimal manual effort.
 
+## Prerequisites
+
+### Required Secret: CHANGELOG_PAT
+
+The workflow requires a Personal Access Token (PAT) with permission to create pull requests. This is necessary because GitHub's default `GITHUB_TOKEN` doesn't have permission to create PRs (to prevent workflow loops).
+
+**Setting up the CHANGELOG_PAT secret:**
+
+1. **Create a Personal Access Token** (classic or fine-grained):
+   - Go to [GitHub Settings → Developer settings → Personal access tokens](https://github.com/settings/tokens)
+   - For **classic tokens**: Grant `repo` scope (full control of private repositories)
+   - For **fine-grained tokens**: Grant `Contents: Read and write` and `Pull requests: Read and write` permissions
+   
+2. **Add the token as a repository secret**:
+   - Go to the repository Settings → Secrets and variables → Actions
+   - Click "New repository secret"
+   - Name: `CHANGELOG_PAT`
+   - Value: Paste the token you created
+   - Click "Add secret"
+
+**Fallback behavior:**
+- If `CHANGELOG_PAT` is not configured, the workflow will fall back to using `GITHUB_TOKEN`
+- However, the PR creation step will fail with the error: "GitHub Actions is not permitted to create or approve pull requests"
+- The workflow will still update the CHANGELOG.md and push the branch, but won't create the PR automatically
+
 ## When to Use
 
 Run the "Update Changelog" workflow:
@@ -184,6 +209,17 @@ After the PR is created, you can manually edit the CHANGELOG.md file in the PR t
 - Move entries to different categories if needed
 
 ## Troubleshooting
+
+### Error: "GitHub Actions is not permitted to create or approve pull requests"
+
+**Cause:** The workflow is using the default `GITHUB_TOKEN` which doesn't have permission to create pull requests.
+
+**Solution:** Configure the `CHANGELOG_PAT` secret as described in the [Prerequisites](#required-secret-changelog_pat) section above.
+
+**Workaround:** If you cannot create a PAT immediately:
+1. The workflow will still update CHANGELOG.md and push the branch
+2. You can manually create a PR from the branch (e.g., `changelog-update-7`)
+3. The branch will be visible in the repository after the workflow runs
 
 ### No Changes Generated
 
