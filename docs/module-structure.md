@@ -15,7 +15,8 @@ Glooko/
 ├── Build.ps1                   # Build script
 ├── Build-Help.ps1              # Help file generation script
 ├── Analyze.ps1                 # PSScriptAnalyzer runner
-├── PesterConfig.ps1            # Pester configuration for code coverage
+├── PesterConfig.ps1            # Pester configuration for core tests (with code coverage)
+├── PesterConfig.Other.ps1      # Pester configuration for other tests (no code coverage)
 ├── PSScriptAnalyzerSettings.psd1  # PSScriptAnalyzer configuration
 ├── assets/                     # Module assets
 │   └── Glooko.ico              # Module icon
@@ -69,7 +70,8 @@ Glooko/
 │   │   ├── Install-ModuleVerbose.ps1  # Reusable function to install PowerShell modules
 │   │   └── Install-TestModules.ps1    # Script to install required test modules
 │   └── workflows/
-│       ├── test.yml            # Continuous integration - Pester tests
+│       ├── test.yml            # Continuous integration - Core tests (Linux & Windows)
+│       ├── test-other.yml      # Continuous integration - Other tests (Linux only)
 │       ├── analyze.yml         # Continuous integration - PSScriptAnalyzer
 │       ├── build.yml           # Build module artifacts
 │       ├── release.yml         # Release to PowerShell Gallery
@@ -124,7 +126,19 @@ The module includes custom type and format definitions:
 These files are automatically loaded when the module is imported via the `TypesToProcess` and `FormatsToProcess` settings in the module manifest.
 
 ### Tests
-The module uses Pester 5.x for comprehensive testing, with test files organized alongside the code they test.
+The module uses Pester 5.x for comprehensive testing. Tests are split into two groups:
+
+**Core Tests** (`PesterConfig.ps1`):
+- Tests for module and Public/Private functions
+- Runs on both Linux and Windows
+- Includes code coverage metrics
+
+**Other Tests** (`PesterConfig.Other.ps1`):
+- Tests for build scripts, publishing tools, and utilities
+- Runs on Linux only
+- No code coverage (focused on internal/dev tools)
+
+Test files are organized alongside the code they test in the `Tests/` folder.
 
 ### Code Quality
 The module uses PSScriptAnalyzer to ensure code quality and adherence to PowerShell best practices:

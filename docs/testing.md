@@ -1,6 +1,7 @@
 # Testing
 
-[![Run Pester Tests](https://github.com/iricigor/Glooko/actions/workflows/test.yml/badge.svg)](https://github.com/iricigor/Glooko/actions/workflows/test.yml)
+[![Run Core Tests](https://github.com/iricigor/Glooko/actions/workflows/test.yml/badge.svg)](https://github.com/iricigor/Glooko/actions/workflows/test.yml)
+[![Run Other Tests](https://github.com/iricigor/Glooko/actions/workflows/test-other.yml/badge.svg)](https://github.com/iricigor/Glooko/actions/workflows/test-other.yml)
 [![Linux Tests](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/iricigor/7d87b86e6e187d46c3d1da7b851e3207/raw/glooko-linux-tests.json)](https://github.com/iricigor/Glooko/actions/workflows/test.yml)
 [![Windows Tests](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/iricigor/7d87b86e6e187d46c3d1da7b851e3207/raw/glooko-windows-tests.json)](https://github.com/iricigor/Glooko/actions/workflows/test.yml)
 
@@ -15,18 +16,37 @@ Install-Module -Name Pester -MinimumVersion 5.0.0 -Force -SkipPublisherCheck
 
 ## Running Tests
 
+The test suite is split into two groups:
+
+### Core Tests (Module and Public/Private Functions)
+Tests for production code - runs on both Linux and Windows:
+
+```powershell
+# Run core tests with code coverage
+./PesterConfig.ps1
+
+# Run specific core test file
+Invoke-Pester -Path .\Tests\Import-GlookoCSV.Tests.ps1
+```
+
+### Other Tests (Build, Publishing, Utilities)
+Tests for build scripts and internal tools - runs on Linux only:
+
+```powershell
+# Run other tests (no code coverage)
+./PesterConfig.Other.ps1
+
+# Run specific other test file
+Invoke-Pester -Path .\Tests\Build.Tests.ps1
+```
+
+### Run All Tests
 ```powershell
 # Run all tests
 Invoke-Pester -Path .\Tests\
 
 # Run tests with detailed output
 Invoke-Pester -Path .\Tests\ -Output Detailed
-
-# Run with code coverage
-.\Tests\PesterConfig.ps1
-
-# Run specific test file
-Invoke-Pester -Path .\Tests\Import-GlookoCSV.Tests.ps1
 ```
 
 ## Test Coverage
@@ -105,15 +125,24 @@ The test suite covers all public and private functions:
 
 The repository includes GitHub Actions workflows that automatically run tests on every pull request and push to the main/master branch:
 
-### Pester Tests
-Test results are displayed directly in the PR checks tab, showing:
+### Core Tests Workflow
+Runs core functionality tests (module and Public/Private functions) on both Linux and Windows:
+- Test results are displayed directly in the PR checks tab
+- Includes code coverage metrics
+- Creates detailed check runs in GitHub
 
+### Other Tests Workflow
+Runs build, publishing, and utility tests on Linux only:
+- Tests for Build.ps1, Publish scripts, Update-Changelog.ps1, and PSScriptAnalyzer
+- No code coverage (focused on internal/dev tools)
+- Creates separate check runs in GitHub
+
+Both workflows display:
 - ✅ Individual test case results with pass/fail status
 - ✅ Detailed test names and execution times
-- ✅ Code coverage metrics
 - ✅ Test artifacts for download
 
-The workflow uses [dorny/test-reporter](https://github.com/dorny/test-reporter) to parse JUnit XML test results and create detailed check runs in GitHub.
+The workflows use [dorny/test-reporter](https://github.com/dorny/test-reporter) to parse JUnit XML test results and create detailed check runs in GitHub.
 
 ### PSScriptAnalyzer
 The repository uses [PSScriptAnalyzer](https://github.com/PowerShell/PSScriptAnalyzer) to ensure code quality and adherence to PowerShell best practices. The analyzer checks for:
