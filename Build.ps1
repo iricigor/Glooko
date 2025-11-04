@@ -144,6 +144,19 @@ try {
         Copy-Item -Path $AssetsDir -Destination $OutAssetsDir -Recurse -Force
     }
     
+    # Copy .ps1xml type and format files
+    $TypesFile = Join-Path $RepoRoot 'Glooko.Types.ps1xml'
+    if (Test-Path $TypesFile) {
+        Write-Verbose "Copying types file..."
+        Copy-Item -Path $TypesFile -Destination $OutputDir -Force
+    }
+    
+    $FormatFile = Join-Path $RepoRoot 'Glooko.Format.ps1xml'
+    if (Test-Path $FormatFile) {
+        Write-Verbose "Copying format file..."
+        Copy-Item -Path $FormatFile -Destination $OutputDir -Force
+    }
+    
     # Copy and update module manifest with full version
     Write-Verbose "Updating module manifest with version $FullVersion..."
     $ManifestOutput = Join-Path $OutputDir 'Glooko.psd1'
