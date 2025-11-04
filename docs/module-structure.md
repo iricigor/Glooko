@@ -130,6 +130,7 @@ The module uses Pester 5.x for comprehensive testing. Tests are split into two g
 
 **Core Tests** (`PesterConfig.ps1`):
 - Tests for module and Public/Private functions
+- Code quality tests (PSScriptAnalyzer)
 - Runs on both Linux and Windows
 - Includes code coverage metrics
 

@@ -5,7 +5,6 @@ $PesterConfig = New-PesterConfiguration
 # Test Discovery - Only other functionality tests
 $PesterConfig.Run.Path = @(
     'Tests/Build.Tests.ps1',
-    'Tests/PSScriptAnalyzer.Tests.ps1',
     'Tests/Publish-ModuleDryRun.Tests.ps1',
     'Tests/Publish-ModuleToGallery.Tests.ps1',
     'Tests/Update-Changelog.Tests.ps1'
