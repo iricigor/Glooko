@@ -12,21 +12,11 @@
             <ListItems>
               <ListItem>
                 <Label>Dataset</Label>
-                <ScriptBlock>
-                  if ($_.Metadata.Dataset) { 
-                    $_.Metadata.Dataset 
-                  } elseif ($_.Metadata.FullName) {
-                    $_.Metadata.FullName
-                  } else {
-                    'Unknown'
-                  }
-                </ScriptBlock>
+                <ScriptBlock>$_.DatasetName</ScriptBlock>
               </ListItem>
               <ListItem>
                 <Label>Records</Label>
-                <ScriptBlock>
-                  if ($_.Data) { $_.Data.Count } else { 0 }
-                </ScriptBlock>
+                <ScriptBlock>$_.RecordCount</ScriptBlock>
               </ListItem>
               <ListItem>
                 <Label>Name</Label>
