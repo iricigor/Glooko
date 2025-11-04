@@ -77,8 +77,10 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## OUTPUTS
 
 ### Array of PSCustomObject
-### Returns an array of objects, each with Metadata and Data properties from Import-GlookoCSV.
-### Multiple files with matching Dataset and OriginalFirstLine are consolidated into single objects.
+
+Returns an array of objects, each with Metadata and Data properties from Import-GlookoCSV.
+Multiple files with matching Dataset and OriginalFirstLine are consolidated into single objects.
+
 ## NOTES
 
 ## RELATED LINKS

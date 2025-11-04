@@ -76,7 +76,9 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## OUTPUTS
 
 ### Array of PSCustomObject
-### Returns an array of objects with Metadata and Data properties from Import-GlookoFolder.
+
+Returns an array of objects with Metadata and Data properties from Import-GlookoFolder.
+
 ## NOTES
 
 ## RELATED LINKS

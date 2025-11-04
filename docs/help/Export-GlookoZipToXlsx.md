@@ -135,7 +135,9 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## OUTPUTS
 
 ### System.IO.FileInfo
-### Returns the FileInfo object for the created XLSX file.
+
+Returns the FileInfo object for the created XLSX file.
+
 ## NOTES
 
 ## RELATED LINKS

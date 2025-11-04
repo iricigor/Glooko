@@ -122,15 +122,7 @@
           <maml:name>System.IO.FileInfo</maml:name>
         </dev:type>
         <maml:description>
-          <maml:para></maml:para>
-        </maml:description>
-      </command:returnValue>
-      <command:returnValue>
-        <dev:type>
-          <maml:name>Returns the FileInfo object for the created XLSX file.</maml:name>
-        </dev:type>
-        <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Returns the FileInfo object for the created XLSX file.</maml:para>
         </maml:description>
       </command:returnValue>
     </command:returnValues>
@@ -250,15 +242,7 @@ Converts the zip file via pipeline input.</dev:code>
           <maml:name>PSCustomObject</maml:name>
         </dev:type>
         <maml:description>
-          <maml:para></maml:para>
-        </maml:description>
-      </command:returnValue>
-      <command:returnValue>
-        <dev:type>
-          <maml:name>Returns an object with Metadata (extended metadata object with parsed filename and first row info) and Data (array of CSV objects) properties.</maml:name>
-        </dev:type>
-        <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Returns an object with Metadata (extended metadata object with parsed filename and first row info) and Data (array of CSV objects) properties.</maml:para>
         </maml:description>
       </command:returnValue>
     </command:returnValues>
@@ -362,23 +346,7 @@ Imports the CSV file via pipeline input.</dev:code>
           <maml:name>Array of PSCustomObject</maml:name>
         </dev:type>
         <maml:description>
-          <maml:para></maml:para>
-        </maml:description>
-      </command:returnValue>
-      <command:returnValue>
-        <dev:type>
-          <maml:name>Returns an array of objects, each with Metadata and Data properties from Import-GlookoCSV.</maml:name>
-        </dev:type>
-        <maml:description>
-          <maml:para></maml:para>
-        </maml:description>
-      </command:returnValue>
-      <command:returnValue>
-        <dev:type>
-          <maml:name>Multiple files with matching Dataset and OriginalFirstLine are consolidated into single objects.</maml:name>
-        </dev:type>
-        <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Returns an array of objects, each with Metadata and Data properties from Import-GlookoCSV. Multiple files with matching Dataset and OriginalFirstLine are consolidated into single objects.</maml:para>
         </maml:description>
       </command:returnValue>
     </command:returnValues>
@@ -481,15 +449,7 @@ Imports all CSV files via pipeline input.</dev:code>
           <maml:name>Array of PSCustomObject</maml:name>
         </dev:type>
         <maml:description>
-          <maml:para></maml:para>
-        </maml:description>
-      </command:returnValue>
-      <command:returnValue>
-        <dev:type>
-          <maml:name>Returns an array of objects with Metadata and Data properties from Import-GlookoFolder.</maml:name>
-        </dev:type>
-        <maml:description>
-          <maml:para></maml:para>
+          <maml:para>Returns an array of objects with Metadata and Data properties from Import-GlookoFolder.</maml:para>
         </maml:description>
       </command:returnValue>
     </command:returnValues>

@@ -76,7 +76,9 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## OUTPUTS
 
 ### PSCustomObject
-### Returns an object with Metadata (extended metadata object with parsed filename and first row info) and Data (array of CSV objects) properties.
+
+Returns an object with Metadata (extended metadata object with parsed filename and first row info) and Data (array of CSV objects) properties.
+
 ## NOTES
 
 ## RELATED LINKS
