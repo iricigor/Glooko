@@ -4,7 +4,6 @@ $PesterConfig = New-PesterConfiguration
 
 # Test Discovery - Only core functionality tests
 $PesterConfig.Run.Path = @(
-    'Tests/PSScriptAnalyzer.Tests.ps1',
     'Tests/Import-GlookoCSV.Tests.ps1',
     'Tests/Import-GlookoFolder.Tests.ps1',
     'Tests/Import-GlookoZip.Tests.ps1',

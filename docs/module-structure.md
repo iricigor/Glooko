@@ -130,7 +130,6 @@ The module uses Pester 5.x for comprehensive testing. Tests are split into two g
 
 **Core Tests** (`PesterConfig.ps1`):
 - Tests for module and Public/Private functions
-- Code quality tests (PSScriptAnalyzer)
 - Runs on both Linux and Windows
 - Includes code coverage metrics
 
@@ -144,5 +143,7 @@ Test files are organized alongside the code they test in the `Tests/` folder.
 ### Code Quality
 The module uses PSScriptAnalyzer to ensure code quality and adherence to PowerShell best practices:
 - **PSScriptAnalyzerSettings.psd1** - Configuration file with rules and exclusions
+- **Analyze.ps1** - Script to run PSScriptAnalyzer with custom settings
+- **.github/workflows/analyze.yml** - Dedicated CI workflow for code quality checks on Public/, Private/, and Glooko.psm1
 - **Analyze.ps1** - Script to run PSScriptAnalyzer with custom settings
 - **Tests/PSScriptAnalyzer.Tests.ps1** - Automated tests to ensure code quality in CI/CD

@@ -99,13 +99,6 @@ The test suite covers all public and private functions:
   - ✅ Property consolidation
   - ✅ Error handling for incompatible datasets
 
-### Code Quality Tests
-- **PSScriptAnalyzer.Tests.ps1** - Code quality and best practices
-  - ✅ Public functions code quality
-  - ✅ Private functions code quality
-  - ✅ Root module code quality
-  - ✅ Configuration file validation
-
 ### Type and Formatting Tests
 - **Glooko.Dataset.Tests.ps1** - Custom type and formatting tests
   - ✅ Type assignment to Import-GlookoCSV results
@@ -133,7 +126,7 @@ The test suite covers all public and private functions:
 The repository includes GitHub Actions workflows that automatically run tests on every pull request and push to the main/master branch:
 
 ### Core Tests Workflow
-Runs core functionality tests (module, Public/Private functions, and code quality) on both Linux and Windows:
+Runs core functionality tests (module and Public/Private functions) on both Linux and Windows:
 - Test results are displayed directly in the PR checks tab
 - Includes code coverage metrics
 - Creates detailed check runs in GitHub
@@ -151,13 +144,16 @@ Both workflows display:
 
 The workflows use [dorny/test-reporter](https://github.com/dorny/test-reporter) to parse JUnit XML test results and create detailed check runs in GitHub.
 
-### PSScriptAnalyzer
-The repository uses [PSScriptAnalyzer](https://github.com/PowerShell/PSScriptAnalyzer) to ensure code quality and adherence to PowerShell best practices. The analyzer checks for:
-
-- ✅ Security vulnerabilities
-- ✅ Code style issues
-- ✅ Best practice violations
-- ✅ Potential bugs
+### PSScriptAnalyzer Workflow
+A separate dedicated workflow runs [PSScriptAnalyzer](https://github.com/PowerShell/PSScriptAnalyzer) to ensure code quality and adherence to PowerShell best practices:
+- Runs on every pull request and push to main/master
+- Analyzes Public/, Private/, and Glooko.psm1 for errors and warnings
+- Also runs on all PowerShell files for informational purposes
+- The analyzer checks for:
+  - ✅ Security vulnerabilities
+  - ✅ Code style issues
+  - ✅ Best practice violations
+  - ✅ Potential bugs
 
 #### Running PSScriptAnalyzer Locally
 
