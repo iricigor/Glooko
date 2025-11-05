@@ -235,8 +235,8 @@ function Update-ChangelogFile {
     # Generate new changelog sections
     $newSections = @()
     $latestVersions = @()
-    foreach ($majorMinor in ($grouped.Keys | Sort-Object -Descending)) {
-        $versionEntries = $grouped[$majorMinor] | Sort-Object { [version]$_.Version } -Descending
+    foreach ($majorMinor in ($grouped.Keys | Sort-Object { [version]$_ } -Descending)) {
+        $versionEntries = @($grouped[$majorMinor] | Sort-Object { [version]$_.Version } -Descending)
         $latestEntry = $versionEntries[0]
         $latestVersions += $latestEntry.Version
         
@@ -280,30 +280,21 @@ function Update-ChangelogFile {
         
         # Update comparison links at the bottom
         # Use the latest full version instead of just major.minor
-        $firstVersion = ($latestVersions | Sort-Object -Descending | Select-Object -First 1)
+        $firstVersion = ($latestVersions | Sort-Object { [version]$_ } -Descending | Select-Object -First 1)
         if ($firstVersion) {
             $linkPattern = "\[Unreleased\]: https://github\.com/.+?/compare/v(.+?)\.\.\.HEAD"
             $newContent = $newContent -replace $linkPattern, "[Unreleased]: https://github.com/$Repository/compare/v$firstVersion...HEAD"
             
-            # Add version comparison links
+            # Add release tag links for all new versions
             # Wrap in @() to ensure $versions is always an array, even if empty.
             # This prevents "Count property not found" errors in strict mode.
-            $versions = @($latestVersions | Sort-Object -Descending)
-            for ($i = 0; $i -lt $versions.Count - 1; $i++) {
-                $current = $versions[$i]
-                $previous = $versions[$i + 1]
-                $linkLine = "[$current]: https://github.com/$Repository/compare/v$previous...v$current"
+            $versions = @($latestVersions | Sort-Object { [version]$_ } -Descending)
+            foreach ($version in $versions) {
+                $linkLine = "[$version]: https://github.com/$Repository/releases/tag/v$version"
                 
                 if ($newContent -notmatch [regex]::Escape($linkLine)) {
                     $newContent = $newContent -replace "(\[Unreleased\]: .+)", "`$1`n$linkLine"
                 }
-            }
-            
-            # Add link for the oldest new version
-            $oldestVersion = $versions[-1]
-            $linkLine = "[$oldestVersion]: https://github.com/$Repository/releases/tag/v$oldestVersion"
-            if ($newContent -notmatch [regex]::Escape($linkLine)) {
-                $newContent = $newContent -replace "(\[Unreleased\]: .+)", "`$1`n$linkLine"
             }
         }
         

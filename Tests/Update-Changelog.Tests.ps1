@@ -415,7 +415,98 @@ All notable changes to this project will be documented in this file.
             
             # Links should reference full versions
             $result | Should -Match '\[Unreleased\]: https://github\.com/iricigor/Glooko/compare/v1\.0\.15\.\.\.HEAD'
+            # Only the latest version from each major.minor group should have a release tag link
             $result | Should -Match '\[1\.0\.15\]: https://github\.com/iricigor/Glooko/releases/tag/v1\.0\.15'
+        }
+        
+        It 'Should add release tag links for each version section header' {
+            # When multiple versions are in different major.minor groups, each gets its own section and link
+            $entries = @(
+                @{ Version = '1.0.14'; Date = '2025-11-03'; Title = 'Fix one'; PRLink = ' ([#107](https://example.com))'; Category = 'Fixed' }
+                @{ Version = '1.1.15'; Date = '2025-11-03'; Title = 'Fix two'; PRLink = ' ([#108](https://example.com))'; Category = 'Fixed' }
+                @{ Version = '2.0.16'; Date = '2025-11-03'; Title = 'Fix three'; PRLink = ' ([#109](https://example.com))'; Category = 'Fixed' }
+            )
+            
+            $result = Update-ChangelogFile -ChangelogPath $script:TestChangelog -NewEntries $entries
+            
+            # Each major.minor group gets one section header and one release tag link
+            $result | Should -Match '\[2\.0\.16\]: https://github\.com/iricigor/Glooko/releases/tag/v2\.0\.16'
+            $result | Should -Match '\[1\.1\.15\]: https://github\.com/iricigor/Glooko/releases/tag/v1\.1\.15'
+            $result | Should -Match '\[1\.0\.14\]: https://github\.com/iricigor/Glooko/releases/tag/v1\.0\.14'
+        }
+    }
+    
+    Context 'Version Sorting' {
+        BeforeAll {
+            # Create a temporary test changelog
+            $script:TestDrive = Join-Path ([System.IO.Path]::GetTempPath()) "PesterTest-$(New-Guid)"
+            New-Item -Path $script:TestDrive -ItemType Directory -Force | Out-Null
+            $script:TestChangelog = Join-Path $script:TestDrive "CHANGELOG.md"
+            
+            $initialContent = @"
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+## [Unreleased]
+
+## [1.0] - 2024-11-02
+
+### Added
+- Initial release
+
+[Unreleased]: https://github.com/iricigor/Glooko/compare/v1.0...HEAD
+[1.0]: https://github.com/iricigor/Glooko/releases/tag/v1.0
+"@
+            Set-Content -Path $script:TestChangelog -Value $initialContent
+            
+            # Set repository for tests
+            $script:Repository = 'iricigor/Glooko'
+            
+            # Extract and execute the Update-ChangelogFile function
+            $scriptContent = Get-Content $script:UpdateChangelogScript -Raw
+            if ($scriptContent -match '(function Update-ChangelogFile\s*\{(?:[^{}]|(?<open>\{)|(?<-open>\}))+(?(open)(?!))\})') {
+                Invoke-Expression $Matches[1]
+            }
+            if ($scriptContent -match '(function Group-ByMajorMinor\s*\{(?:[^{}]|(?<open>\{)|(?<-open>\}))+(?(open)(?!))\})') {
+                Invoke-Expression $Matches[1]
+            }
+        }
+        
+        AfterAll {
+            if (Test-Path $script:TestDrive) {
+                Remove-Item $script:TestDrive -Recurse -Force
+            }
+        }
+        
+        It 'Should sort versions numerically, not alphabetically (1.10 > 1.9 > 1.2)' {
+            # This test verifies that version 1.10 is correctly sorted after 1.9 and 1.2
+            # With string sorting (bug), 1.10 would come before 1.2
+            # With version sorting (fix), 1.10 comes after 1.9
+            $entries = @(
+                @{ Version = '1.2.0'; Date = '2025-11-03'; Title = 'Version 1.2'; PRLink = ''; Category = 'Added' }
+                @{ Version = '1.9.0'; Date = '2025-11-04'; Title = 'Version 1.9'; PRLink = ''; Category = 'Added' }
+                @{ Version = '1.10.0'; Date = '2025-11-05'; Title = 'Version 1.10'; PRLink = ''; Category = 'Added' }
+            )
+            
+            $result = Update-ChangelogFile -ChangelogPath $script:TestChangelog -NewEntries $entries
+            
+            # Extract the order of version headers from the result
+            # Match both two-part (1.0) and three-part (1.0.1) version formats
+            $versionHeaders = [regex]::Matches($result, '## \[(\d+\.\d+(?:\.\d+)?)\]') | ForEach-Object { $_.Groups[1].Value }
+            
+            # The versions should appear in descending order: 1.10.0, then 1.9.0, then 1.2.0
+            $versionHeaders[0] | Should -Be '1.10.0'
+            $versionHeaders[1] | Should -Be '1.9.0'
+            $versionHeaders[2] | Should -Be '1.2.0'
+        }
+        
+        It 'Should use version sorting in the script, not string sorting' {
+            # Verify the script uses [version] cast for sorting
+            $scriptContent = Get-Content $script:UpdateChangelogScript -Raw
+            
+            # Check that version sorting is used for major.minor keys
+            $scriptContent | Should -Match 'Sort-Object\s+\{\s*\[version\]\$_\s*\}\s+-Descending'
         }
     }
     
