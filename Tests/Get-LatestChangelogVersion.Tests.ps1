@@ -93,13 +93,13 @@ Describe 'Get-LatestChangelogVersion' {
 
     Context 'When changelog file does not exist' {
         It 'Should return null' {
-            $result = Get-LatestChangelogVersion -ChangelogPath '/tmp/nonexistent.md' -WarningAction SilentlyContinue
+            $result = Get-LatestChangelogVersion -ChangelogPath (Join-Path $TestDrive 'nonexistent.md') -WarningAction SilentlyContinue
             $result | Should -BeNullOrEmpty
         }
 
         It 'Should write a warning' {
             $warnings = @()
-            Get-LatestChangelogVersion -ChangelogPath '/tmp/nonexistent.md' -WarningVariable warnings -WarningAction SilentlyContinue
+            Get-LatestChangelogVersion -ChangelogPath (Join-Path $TestDrive 'nonexistent.md') -WarningVariable warnings -WarningAction SilentlyContinue
             $warnings | Should -Not -BeNullOrEmpty
             $warnings[0] | Should -Match 'not found'
         }

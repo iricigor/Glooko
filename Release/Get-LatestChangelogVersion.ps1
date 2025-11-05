@@ -52,7 +52,14 @@ function Get-LatestChangelogVersion {
             $versionStr = $match.Groups[1].Value
             Write-Verbose "Found version: $versionStr"
             try {
-                $versions += [version]$versionStr
+                # Pad two-part versions to three parts for proper [version] casting
+                # e.g., "1.0" becomes "1.0.0" so .NET Version class can parse it
+                $paddedVersion = if ($versionStr -match '^\d+\.\d+$') {
+                    "$versionStr.0"
+                } else {
+                    $versionStr
+                }
+                $versions += [version]$paddedVersion
             } catch {
                 Write-Verbose "Skipping invalid version format: $versionStr"
             }
@@ -64,10 +71,16 @@ function Get-LatestChangelogVersion {
         }
         
         # Sort versions and get the latest
-        $latestVersion = ($versions | Sort-Object -Descending | Select-Object -First 1).ToString()
+        $latestVersion = ($versions | Sort-Object -Descending | Select-Object -First 1)
         
-        Write-Verbose "Latest version in changelog: $latestVersion"
-        return $latestVersion
+        # Convert back to string, removing the padding if it was a two-part version
+        $latestVersionStr = $latestVersion.ToString()
+        if ($latestVersionStr -match '^(\d+\.\d+)\.0$') {
+            $latestVersionStr = $Matches[1]
+        }
+        
+        Write-Verbose "Latest version in changelog: $latestVersionStr"
+        return $latestVersionStr
         
     } catch {
         Write-Warning "Error reading changelog: $($_.Exception.Message)"
