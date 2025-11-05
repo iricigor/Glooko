@@ -47,6 +47,23 @@ Get-ChildItem -Path $PSScriptRoot/Public/*.ps1 | ForEach-Object {
         # Copy the dry run script to test directory
         Copy-Item -Path $script:DryRunScript -Destination $script:TestDir -Force
         
+        # Copy the Test-ChangelogVersion helper function that the script depends on
+        $helperScript = Join-Path $script:RepoRoot 'Release/Test-ChangelogVersion.ps1'
+        Copy-Item -Path $helperScript -Destination $script:TestDir -Force
+        
+        # Create a minimal CHANGELOG.md with the test version to pass changelog verification
+        # Place it one level up from TestDir since Test-ChangelogVersion looks for ../CHANGELOG.md
+        $changelogContent = @'
+# Changelog
+
+## [99.99.99] - 2025-11-05
+
+### Added
+- Test version for testing
+'@
+        $changelogPath = Join-Path (Split-Path $script:TestDir -Parent) 'CHANGELOG.md'
+        Set-Content -Path $changelogPath -Value $changelogContent
+        
         # Change to test directory
         Set-Location $script:TestDir
     }
