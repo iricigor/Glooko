@@ -390,6 +390,26 @@ try {
         Write-Host "Saved changelog to: $OutputFile"
     }
     
+    # Output version information for GitHub Actions
+    if ($env:GITHUB_OUTPUT) {
+        # Get all unique versions and sort them
+        $versions = @($entries | Select-Object -ExpandProperty Version | Sort-Object { [version]$_ } -Descending)
+        
+        # Format versions for output
+        if ($versions.Count -eq 1) {
+            $versionInfo = "v$($versions[0])"
+        } elseif ($versions.Count -eq 2) {
+            $versionInfo = "v$($versions[0]) and v$($versions[1])"
+        } elseif ($versions.Count -gt 2) {
+            $versionInfo = "v$($versions[0]) and $($versions.Count - 1) more"
+        } else {
+            $versionInfo = ""
+        }
+        
+        "versions=$versionInfo" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+        Write-Verbose "Wrote versions to GITHUB_OUTPUT: $versionInfo"
+    }
+    
     Write-Host "`nChangelog update completed successfully!" -ForegroundColor Green
     exit 0
 

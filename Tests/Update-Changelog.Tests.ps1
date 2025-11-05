@@ -576,4 +576,31 @@ All notable changes to this project will be documented in this file.
             $scriptContent | Should -Match 'DryRun:\$DryRun'
         }
     }
+    
+    Context 'GitHub Actions Output' {
+        It 'Should check for GITHUB_OUTPUT environment variable' {
+            $scriptContent = Get-Content $script:UpdateChangelogScript -Raw
+            $scriptContent | Should -Match '\$env:GITHUB_OUTPUT'
+        }
+        
+        It 'Should output version information when GITHUB_OUTPUT is set' {
+            $scriptContent = Get-Content $script:UpdateChangelogScript -Raw
+            $scriptContent | Should -Match 'versions='
+            $scriptContent | Should -Match 'Out-File.*GITHUB_OUTPUT'
+        }
+        
+        It 'Should format single version correctly' {
+            $scriptContent = Get-Content $script:UpdateChangelogScript -Raw
+            # Should have logic for single version: v{version}
+            $scriptContent | Should -Match 'versionInfo\s*=\s*"v\$\('
+        }
+        
+        It 'Should format multiple versions correctly' {
+            $scriptContent = Get-Content $script:UpdateChangelogScript -Raw
+            # Should have logic for two versions: v{version1} and v{version2}
+            $scriptContent | Should -Match 'and v\$\('
+            # Should have logic for more than two: v{version} and {count} more
+            $scriptContent | Should -Match 'and \$\(\$versions\.Count - 1\) more'
+        }
+    }
 }
