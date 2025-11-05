@@ -1,0 +1,66 @@
+@{
+    # Script module or binary module file associated with this manifest.
+    RootModule = 'Glooko.psm1'
+
+    # Version number of this module.
+    ModuleVersion = '1.0.1'
+
+    # Supported PSEditions
+    CompatiblePSEditions = @('Core')
+
+    # ID used to uniquely identify this module
+    GUID = '02ff76d0-8773-4042-a1c6-343cc40deba5'
+
+    # Author of this module
+    Author = 'iricigor'
+
+    # Company or vendor of this module
+    CompanyName = 'iricigor'
+
+    # Description of the functionality provided by this module
+    Description = 'The Glooko PowerShell module enables tech-savvy users to import, consolidate, and analyze personal diabetes data exported from Glooko, with advanced Excel export and support for PowerShell 7+. Future releases will provide static analysis and CGM statistics, but this tool is intended solely for personal data exploration and is not a replacement for professional medical advice.'
+
+    # Minimum version of the PowerShell engine required by this module
+    PowerShellVersion = '7.0'
+
+    # Type files (.ps1xml) to be loaded when importing this module
+    TypesToProcess = @('Glooko.Types.ps1xml')
+
+    # Format files (.ps1xml) to be loaded when importing this module
+    FormatsToProcess = @('Glooko.Format.ps1xml')
+
+    # Functions to export from this module - uses wildcard to automatically export all public functions
+    # The actual function list is controlled by Export-ModuleMember in Glooko.psm1
+    FunctionsToExport = '*'
+
+    # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry
+    CmdletsToExport = @()
+
+    # Variables to export from this module
+    VariablesToExport = @()
+
+    # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry
+    AliasesToExport = @()
+
+    # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
+    PrivateData = @{
+        PSData = @{
+            # Tags applied to this module. These help with module discovery in online galleries.
+            Tags = @('CSV', 'Data', 'Import', 'Glooko', 'PowerShell', 'Diabetes', 'BloodGlucose', 'T1D', 'Dexcom', 'Tandem', 'Windows', 'Linux', 'PSEdition_Core', 'CGM', 'ContinuousGlucoseMonitoring', 'InsulinPump', 'AutomatedInsulinDelivery', 'AID', 'BloodSugar', 'GlucoseMonitoring', 'Hypoglycemia', 'Hyperglycemia')
+
+            # A URL to the license for this module.
+            LicenseUri = 'https://opensource.org/licenses/MIT'
+
+            # A URL to the main website for this project.
+            ProjectUri = 'https://github.com/iricigor/Glooko'
+
+            # A URL to an icon representing this module.
+            IconUri = 'https://raw.githubusercontent.com/iricigor/Glooko/main/assets/Glooko.ico'
+
+            # ReleaseNotes of this module
+            ReleaseNotes = 'See CHANGELOG.md for detailed release notes: https://github.com/iricigor/Glooko/blob/main/CHANGELOG.md'
+        }
+    }
+
+}
+
