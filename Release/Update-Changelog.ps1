@@ -273,19 +273,26 @@ function Update-ChangelogFile {
     }
     
     # Find the [Unreleased] section and insert new sections after it
-    $unreleasedPattern = '(?s)(## \[Unreleased\].*?)((?=## \[\d+\.\d+\])|$)'
+    # Pattern matches [Unreleased] section content up to (but not including) the next ## header or end of file
+    $unreleasedPattern = '(?s)(## \[Unreleased\].*?)((?=\n## )|$)'
     
     if ($content -match $unreleasedPattern) {
         $newContent = $content -replace $unreleasedPattern, ($Matches[1] + "`n`n" + ($newSections -join "`n`n") + "`n")
         
-        # Update comparison links at the bottom
+        # Add release tag links at the end of the file
         # Use the latest full version instead of just major.minor
         $firstVersion = ($latestVersions | Sort-Object { [version]$_ } -Descending | Select-Object -First 1)
         if ($firstVersion) {
+            # Update [Unreleased] link if it exists, otherwise add it
             $linkPattern = "\[Unreleased\]: https://github\.com/.+?/compare/v(.+?)\.\.\.HEAD"
-            $newContent = $newContent -replace $linkPattern, "[Unreleased]: https://github.com/$Repository/compare/v$firstVersion...HEAD"
+            if ($newContent -match $linkPattern) {
+                $newContent = $newContent -replace $linkPattern, "[Unreleased]: https://github.com/$Repository/compare/v$firstVersion...HEAD"
+            } else {
+                # Add [Unreleased] link at the end if it doesn't exist
+                $newContent = $newContent.TrimEnd() + "`n`n[Unreleased]: https://github.com/$Repository/compare/v$firstVersion...HEAD"
+            }
             
-            # Add release tag links for all new versions
+            # Add release tag links for all new versions at the end of the file
             # Wrap in @() to ensure $versions is always an array, even if empty.
             # This prevents "Count property not found" errors in strict mode.
             $versions = @($latestVersions | Sort-Object { [version]$_ } -Descending)
@@ -293,7 +300,8 @@ function Update-ChangelogFile {
                 $linkLine = "[$version]: https://github.com/$Repository/releases/tag/v$version"
                 
                 if ($newContent -notmatch [regex]::Escape($linkLine)) {
-                    $newContent = $newContent -replace "(\[Unreleased\]: .+)", "`$1`n$linkLine"
+                    # Append at the end of the file
+                    $newContent = $newContent.TrimEnd() + "`n$linkLine"
                 }
             }
         }
