@@ -47,6 +47,23 @@ Get-ChildItem -Path $PSScriptRoot/Public/*.ps1 | ForEach-Object {
         # Copy the dry run script to test directory
         Copy-Item -Path $script:DryRunScript -Destination $script:TestDir -Force
         
+        # Copy the Test-ChangelogVersion helper function that the script depends on
+        $helperScript = Join-Path $script:RepoRoot 'Release/Test-ChangelogVersion.ps1'
+        Copy-Item -Path $helperScript -Destination $script:TestDir -Force
+        
+        # Create a minimal CHANGELOG.md with the test version to pass changelog verification
+        # Place it one level up from TestDir since Test-ChangelogVersion looks for ../CHANGELOG.md
+        $changelogContent = @'
+# Changelog
+
+## [99.99.99] - 2025-11-05
+
+### Added
+- Test version for testing
+'@
+        $changelogPath = Join-Path (Split-Path $script:TestDir -Parent) 'CHANGELOG.md'
+        Set-Content -Path $changelogPath -Value $changelogContent
+        
         # Change to test directory
         Set-Location $script:TestDir
     }
@@ -54,6 +71,32 @@ Get-ChildItem -Path $PSScriptRoot/Public/*.ps1 | ForEach-Object {
     AfterEach {
         # Clean up test directory
         Set-Location $script:OriginalLocation
+    }
+    
+    Context 'Changelog verification in dry run' {
+        
+        It 'Should check if version exists in CHANGELOG.md' {
+            $scriptContent = Get-Content $script:DryRunScript -Raw
+            $scriptContent | Should -Match 'Test-ChangelogVersion'
+        }
+        
+        It 'Should import the Test-ChangelogVersion helper function' {
+            $scriptContent = Get-Content $script:DryRunScript -Raw
+            $scriptContent | Should -Match "Test-ChangelogVersion\.ps1"
+        }
+        
+        It 'Should contain warning message about missing changelog entry' {
+            $scriptContent = Get-Content $script:DryRunScript -Raw
+            $scriptContent | Should -Match 'CHANGELOG.md does not contain an entry'
+        }
+        
+        It 'Should exit with error when changelog check fails' {
+            $scriptContent = Get-Content $script:DryRunScript -Raw
+            
+            # Verify the script has the logic to check changelog and error if not found
+            $scriptContent | Should -Match 'Test-ChangelogVersion'
+            $scriptContent | Should -Match 'exit 1'
+        }
     }
     
     Context 'Version checking in dry run' {

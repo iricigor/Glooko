@@ -124,11 +124,11 @@ The workflow will perform all steps except the actual publishing to PowerShell G
 
 The release workflow:
 
-1. **Downloads Build Artifact**: Retrieves the specified (or latest) build artifact from successful build workflow runs
-2. **Verifies Module**: 
-   - Checks that the module manifest exists
-   - Validates the module can be loaded
-   - Displays module version and exported functions
+1. **Verifies Changelog**: 
+   - Checks that CHANGELOG.md contains an entry for the version being released
+   - Ensures the changelog has been updated before publishing
+   - Exits with an error if the version is not found in the changelog
+2. **Downloads Build Artifact**: Retrieves the specified (or latest) build artifact from successful build workflow runs
 3. **Verifies Module Checksum** (unless force_release is enabled):
    - Calculates checksum of module runtime files (Public, Private, .psm1, .psd1, .ps1xml files)
    - Strips version from module manifest before checksum calculation
@@ -136,58 +136,17 @@ The release workflow:
    - Compares checksum against all published versions
    - Fails if checksum matches any published version (prevents duplicate releases)
    - Can be bypassed with the **Force release** option
-4. **Publishes to PowerShell Gallery** (unless dry run):
+4. **Verifies Module**: 
+   - Checks that the module manifest exists
+   - Validates the module can be loaded
+   - Displays module version and exported functions
+5. **Checks PowerShell Gallery**: Verifies the version doesn't already exist in PowerShell Gallery
+6. **Publishes to PowerShell Gallery** (unless dry run):
    - Uses the `PSGALLERY_KEY` secret for authentication
    - Publishes the module from the BuildOutput directory
    - Reports success or failure
-5. **Creates GitHub Release**: Creates a GitHub release with the version tag
-6. **Creates Summary**: Generates a release summary with installation instructions
-
-### Checksum Verification
-
-Starting with this release, the workflow includes checksum verification to prevent publishing a module with identical runtime code to an already-published version.
-
-**What gets checksummed:**
-- All files in `Public/` and `Private/` directories
-- `Glooko.psm1` (root module file)
-- `Glooko.psd1` (module manifest, with version stripped)
-- `Glooko.Types.ps1xml` and `Glooko.Format.ps1xml` (type and format files)
-
-**What doesn't affect the checksum:**
-- Version number in the module manifest
-- Build metadata (BuildInfo.json)
-- Documentation files (CHANGELOG.md, LICENSE, README.md)
-- Help files (en-US directory)
-- Assets (icons, images)
-
-**Why this matters:**
-The checksum verification prevents accidentally publishing a new version when only the version number has changed but the runtime code is identical to a previous release. This ensures that each published version represents actual code changes.
-
-**When checksum verification fails:**
-
-If the workflow detects that the module code is identical to a published version, it will fail with a message like:
-
-```
-⚠️  CHECKSUM MATCH FOUND!
-Current module matches published version: 1.0.25
-
-The module runtime code is identical to version 1.0.25 already published in PowerShell Gallery.
-Publishing this would create a duplicate with only a version number change.
-
-Options:
-  1. Make code changes to the module runtime files
-  2. Use -Force flag to bypass this check and publish anyway
-```
-
-**When to use Force release:**
-
-Check the **Force release** option when:
-- You need to republish due to a publishing error (e.g., network failure during upload)
-- You've made changes outside of runtime files (e.g., documentation, assets) that you want to release
-- You've updated the module manifest metadata (description, tags, etc.) without code changes
-- You understand the checksum matched but still want to proceed with the release
-
-**Note:** Using Force release bypasses all checksum verification and allows the release to proceed regardless of whether the code matches a published version.
+7. **Creates GitHub Release**: Creates a GitHub release with the version tag
+8. **Creates Summary**: Generates a release summary with installation instructions
 
 #### Stage 3: Merge Changelog PR
 
@@ -245,9 +204,10 @@ To use Force release:
 
 If publishing to PowerShell Gallery fails:
 - Verify the `PSGALLERY_KEY` secret is correctly configured
+- Ensure the changelog has been updated with the version being released
 - Check that the module version doesn't already exist in the gallery
 - Review the error message for specific issues
-- Try a dry run first to validate the module
+- Try a dry run first to validate the module and changelog
 
 ### After Release
 
@@ -354,7 +314,7 @@ Before creating a release:
 - ✅ Released versions are always documented in the changelog
 - ✅ PowerShell Gallery and changelog stay synchronized
 - ✅ GitHub releases reference the correct version information
-- ✅ Future improvement (issue [#115](https://github.com/iricigor/Glooko/issues/115)) can add validation
+- ✅ Changelog verification prevents accidental release of undocumented versions
 
 ## Best Practices
 

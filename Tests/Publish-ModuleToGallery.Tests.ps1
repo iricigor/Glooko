@@ -55,6 +55,32 @@ Describe 'Publish-ModuleToGallery.ps1' {
         Set-Location $script:OriginalLocation
     }
     
+    Context 'Changelog verification' {
+        
+        It 'Should check if version exists in CHANGELOG.md' {
+            $scriptContent = Get-Content $script:PublishScript -Raw
+            $scriptContent | Should -Match 'Test-ChangelogVersion'
+        }
+        
+        It 'Should import the Test-ChangelogVersion helper function' {
+            $scriptContent = Get-Content $script:PublishScript -Raw
+            $scriptContent | Should -Match "Test-ChangelogVersion\.ps1"
+        }
+        
+        It 'Should contain error message about missing changelog entry' {
+            $scriptContent = Get-Content $script:PublishScript -Raw
+            $scriptContent | Should -Match 'CHANGELOG.md does not contain an entry'
+        }
+        
+        It 'Should exit with error when changelog check fails' {
+            $scriptContent = Get-Content $script:PublishScript -Raw
+            
+            # Verify the script has the logic to check changelog and error if not found
+            $scriptContent | Should -Match 'Test-ChangelogVersion'
+            $scriptContent | Should -Match 'exit 1'
+        }
+    }
+    
     Context 'Version checking' {
         
         It 'Should check if version exists in PowerShell Gallery before publishing' {
