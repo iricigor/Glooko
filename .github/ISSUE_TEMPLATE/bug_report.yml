@@ -1,7 +1,7 @@
 name: Bug Report
 description: Report a bug in the Glooko PowerShell module
 title: "[BUG]: "
-labels: ["bug"]
+labels: ["🪲 bug"]
 body:
   - type: markdown
     attributes:
