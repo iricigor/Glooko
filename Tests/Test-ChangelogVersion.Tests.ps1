@@ -156,11 +156,11 @@ Describe 'Test-ChangelogVersion' {
     
     Context 'When changelog file does not exist' {
         
-        It 'Should return true when file does not exist (allowing release without changelog)' {
+        It 'Should return false when file does not exist' {
             $nonExistentPath = Join-Path $TestDrive 'NonExistent.md'
             
             $result = Test-ChangelogVersion -Version '1.0.25' -ChangelogPath $nonExistentPath
-            $result | Should -Be $true
+            $result | Should -Be $false
         }
         
         It 'Should write warning when file does not exist' {

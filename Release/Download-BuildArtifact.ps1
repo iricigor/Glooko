@@ -72,8 +72,14 @@ try {
             # Looking for specific version
             $artifact = $artifacts.artifacts | Where-Object { $_.name -eq $artifactName } | Select-Object -First 1
         } else {
-            # Looking for any Glooko-Module artifact
-            $artifact = $artifacts.artifacts | Where-Object { $_.name -like 'Glooko-Module-*' } | Select-Object -First 1
+            # Looking for any Glooko-Module artifact, but skip build number 0
+            $artifact = $artifacts.artifacts | Where-Object { 
+                $_.name -like 'Glooko-Module-*' -and $_.name -notmatch 'Glooko-Module-\d+\.\d+\.0$'
+            } | Select-Object -First 1
+            
+            if (-not $artifact) {
+                Write-Verbose "Skipping run $($run.id) - only has build number 0 artifacts"
+            }
         }
         
         if ($artifact) {
