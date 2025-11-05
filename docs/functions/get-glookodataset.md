@@ -86,7 +86,7 @@ Import-GlookoFolder -Path "C:\data" |
 # Get CGM data and calculate statistics
 $cgmData = Import-GlookoZip -Path "C:\data\export.zip" | Get-GlookoDataset -Name "cgm"
 $stats = $cgmData | Measure-Object -Property Value -Average -Minimum -Maximum
-Write-Host "Average glucose: $($stats.Average) mg/dL"
+Write-Host "Average glucose: $($stats.Average) mmol/L"
 Write-Host "Min: $($stats.Minimum), Max: $($stats.Maximum)"
 ```
 
@@ -137,7 +137,7 @@ $alarmData = $datasets | Get-GlookoDataset -Name "alarms"
 $insulinData = $datasets | Get-GlookoDataset -Name "insulin"
 
 # 3. Analyze the data
-$highGlucose = $cgmData | Where-Object { $_.Value -gt 180 }
+$highGlucose = $cgmData | Where-Object { $_.Value -gt 10.0 }
 Write-Host "High glucose readings: $($highGlucose.Count)"
 
 $lowAlarms = $alarmData | Where-Object { $_.Alarm -eq 'Low' }

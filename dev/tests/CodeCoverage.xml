@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE report PUBLIC "-//JACOCO//DTD Report 1.1//EN" "report.dtd"[]>
-<report name="Pester (11/05/2025 22:25:08)">
-  <sessioninfo id="this" start="1762381500721" dump="1762381508556" />
+<report name="Pester (11/05/2025 21:35:14)">
+  <sessioninfo id="this" start="1762378506990" dump="1762378514712" />
   <package name="Glooko">
     <class name="Glooko/Glooko" sourcefilename="Glooko.psm1">
       <method name="&lt;script&gt;" desc="()" line="6">
@@ -48,22 +48,6 @@
       <counter type="LINE" missed="61" covered="13" />
       <counter type="METHOD" missed="0" covered="2" />
       <counter type="CLASS" missed="0" covered="1" />
-    </class>
-    <class name="Glooko/Public/Get-GlookoDataset" sourcefilename="Public/Get-GlookoDataset.ps1">
-      <method name="Get-GlookoDataset" desc="()" line="53">
-        <counter type="INSTRUCTION" missed="39" covered="0" />
-        <counter type="LINE" missed="30" covered="0" />
-        <counter type="METHOD" missed="1" covered="0" />
-      </method>
-      <method name="&lt;script&gt;" desc="()" line="117">
-        <counter type="INSTRUCTION" missed="0" covered="1" />
-        <counter type="LINE" missed="0" covered="1" />
-        <counter type="METHOD" missed="0" covered="1" />
-      </method>
-      <counter type="INSTRUCTION" missed="39" covered="1" />
-      <counter type="LINE" missed="30" covered="1" />
-      <counter type="METHOD" missed="1" covered="1" />
-      <counter type="CLASS" missed="1" covered="0" />
     </class>
     <class name="Glooko/Public/Import-GlookoCSV" sourcefilename="Public/Import-GlookoCSV.ps1">
       <method name="Import-GlookoCSV" desc="()" line="31">
@@ -193,43 +177,6 @@
       <counter type="METHOD" missed="0" covered="2" />
       <counter type="CLASS" missed="0" covered="1" />
     </sourcefile>
-    <sourcefile name="Public/Get-GlookoDataset.ps1">
-      <line nr="53" mi="1" ci="0" mb="0" cb="0" />
-      <line nr="54" mi="1" ci="0" mb="0" cb="0" />
-      <line nr="55" mi="1" ci="0" mb="0" cb="0" />
-      <line nr="60" mi="1" ci="0" mb="0" cb="0" />
-      <line nr="61" mi="1" ci="0" mb="0" cb="0" />
-      <line nr="67" mi="1" ci="0" mb="0" cb="0" />
-      <line nr="68" mi="1" ci="0" mb="0" cb="0" />
-      <line nr="69" mi="1" ci="0" mb="0" cb="0" />
-      <line nr="72" mi="2" ci="0" mb="0" cb="0" />
-      <line nr="75" mi="2" ci="0" mb="0" cb="0" />
-      <line nr="76" mi="1" ci="0" mb="0" cb="0" />
-      <line nr="77" mi="1" ci="0" mb="0" cb="0" />
-      <line nr="78" mi="1" ci="0" mb="0" cb="0" />
-      <line nr="79" mi="1" ci="0" mb="0" cb="0" />
-      <line nr="81" mi="1" ci="0" mb="0" cb="0" />
-      <line nr="84" mi="1" ci="0" mb="0" cb="0" />
-      <line nr="85" mi="1" ci="0" mb="0" cb="0" />
-      <line nr="88" mi="1" ci="0" mb="0" cb="0" />
-      <line nr="89" mi="1" ci="0" mb="0" cb="0" />
-      <line nr="90" mi="1" ci="0" mb="0" cb="0" />
-      <line nr="93" mi="3" ci="0" mb="0" cb="0" />
-      <line nr="96" mi="1" ci="0" mb="0" cb="0" />
-      <line nr="97" mi="1" ci="0" mb="0" cb="0" />
-      <line nr="98" mi="3" ci="0" mb="0" cb="0" />
-      <line nr="99" mi="2" ci="0" mb="0" cb="0" />
-      <line nr="100" mi="1" ci="0" mb="0" cb="0" />
-      <line nr="103" mi="2" ci="0" mb="0" cb="0" />
-      <line nr="104" mi="1" ci="0" mb="0" cb="0" />
-      <line nr="107" mi="2" ci="0" mb="0" cb="0" />
-      <line nr="111" mi="1" ci="0" mb="0" cb="0" />
-      <line nr="117" mi="0" ci="1" mb="0" cb="0" />
-      <counter type="INSTRUCTION" missed="39" covered="1" />
-      <counter type="LINE" missed="30" covered="1" />
-      <counter type="METHOD" missed="1" covered="1" />
-      <counter type="CLASS" missed="1" covered="0" />
-    </sourcefile>
     <sourcefile name="Public/Import-GlookoCSV.ps1">
       <line nr="31" mi="0" ci="1" mb="0" cb="0" />
       <line nr="32" mi="0" ci="1" mb="0" cb="0" />
@@ -327,13 +274,13 @@
       <counter type="METHOD" missed="0" covered="2" />
       <counter type="CLASS" missed="0" covered="1" />
     </sourcefile>
-    <counter type="INSTRUCTION" missed="113" covered="108" />
-    <counter type="LINE" missed="94" covered="90" />
-    <counter type="METHOD" missed="1" covered="9" />
-    <counter type="CLASS" missed="1" covered="4" />
+    <counter type="INSTRUCTION" missed="74" covered="107" />
+    <counter type="LINE" missed="64" covered="89" />
+    <counter type="METHOD" missed="0" covered="8" />
+    <counter type="CLASS" missed="0" covered="4" />
   </package>
-  <counter type="INSTRUCTION" missed="115" covered="118" />
-  <counter type="LINE" missed="95" covered="96" />
-  <counter type="METHOD" missed="1" covered="10" />
-  <counter type="CLASS" missed="1" covered="5" />
+  <counter type="INSTRUCTION" missed="76" covered="117" />
+  <counter type="LINE" missed="65" covered="95" />
+  <counter type="METHOD" missed="0" covered="9" />
+  <counter type="CLASS" missed="0" covered="5" />
 </report>
