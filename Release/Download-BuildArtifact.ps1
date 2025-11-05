@@ -40,13 +40,27 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+# Import helper function to get latest version from changelog
+. (Join-Path $PSScriptRoot 'Get-LatestChangelogVersion.ps1')
+
 try {
     if ($Version) {
         Write-Host "Downloading specific version: $Version"
         $artifactName = "Glooko-Module-$Version"
     } else {
-        Write-Host "Version not specified, will use latest build artifact from build workflow"
-        $artifactName = $null
+        Write-Host "Version not specified, attempting to determine from CHANGELOG.md..."
+        $changelogVersion = Get-LatestChangelogVersion
+        
+        if ($changelogVersion) {
+            Write-Host "Latest version in CHANGELOG.md: $changelogVersion"
+            Write-Host "Will download build artifact for version $changelogVersion"
+            $artifactName = "Glooko-Module-$changelogVersion"
+            $Version = $changelogVersion
+        } else {
+            Write-Warning "Could not determine version from CHANGELOG.md"
+            Write-Host "Falling back to latest build artifact from build workflow"
+            $artifactName = $null
+        }
     }
     
     # Get the latest successful build workflow run
