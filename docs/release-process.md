@@ -129,17 +129,24 @@ The release workflow:
    - Ensures the changelog has been updated before publishing
    - Exits with an error if the version is not found in the changelog
 2. **Downloads Build Artifact**: Retrieves the specified (or latest) build artifact from successful build workflow runs
-3. **Verifies Module**: 
+3. **Verifies Module Checksum** (unless force_release is enabled):
+   - Calculates checksum of module runtime files (Public, Private, .psm1, .psd1, .ps1xml files)
+   - Strips version from module manifest before checksum calculation
+   - Downloads all published versions from PowerShell Gallery
+   - Compares checksum against all published versions
+   - Fails if checksum matches any published version (prevents duplicate releases)
+   - Can be bypassed with the **Force release** option
+4. **Verifies Module**: 
    - Checks that the module manifest exists
    - Validates the module can be loaded
    - Displays module version and exported functions
-4. **Checks PowerShell Gallery**: Verifies the version doesn't already exist in PowerShell Gallery
-5. **Publishes to PowerShell Gallery** (unless dry run):
+5. **Checks PowerShell Gallery**: Verifies the version doesn't already exist in PowerShell Gallery
+6. **Publishes to PowerShell Gallery** (unless dry run):
    - Uses the `PSGALLERY_KEY` secret for authentication
    - Publishes the module from the BuildOutput directory
    - Reports success or failure
-6. **Creates GitHub Release**: Creates a GitHub release with the version tag
-7. **Creates Summary**: Generates a release summary with installation instructions
+7. **Creates GitHub Release**: Creates a GitHub release with the version tag
+8. **Creates Summary**: Generates a release summary with installation instructions
 
 #### Stage 3: Merge Changelog PR
 
