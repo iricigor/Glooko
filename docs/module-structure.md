@@ -32,6 +32,8 @@ Glooko/
 │   ├── Import-GlookoFolder.ps1 # Folder import with dataset consolidation
 │   ├── Import-GlookoZip.ps1    # Zip file import and processing
 │   ├── Get-GlookoDataset.ps1   # Filter datasets by name and return data
+│   ├── Get-GlookoCGMStats.ps1  # Basic CGM data analysis (in range statistics)
+│   ├── Get-GlookoCGMStatsExtended.ps1  # Extended CGM analysis with date filtering
 │   └── Export-GlookoZipToXlsx.ps1  # Zip to Excel conversion
 ├── dev/                        # Development, build, and test infrastructure
 │   ├── build/                  # Build and development scripts
@@ -58,6 +60,8 @@ Glooko/
 │       ├── Import-GlookoFolder.Tests.ps1
 │       ├── Import-GlookoZip.Tests.ps1
 │       ├── Get-GlookoDataset.Tests.ps1
+│       ├── Get-GlookoCGMStats.Tests.ps1        # Basic CGM analysis tests
+│       ├── Get-GlookoCGMStatsExtended.Tests.ps1 # Extended CGM analysis tests
 │       ├── Export-GlookoZipToXlsx.Tests.ps1
 │       ├── Expand-GlookoMetadata.Tests.ps1
 │       ├── Merge-GlookoDatasets.Tests.ps1
@@ -76,6 +80,9 @@ Glooko/
 │       │   ├── New-TestFolder.ps1
 │       │   └── New-TestZipFile.ps1
 │       └── Fixtures/           # Test data files
+│           ├── sample-data.csv
+│           ├── test-data01.csv
+│           └── cgm-sample.csv         # CGM test data
 ├── docs/                       # Additional documentation
 │   ├── alternative-import-methods.md
 │   ├── automated-changelog.md  # Automated changelog updates guide
@@ -91,6 +98,8 @@ Glooko/
 │   │   ├── import-glookofolder.md
 │   │   ├── import-glookozip.md
 │   │   ├── get-glookodataset.md
+│   │   ├── get-glookocgmstats.md     # Basic CGM analysis docs
+│   │   ├── get-glookocgmstatsextended.md  # Extended CGM analysis docs
 │   │   └── export-glookozip-to-xlsx.md
 │   └── help/                   # platyPS markdown help files
 │       ├── Import-GlookoCSV.md
