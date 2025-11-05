@@ -14,7 +14,7 @@ BeforeAll {
 Describe 'PSScriptAnalyzer Tests' {
     
     BeforeAll {
-        $script:SettingsPath = Join-Path $script:ModuleRoot 'PSScriptAnalyzerSettings.psd1'
+        $script:SettingsPath = Join-Path $script:ModuleRoot 'config' 'PSScriptAnalyzerSettings.psd1'
         
         # Paths to analyze
         $script:PublicPath = Join-Path $script:ModuleRoot 'Public'

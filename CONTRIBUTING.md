@@ -98,18 +98,17 @@ Glooko/
 ├── Private/                 # Internal helper functions
 ├── Tests/                   # Pester test files
 ├── docs/                    # Documentation
+├── build/                   # Build scripts
+├── config/                  # Configuration files
 ├── Glooko.psm1             # Module loader
-├── Glooko.psd1             # Module manifest
-├── Build.ps1               # Build script
-├── Analyze.ps1             # PSScriptAnalyzer runner
-└── PesterConfig.ps1        # Test configuration
+└── Glooko.psd1             # Module manifest
 ```
 
 ### Running Tests
 
 ```powershell
 # Run all tests with coverage
-./PesterConfig.ps1
+./config/PesterConfig.ps1
 
 # Run specific test file
 Invoke-Pester -Path ./Tests/Import-GlookoCSV.Tests.ps1
@@ -122,10 +121,10 @@ Invoke-Pester -Path ./Tests/ -Output Detailed
 
 ```powershell
 # Run PSScriptAnalyzer on module code
-./Analyze.ps1 -Path Public,Private,Glooko.psm1
+./build/Analyze.ps1 -Path Public,Private,Glooko.psm1
 
 # Auto-fix issues where possible
-./Analyze.ps1 -Fix
+./build/Analyze.ps1 -Fix
 ```
 
 ## How to Contribute
@@ -282,7 +281,7 @@ Always run tests before submitting:
 
 ```powershell
 # Run all tests with coverage
-./PesterConfig.ps1
+./config/PesterConfig.ps1
 
 # Ensure all tests pass
 # Ensure code coverage meets minimum 75%
@@ -335,10 +334,10 @@ Always run tests before submitting:
 3. **Test your changes**:
    ```powershell
    # Run tests
-   ./PesterConfig.ps1
+   ./config/PesterConfig.ps1
    
    # Run code analysis
-   ./Analyze.ps1
+   ./build/Analyze.ps1
    ```
 
 4. **Commit your changes**:

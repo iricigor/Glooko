@@ -23,7 +23,7 @@ Tests for production code - runs on both Linux and Windows:
 
 ```powershell
 # Run core tests with code coverage
-./PesterConfig.ps1
+./config/PesterConfig.ps1
 
 # Run specific core test file
 Invoke-Pester -Path .\Tests\Import-GlookoCSV.Tests.ps1
@@ -34,7 +34,7 @@ Tests for build scripts and internal tools - runs on Linux only:
 
 ```powershell
 # Run other tests (no code coverage)
-./PesterConfig.Other.ps1
+./config/PesterConfig.Other.ps1
 
 # Run specific other test file
 Invoke-Pester -Path .\Tests\Build.Tests.ps1
@@ -214,7 +214,7 @@ Install-Module -Name PSScriptAnalyzer -Force -SkipPublisherCheck
 
 #### PSScriptAnalyzer Configuration
 
-The analyzer uses settings defined in `PSScriptAnalyzerSettings.psd1`. The following rules are excluded with detailed rationale:
+The analyzer uses settings defined in `config/PSScriptAnalyzerSettings.psd1`. The following rules are excluded with detailed rationale:
 
 - **`PSAvoidTrailingWhitespace`** - This is a formatting issue better handled by editor settings (e.g., `.editorconfig`, VS Code format-on-save). Enforcing it in the analyzer would create noise without adding security or functional value.
 

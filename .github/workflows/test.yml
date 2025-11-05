@@ -33,8 +33,8 @@ jobs:
         # Change to the repository root
         Set-Location $env:GITHUB_WORKSPACE
         
-        # Run core tests using the PesterConfig.ps1
-        ./PesterConfig.ps1
+        # Run core tests using the config/PesterConfig.ps1
+        ./config/PesterConfig.ps1
         
         # Check if tests passed
         if ($LASTEXITCODE -ne 0) {
@@ -135,8 +135,8 @@ jobs:
         # Change to the repository root
         Set-Location $env:GITHUB_WORKSPACE
         
-        # Run core tests using the PesterConfig.ps1
-        ./PesterConfig.ps1
+        # Run core tests using the config/PesterConfig.ps1
+        ./config/PesterConfig.ps1
         
         # Check if tests passed
         if ($LASTEXITCODE -ne 0) {

@@ -27,7 +27,7 @@ jobs:
       run: |
         $ErrorActionPreference = 'Stop'
         Write-Host "Building Glooko module..."
-        ./Build.ps1 -Verbose
+        ./build/Build.ps1 -Verbose
     
     - name: Display build information
       shell: pwsh
@@ -85,7 +85,7 @@ jobs:
       shell: pwsh
       run: |
         Set-Location $env:GITHUB_WORKSPACE
-        ./PesterConfig.ps1
+        ./config/PesterConfig.ps1
         
         if ($LASTEXITCODE -ne 0) {
           Write-Error "Tests failed with exit code $LASTEXITCODE"
@@ -148,7 +148,7 @@ jobs:
       shell: pwsh
       run: |
         Set-Location $env:GITHUB_WORKSPACE
-        ./PesterConfig.ps1
+        ./config/PesterConfig.ps1
         
         if ($LASTEXITCODE -ne 0) {
           Write-Error "Tests failed with exit code $LASTEXITCODE"

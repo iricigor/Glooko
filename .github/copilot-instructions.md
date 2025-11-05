@@ -16,9 +16,10 @@ This is a PowerShell module for CSV data processing utilities, specifically desi
   - `TestHelpers.ps1`: Shared test utilities
   - `Fixtures/`: Test data files
 - **docs/**: Documentation files
+- **build/**: Build and development scripts
+- **config/**: Configuration files
 - **Glooko.psm1**: Root module file that imports all functions
 - **Glooko.psd1**: Module manifest with metadata and exports
-- **PesterConfig.ps1**: Pester test configuration
 
 ## Building and Testing
 
@@ -30,7 +31,7 @@ This is a PowerShell module for CSV data processing utilities, specifically desi
 Tests are run using Pester 5.x framework:
 ```powershell
 # Run all tests with coverage
-./PesterConfig.ps1
+./config/PesterConfig.ps1
 
 # Or run Pester directly
 Invoke-Pester -Configuration $PesterConfig
@@ -40,7 +41,7 @@ Invoke-Pester -Configuration $PesterConfig
 - Tests are located in the `Tests/` directory
 - Test results are output to `Tests/TestResults.xml` (JUnit format)
 - Code coverage reports are generated in `Tests/CodeCoverage.xml` (JaCoCo format)
-- Code coverage is tracked for `Public/*.ps1` and `Glooko.psm1` files (see PesterConfig.ps1)
+- Code coverage is tracked for `Public/*.ps1` and `Glooko.psm1` files (see config/PesterConfig.ps1)
 - Target coverage: 75% minimum
 - All tests should pass before submitting changes
 

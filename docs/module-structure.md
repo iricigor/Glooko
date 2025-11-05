@@ -12,12 +12,14 @@ Glooko/
 ├── Glooko.psm1                 # Module loader
 ├── Glooko.Types.ps1xml         # Custom type definitions
 ├── Glooko.Format.ps1xml        # Custom formatting definitions
-├── Build.ps1                   # Build script
-├── Build-Help.ps1              # Help file generation script
-├── Analyze.ps1                 # PSScriptAnalyzer runner
-├── PesterConfig.ps1            # Pester configuration for core tests (with code coverage)
-├── PesterConfig.Other.ps1      # Pester configuration for other tests (no code coverage)
-├── PSScriptAnalyzerSettings.psd1  # PSScriptAnalyzer configuration
+├── build/                      # Build and development scripts
+│   ├── Build.ps1               # Build script
+│   ├── Build-Help.ps1          # Help file generation script
+│   └── Analyze.ps1             # PSScriptAnalyzer runner
+├── config/                     # Configuration files
+│   ├── PesterConfig.ps1        # Pester configuration for core tests (with code coverage)
+│   ├── PesterConfig.Other.ps1  # Pester configuration for other tests (no code coverage)
+│   └── PSScriptAnalyzerSettings.psd1  # PSScriptAnalyzer configuration
 ├── assets/                     # Module assets
 │   └── Glooko.ico              # Module icon
 ├── en-US/                      # XML help files
@@ -125,7 +127,7 @@ Functions in the `Private/` folder are internal helper functions used by public 
 The module includes XML help files for all exported functions:
 - **en-US/Glooko-help.xml** - External MAML help file that provides comprehensive help accessible via `Get-Help`
 - **docs/help/** - platyPS-formatted markdown files generated from comment-based help
-- **Build-Help.ps1** - Script to regenerate help files from comment-based help using platyPS
+- **build/Build-Help.ps1** - Script to regenerate help files from comment-based help using platyPS
 
 For more information about help file generation and maintenance, see [Help Generation Documentation](help-generation.md).
 ### Type and Format Files
@@ -138,12 +140,12 @@ These files are automatically loaded when the module is imported via the `TypesT
 ### Tests
 The module uses Pester 5.x for comprehensive testing. Tests are split into two groups:
 
-**Core Tests** (`PesterConfig.ps1`):
+**Core Tests** (`config/PesterConfig.ps1`):
 - Tests for module and Public/Private functions
 - Runs on both Linux and Windows
 - Includes code coverage metrics
 
-**Other Tests** (`PesterConfig.Other.ps1`):
+**Other Tests** (`config/PesterConfig.Other.ps1`):
 - Tests for build scripts, publishing tools, and utilities
 - Runs on Linux only
 - No code coverage (focused on internal/dev tools)
@@ -152,8 +154,7 @@ Test files are organized alongside the code they test in the `Tests/` folder.
 
 ### Code Quality
 The module uses PSScriptAnalyzer to ensure code quality and adherence to PowerShell best practices:
-- **PSScriptAnalyzerSettings.psd1** - Configuration file with rules and exclusions
-- **Analyze.ps1** - Script to run PSScriptAnalyzer with custom settings
+- **config/PSScriptAnalyzerSettings.psd1** - Configuration file with rules and exclusions
+- **build/Analyze.ps1** - Script to run PSScriptAnalyzer with custom settings
 - **.github/workflows/analyze.yml** - Dedicated CI workflow for code quality checks on Public/, Private/, and Glooko.psm1
-- **Analyze.ps1** - Script to run PSScriptAnalyzer with custom settings
 - **Tests/PSScriptAnalyzer.Tests.ps1** - Automated tests to ensure code quality in CI/CD
