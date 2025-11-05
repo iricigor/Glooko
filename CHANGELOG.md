@@ -5,12 +5,6 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html) using major.minor version format.
 
-## [Unreleased]
-
-### Documentation
-- Clarify release process order: prepare changelog PR → release to PS Gallery → merge changelog PR (prevents version mismatch due to auto-incrementing builds)
-
-
 ## [1.0.39] - 2025-11-05
 
 ### Added
@@ -23,7 +17,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Split tests into core and other workflows ([#127](https://github.com/iricigor/Glooko/pull/127))
-- Build 1.0.26
 
 ### Fixed
 - Fix release workflow to skip build number 0 artifacts from PR builds ([#143](https://github.com/iricigor/Glooko/pull/143))
