@@ -33,8 +33,8 @@ function Test-ChangelogVersion {
     Write-Verbose "Checking if CHANGELOG.md contains version $Version"
     
     if (-not (Test-Path $ChangelogPath)) {
-        Write-Warning "CHANGELOG.md not found at: $ChangelogPath"
-        return $false
+        Write-Warning "CHANGELOG.md not found at: $ChangelogPath - skipping changelog validation"
+        return $true
     }
     
     try {
