@@ -34,7 +34,7 @@ jobs:
       run: |
         $ErrorActionPreference = 'Stop'
         Write-Host "Building Glooko module..."
-        ./Build.ps1 -Verbose
+        ./dev/build/Build.ps1 -Verbose
     
     - name: Display build information
       shell: pwsh

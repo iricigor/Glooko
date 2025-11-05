@@ -1,7 +1,7 @@
 # PSScriptAnalyzer Tests for Glooko Module
 
 BeforeAll {
-    $script:ModuleRoot = Split-Path $PSScriptRoot -Parent
+    $script:ModuleRoot = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
     Import-Module (Join-Path $script:ModuleRoot 'Glooko.psd1') -Force
     
     # Check if PSScriptAnalyzer is available
@@ -14,7 +14,7 @@ BeforeAll {
 Describe 'PSScriptAnalyzer Tests' {
     
     BeforeAll {
-        $script:SettingsPath = Join-Path $script:ModuleRoot 'PSScriptAnalyzerSettings.psd1'
+        $script:SettingsPath = Join-Path $script:ModuleRoot 'dev' 'config' 'PSScriptAnalyzerSettings.psd1'
         
         # Paths to analyze
         $script:PublicPath = Join-Path $script:ModuleRoot 'Public'

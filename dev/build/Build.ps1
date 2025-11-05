@@ -38,8 +38,8 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 try {
-    # Get the script directory (repository root)
-    $RepoRoot = $PSScriptRoot
+    # Get the repository root (two levels up from dev/build folder)
+    $RepoRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
     Write-Verbose "Repository root: $RepoRoot"
 
     # Read the module manifest to get major.minor version

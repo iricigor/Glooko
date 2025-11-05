@@ -1,8 +1,8 @@
 BeforeAll {
     # Store original location
     $script:OriginalLocation = Get-Location
-    $script:RepoRoot = Split-Path -Parent $PSScriptRoot
-    $script:DryRunScript = Join-Path $script:RepoRoot 'Release/Publish-ModuleDryRun.ps1'
+    $script:RepoRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
+    $script:DryRunScript = Join-Path $script:RepoRoot 'dev/release/Publish-ModuleDryRun.ps1'
 }
 
 AfterAll {
@@ -48,7 +48,7 @@ Get-ChildItem -Path $PSScriptRoot/Public/*.ps1 | ForEach-Object {
         Copy-Item -Path $script:DryRunScript -Destination $script:TestDir -Force
         
         # Copy the Test-ChangelogVersion helper function that the script depends on
-        $helperScript = Join-Path $script:RepoRoot 'Release/Test-ChangelogVersion.ps1'
+        $helperScript = Join-Path $script:RepoRoot 'dev/release/Test-ChangelogVersion.ps1'
         Copy-Item -Path $helperScript -Destination $script:TestDir -Force
         
         # Create a minimal CHANGELOG.md with the test version to pass changelog verification

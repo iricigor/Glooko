@@ -59,8 +59,8 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 try {
-    # Get the script directory (repository root)
-    $RepoRoot = $PSScriptRoot
+    # Get the repository root (two levels up from dev/build folder)
+    $RepoRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
     Write-Verbose "Repository root: $RepoRoot"
 
     # Check if PSScriptAnalyzer is available
@@ -71,12 +71,11 @@ try {
 
     Import-Module PSScriptAnalyzer -Force
 
-    # Settings file
-    $SettingsFile = Join-Path $RepoRoot 'PSScriptAnalyzerSettings.psd1'
+    # Settings file in dev/config folder
+    $SettingsFile = Join-Path $RepoRoot 'dev' 'config' 'PSScriptAnalyzerSettings.psd1'
     
     # Build parameters for Invoke-ScriptAnalyzer
     $analyzerParams = @{
-        Path = $Path
         Recurse = $Recurse
         Severity = $Severity
     }
@@ -101,10 +100,17 @@ try {
         $analyzerParams['Fix'] = $true
     }
 
-    # Process each path
+    # Process each path (resolve relative to repository root)
     foreach ($pathItem in $Path) {
-        Write-Verbose "Analyzing path: $pathItem"
-        $analyzerParams['Path'] = $pathItem
+        # If path is relative and doesn't start with ./ or \, make it relative to repo root
+        if (-not [System.IO.Path]::IsPathRooted($pathItem) -and $pathItem -notmatch '^\.') {
+            $resolvedPath = Join-Path $RepoRoot $pathItem
+        } else {
+            $resolvedPath = $pathItem
+        }
+        
+        Write-Verbose "Analyzing path: $resolvedPath"
+        $analyzerParams['Path'] = $resolvedPath
         $results = Invoke-ScriptAnalyzer @analyzerParams
         if ($results) {
             $allResults += $results

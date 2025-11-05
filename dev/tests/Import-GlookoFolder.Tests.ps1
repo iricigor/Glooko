@@ -1,13 +1,13 @@
 BeforeAll {
     # Import the module being tested
-    $ModulePath = Join-Path $PSScriptRoot '..' 'Glooko.psd1'
+    $ModulePath = Join-Path $PSScriptRoot '..' '..' 'Glooko.psd1'
     Import-Module $ModulePath -Force
     
     # Import test helpers
     . (Join-Path $PSScriptRoot 'Helpers' 'TestHelpers.ps1')
     
     # Import Private functions for direct testing
-    . (Join-Path $PSScriptRoot '..' 'Private' 'Expand-GlookoMetadata.ps1')
+    . (Join-Path $PSScriptRoot '..' '..' 'Private' 'Expand-GlookoMetadata.ps1')
 }
 
 AfterAll {

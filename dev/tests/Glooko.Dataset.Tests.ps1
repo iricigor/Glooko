@@ -1,6 +1,6 @@
 BeforeAll {
     # Import the module
-    $ModulePath = Join-Path $PSScriptRoot '..' 'Glooko.psd1'
+    $ModulePath = Join-Path $PSScriptRoot '..' '..' 'Glooko.psd1'
     Import-Module $ModulePath -Force
 }
 

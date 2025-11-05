@@ -39,7 +39,7 @@ jobs:
       shell: pwsh
       run: |
         # Run PSScriptAnalyzer on module code (Public, Private, root module)
-        ./Analyze.ps1 -Path Public,Private,Glooko.psm1
+        ./dev/build/Analyze.ps1 -Path Public,Private,Glooko.psm1
         
         # Check exit code
         if ($LASTEXITCODE -ne 0) {
@@ -53,4 +53,4 @@ jobs:
       run: |
         # Run on all PowerShell files for informational purposes
         Write-Host "`n=== Running PSScriptAnalyzer on all PowerShell files ===" -ForegroundColor Cyan
-        ./Analyze.ps1
+        ./dev/build/Analyze.ps1

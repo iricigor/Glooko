@@ -34,7 +34,7 @@ The `Build-Help.ps1` script automatically installs the required dependency:
 Run the `Build-Help.ps1` script to generate both platyPS markdown and XML help files:
 
 ```powershell
-./Build-Help.ps1
+./dev/build/Build-Help.ps1
 ```
 
 This will:
@@ -57,7 +57,7 @@ The `Build.ps1` script automatically includes the `en-US/` folder in the module 
 
 When building the module:
 ```powershell
-./Build.ps1
+./dev/build/Build.ps1
 ```
 
 The output in `BuildOutput/` will include:
@@ -113,7 +113,7 @@ When you modify comment-based help in the function files (in `Public/`), you sho
 # Edit Public/Import-GlookoCSV.ps1
 
 # 2. Regenerate help files
-./Build-Help.ps1
+./dev/build/Build-Help.ps1
 
 # 3. Test the help
 Import-Module ./Glooko.psd1 -Force
