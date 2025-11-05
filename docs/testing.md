@@ -110,7 +110,8 @@ The test suite covers all public and private functions:
   - ✅ Verbose output verification
 
 - **Get-GlookoCGMStatsExtended** - Extended CGM data analysis
-  - ✅ Five-category analysis (very low/low/in/high/very high)
+  - ✅ Flexible 3-category or 5-category analysis
+  - ✅ UseVeryLowHigh switch to enable/disable very low and very high categories
   - ✅ Percentage calculations with rounding
   - ✅ Date grouping functionality
   - ✅ Date filtering with Days parameter

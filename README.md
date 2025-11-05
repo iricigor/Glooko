@@ -78,7 +78,7 @@ This module provides the following functions:
 - **`Get-GlookoDataset`** - Filters datasets by name and returns only their data, making it easy to work with specific dataset types like 'cgm' or 'alarms', see [detailed documentation](docs/functions/get-glookodataset.md).
 - **`Export-GlookoZipToXlsx`** - Converts a Glooko zip file to an Excel (XLSX) file with a Summary worksheet as the first tab, followed by each dataset in a separate worksheet, see [detailed documentation](docs/functions/export-glookozip-to-xlsx.md).
 - **`Get-GlookoCGMStats`** - Analyzes CGM data and provides basic statistics (below range, in range, above range) grouped by date with counts and percentages, see [detailed documentation](docs/functions/get-glookocgmstats.md).
-- **`Get-GlookoCGMStatsExtended`** - Provides extended CGM analysis with very low, low, in range, high, and very high categories, plus date range filtering options, see [detailed documentation](docs/functions/get-glookocgmstatsextended.md).
+- **`Get-GlookoCGMStatsExtended`** - Provides flexible CGM analysis supporting both 3-category (low/in range/high) and 5-category (very low/low/in range/high/very high) analysis with date range filtering options, see [detailed documentation](docs/functions/get-glookocgmstatsextended.md).
 
 ### Getting Help
 

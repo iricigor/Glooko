@@ -25,17 +25,51 @@ Describe 'Get-GlookoCGMStatsExtended' {
         )
     }
     
-    Context 'Basic functionality' {
+    Context 'Basic functionality - 3 categories (default)' {
         
-        It 'Should analyze CGM data and return extended statistics' {
+        It 'Should analyze CGM data and return statistics with 3 categories by default' {
             $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData
             
             $result | Should -Not -BeNullOrEmpty
             $result | Should -HaveCount 3  # Three dates
+            
+            # Should have 3-category properties
+            $result[0].PSObject.Properties.Name | Should -Contain 'Low'
+            $result[0].PSObject.Properties.Name | Should -Contain 'InRange'
+            $result[0].PSObject.Properties.Name | Should -Contain 'High'
+            $result[0].PSObject.Properties.Name | Should -Not -Contain 'VeryLow'
+            $result[0].PSObject.Properties.Name | Should -Not -Contain 'VeryHigh'
+        }
+        
+        It 'Should calculate correct counts for 3 categories' {
+            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData
+            
+            $day1 = $result | Where-Object { $_.Date -eq '2025-10-26' }
+            $day1.TotalReadings | Should -Be 5
+            $day1.Low | Should -Be 2      # 2.5, 3.5 (both < 4.0)
+            $day1.InRange | Should -Be 1  # 7.0
+            $day1.High | Should -Be 2     # 12.0, 15.0 (both > 10.0)
+        }
+    }
+    
+    Context 'Basic functionality - 5 categories (with UseVeryLowHigh)' {
+        
+        It 'Should analyze CGM data and return extended statistics with 5 categories' {
+            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData -UseVeryLowHigh
+            
+            $result | Should -Not -BeNullOrEmpty
+            $result | Should -HaveCount 3  # Three dates
+            
+            # Should have 5-category properties
+            $result[0].PSObject.Properties.Name | Should -Contain 'VeryLow'
+            $result[0].PSObject.Properties.Name | Should -Contain 'Low'
+            $result[0].PSObject.Properties.Name | Should -Contain 'InRange'
+            $result[0].PSObject.Properties.Name | Should -Contain 'High'
+            $result[0].PSObject.Properties.Name | Should -Contain 'VeryHigh'
         }
         
         It 'Should calculate correct counts for all categories' {
-            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData
+            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData -UseVeryLowHigh
             
             $day1 = $result | Where-Object { $_.Date -eq '2025-10-26' }
             $day1.TotalReadings | Should -Be 5
@@ -46,8 +80,8 @@ Describe 'Get-GlookoCGMStatsExtended' {
             $day1.VeryHigh | Should -Be 1  # 15.0
         }
         
-        It 'Should calculate correct percentages' {
-            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData
+        It 'Should calculate correct percentages for 5 categories' {
+            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData -UseVeryLowHigh
             
             $day1 = $result | Where-Object { $_.Date -eq '2025-10-26' }
             $day1.VeryLowPercent | Should -Be 20.0
@@ -57,8 +91,8 @@ Describe 'Get-GlookoCGMStatsExtended' {
             $day1.VeryHighPercent | Should -Be 20.0
         }
         
-        It 'Should include range definitions in output' {
-            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData
+        It 'Should include range definitions in output for 5 categories' {
+            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData -UseVeryLowHigh
             
             $result[0].Ranges | Should -Match 'VeryLow<3'
             $result[0].Ranges | Should -Match 'Low=3-4'
@@ -68,10 +102,29 @@ Describe 'Get-GlookoCGMStatsExtended' {
         }
     }
     
-    Context 'Custom thresholds' {
+    Context 'Custom thresholds - 3 categories' {
+        
+        It 'Should support custom low threshold' {
+            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData -LowThreshold 5.0
+            
+            $day1 = $result | Where-Object { $_.Date -eq '2025-10-26' }
+            # With low=5.0: 2.5, 3.5 are < 5.0 (low)
+            $day1.Low | Should -Be 2
+        }
+        
+        It 'Should support custom high threshold' {
+            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData -HighThreshold 8.0
+            
+            $day1 = $result | Where-Object { $_.Date -eq '2025-10-26' }
+            # With high=8.0: 12.0, 15.0 are > 8.0 (high)
+            $day1.High | Should -Be 2
+        }
+    }
+    
+    Context 'Custom thresholds - 5 categories' {
         
         It 'Should support custom very low threshold' {
-            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData -VeryLowThreshold 2.0
+            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData -UseVeryLowHigh -VeryLowThreshold 2.0
             
             $day1 = $result | Where-Object { $_.Date -eq '2025-10-26' }
             $day1.VeryLow | Should -Be 0   # 2.5 is now in Low category
@@ -79,7 +132,7 @@ Describe 'Get-GlookoCGMStatsExtended' {
         }
         
         It 'Should support custom very high threshold' {
-            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData -VeryHighThreshold 16.0
+            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData -UseVeryLowHigh -VeryHighThreshold 16.0
             
             $day1 = $result | Where-Object { $_.Date -eq '2025-10-26' }
             $day1.VeryHigh | Should -Be 0  # 15.0 is now in High category
@@ -87,7 +140,7 @@ Describe 'Get-GlookoCGMStatsExtended' {
         }
         
         It 'Should support all custom thresholds' {
-            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData `
+            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData -UseVeryLowHigh `
                 -VeryLowThreshold 2.0 -LowThreshold 3.0 -HighThreshold 12.0 -VeryHighThreshold 16.0
             
             $day1 = $result | Where-Object { $_.Date -eq '2025-10-26' }
@@ -102,7 +155,7 @@ Describe 'Get-GlookoCGMStatsExtended' {
     Context 'Date filtering with Days parameter' {
         
         It 'Should filter to last N days' {
-            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData -Days 2
+            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData -UseVeryLowHigh -Days 2
             
             $result | Should -HaveCount 2
             $result.Date | Should -Contain '2025-10-27'
@@ -110,7 +163,7 @@ Describe 'Get-GlookoCGMStatsExtended' {
         }
         
         It 'Should filter to last 1 day' {
-            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData -Days 1
+            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData -UseVeryLowHigh -Days 1
             
             $result | Should -HaveCount 1
             $result[0].Date | Should -Be '2025-10-28'
@@ -120,7 +173,7 @@ Describe 'Get-GlookoCGMStatsExtended' {
     Context 'Date filtering with StartDate and EndDate' {
         
         It 'Should filter by start date' {
-            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData -StartDate ([datetime]'2025-10-27')
+            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData -UseVeryLowHigh -StartDate ([datetime]'2025-10-27')
             
             $result | Should -HaveCount 2
             $result.Date | Should -Contain '2025-10-27'
@@ -128,7 +181,7 @@ Describe 'Get-GlookoCGMStatsExtended' {
         }
         
         It 'Should filter by end date' {
-            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData -EndDate ([datetime]'2025-10-27')
+            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData -UseVeryLowHigh -EndDate ([datetime]'2025-10-27')
             
             $result | Should -HaveCount 2
             $result.Date | Should -Contain '2025-10-26'
@@ -136,7 +189,7 @@ Describe 'Get-GlookoCGMStatsExtended' {
         }
         
         It 'Should filter by date range' {
-            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData `
+            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData -UseVeryLowHigh `
                 -StartDate ([datetime]'2025-10-26') -EndDate ([datetime]'2025-10-27')
             
             $result | Should -HaveCount 2
@@ -145,7 +198,7 @@ Describe 'Get-GlookoCGMStatsExtended' {
         }
         
         It 'Should filter to exact date' {
-            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData `
+            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData -UseVeryLowHigh `
                 -StartDate ([datetime]'2025-10-27') -EndDate ([datetime]'2025-10-27')
             
             $result | Should -HaveCount 1
@@ -161,7 +214,7 @@ Describe 'Get-GlookoCGMStatsExtended' {
                 [PSCustomObject]@{ Timestamp = '2025-10-26 06:00'; GlucoseValue = 15.0 }
             )
             
-            $result = Get-GlookoCGMStatsExtended -InputObject $customData -GlucoseColumn 'GlucoseValue'
+            $result = Get-GlookoCGMStatsExtended -InputObject $customData -UseVeryLowHigh -GlucoseColumn 'GlucoseValue'
             
             $result | Should -Not -BeNullOrEmpty
             $result[0].VeryLow | Should -Be 1
@@ -182,7 +235,7 @@ Describe 'Get-GlookoCGMStatsExtended' {
     Context 'Pipeline support' {
         
         It 'Should accept pipeline input' {
-            $result = $Script:TestCGMData | Get-GlookoCGMStatsExtended
+            $result = $Script:TestCGMData | Get-GlookoCGMStatsExtended -UseVeryLowHigh
             
             $result | Should -Not -BeNullOrEmpty
             $result | Should -HaveCount 3
@@ -190,7 +243,7 @@ Describe 'Get-GlookoCGMStatsExtended' {
         
         It 'Should work with Import-GlookoCSV output' {
             $testFile = Join-Path $PSScriptRoot 'Fixtures' 'cgm-sample.csv'
-            $result = Import-GlookoCSV -Path $testFile | ForEach-Object { $_.Data } | Get-GlookoCGMStatsExtended
+            $result = Import-GlookoCSV -Path $testFile | ForEach-Object { $_.Data } | Get-GlookoCGMStatsExtended -UseVeryLowHigh
             
             $result | Should -Not -BeNullOrEmpty
         }
@@ -212,7 +265,7 @@ Describe 'Get-GlookoCGMStatsExtended' {
                 [PSCustomObject]@{ Timestamp = '2025-10-26 00:00'; 'CGM Glucose Value (mmol/l)' = 7.0 }
             )
             
-            $result = Get-GlookoCGMStatsExtended -InputObject $singleReading
+            $result = Get-GlookoCGMStatsExtended -InputObject $singleReading -UseVeryLowHigh
             
             $result | Should -Not -BeNullOrEmpty
             $result[0].TotalReadings | Should -Be 1
@@ -231,7 +284,7 @@ Describe 'Get-GlookoCGMStatsExtended' {
                 [PSCustomObject]@{ Timestamp = '2025-10-26 07:00'; 'CGM Glucose Value (mmol/l)' = 14.0 } # Very high (inclusive)
             )
             
-            $result = Get-GlookoCGMStatsExtended -InputObject $boundaryData
+            $result = Get-GlookoCGMStatsExtended -InputObject $boundaryData -UseVeryLowHigh
             
             $result[0].VeryLow | Should -Be 1
             $result[0].Low | Should -Be 2
@@ -242,7 +295,7 @@ Describe 'Get-GlookoCGMStatsExtended' {
         
         It 'Should handle no data after date filtering' {
             $warnings = @()
-            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData `
+            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData -UseVeryLowHigh `
                 -StartDate ([datetime]'2025-11-01') -WarningVariable warnings
             
             $result | Should -BeNullOrEmpty
@@ -254,7 +307,7 @@ Describe 'Get-GlookoCGMStatsExtended' {
     Context 'Data grouping by date' {
         
         It 'Should group readings by date correctly' {
-            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData
+            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData -UseVeryLowHigh
             
             $dates = $result | Select-Object -ExpandProperty Date
             $dates | Should -Contain '2025-10-26'
@@ -263,7 +316,7 @@ Describe 'Get-GlookoCGMStatsExtended' {
         }
         
         It 'Should count readings per date correctly' {
-            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData
+            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData -UseVeryLowHigh
             
             $day1 = $result | Where-Object { $_.Date -eq '2025-10-26' }
             $day2 = $result | Where-Object { $_.Date -eq '2025-10-27' }
@@ -278,7 +331,7 @@ Describe 'Get-GlookoCGMStatsExtended' {
     Context 'Verbose output' {
         
         It 'Should provide verbose output when requested' {
-            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData -Verbose
+            $result = Get-GlookoCGMStatsExtended -InputObject $Script:TestCGMData -UseVeryLowHigh -Verbose
             
             # Verify the function still works correctly with verbose output
             $result | Should -Not -BeNullOrEmpty
@@ -294,7 +347,7 @@ Describe 'Get-GlookoCGMStatsExtended' {
                 [PSCustomObject]@{ Timestamp = '2025-10-26 02:00'; 'CGM Glucose Value (mmol/l)' = 15.0 }
             )
             
-            $result = Get-GlookoCGMStatsExtended -InputObject $testData
+            $result = Get-GlookoCGMStatsExtended -InputObject $testData -UseVeryLowHigh
             
             # 2 in range out of 3 = 66.666... should round to 66.7
             $result[0].InRangePercent | Should -Be 66.7
