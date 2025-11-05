@@ -99,7 +99,8 @@ The test suite covers all public and private functions:
   - ✅ Property consolidation
   - ✅ Error handling for incompatible datasets
 
-- **Test-ChangelogVersion** - Changelog version verification helper
+### Release Automation Helper Functions
+- **Test-ChangelogVersion** - Changelog version verification helper (in Release/ folder)
   - ✅ Version header detection in changelog
   - ✅ Support for two-part and three-part version numbers
   - ✅ Error handling for missing changelog

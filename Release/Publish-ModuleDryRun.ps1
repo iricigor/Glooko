@@ -24,7 +24,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 # Import helper function
-. (Join-Path $PSScriptRoot '..' 'Private' 'Test-ChangelogVersion.ps1')
+. (Join-Path $PSScriptRoot 'Test-ChangelogVersion.ps1')
 
 try {
     Write-Host "DRY RUN: Would publish module version $ModuleVersion to PowerShell Gallery"

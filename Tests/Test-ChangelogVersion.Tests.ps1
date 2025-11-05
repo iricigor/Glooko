@@ -4,7 +4,7 @@ BeforeAll {
     $script:RepoRoot = Split-Path -Parent $PSScriptRoot
     
     # Import the function under test
-    . (Join-Path $script:RepoRoot 'Private/Test-ChangelogVersion.ps1')
+    . (Join-Path $script:RepoRoot 'Release/Test-ChangelogVersion.ps1')
 }
 
 AfterAll {
