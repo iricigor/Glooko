@@ -1,6 +1,6 @@
 # Pester Test Results
-Tests/TestResults.xml
-Tests/CodeCoverage.xml
+dev/tests/TestResults.xml
+dev/tests/CodeCoverage.xml
 
 # Build output
 BuildOutput/

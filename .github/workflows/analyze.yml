@@ -2,9 +2,9 @@ name: PSScriptAnalyzer
 
 on:
   pull_request:
-    branches: [ main, master ]
+    branches: [ main, master, dev/data-v1.1 ]
   push:
-    branches: [ main, master ]
+    branches: [ main, master, dev/data-v1.1 ]
   workflow_dispatch:
 
 permissions:

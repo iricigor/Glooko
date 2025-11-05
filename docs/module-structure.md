@@ -31,6 +31,7 @@ Glooko/
 │   ├── Import-GlookoCSV.ps1    # Main CSV import function
 │   ├── Import-GlookoFolder.ps1 # Folder import with dataset consolidation
 │   ├── Import-GlookoZip.ps1    # Zip file import and processing
+│   ├── Get-GlookoDataset.ps1   # Filter datasets by name and return data
 │   └── Export-GlookoZipToXlsx.ps1  # Zip to Excel conversion
 ├── dev/                        # Development, build, and test infrastructure
 │   ├── build/                  # Build and development scripts
@@ -56,6 +57,7 @@ Glooko/
 │       ├── Import-GlookoCSV.Tests.ps1
 │       ├── Import-GlookoFolder.Tests.ps1
 │       ├── Import-GlookoZip.Tests.ps1
+│       ├── Get-GlookoDataset.Tests.ps1
 │       ├── Export-GlookoZipToXlsx.Tests.ps1
 │       ├── Expand-GlookoMetadata.Tests.ps1
 │       ├── Merge-GlookoDatasets.Tests.ps1
@@ -88,6 +90,7 @@ Glooko/
 │   │   ├── import-glookocsv.md
 │   │   ├── import-glookofolder.md
 │   │   ├── import-glookozip.md
+│   │   ├── get-glookodataset.md
 │   │   └── export-glookozip-to-xlsx.md
 │   └── help/                   # platyPS markdown help files
 │       ├── Import-GlookoCSV.md

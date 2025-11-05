@@ -87,6 +87,17 @@ The test suite covers all public and private functions:
   - ✅ Error handling for invalid inputs
   - ✅ Output file creation verification
 
+- **Get-GlookoDataset** - Filter datasets by name and return data
+  - ✅ Basic filtering by dataset name
+  - ✅ Exact matching (no wildcard support)
+  - ✅ Case-insensitive matching
+  - ✅ Pipeline input support
+  - ✅ Fallback to FullName when Dataset is null
+  - ✅ Multiple dataset consolidation
+  - ✅ Error handling for empty inputs
+  - ✅ Data integrity preservation
+  - ✅ Verbose output verification
+
 ### Private Functions
 - **Expand-GlookoMetadata** - Metadata parsing helper
   - ✅ Metadata extraction from CSV first row
