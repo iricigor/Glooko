@@ -34,7 +34,7 @@ jobs:
         Set-Location $env:GITHUB_WORKSPACE
         
         # Run tests using the config/PesterConfig.Other.ps1
-        ./config/PesterConfig.Other.ps1
+        ./dev/config/PesterConfig.Other.ps1
         
         # Check if tests passed
         if ($LASTEXITCODE -ne 0) {

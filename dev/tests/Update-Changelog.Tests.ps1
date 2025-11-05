@@ -1,8 +1,8 @@
 BeforeAll {
     # Store original location
     $script:OriginalLocation = Get-Location
-    $script:RepoRoot = Split-Path -Parent $PSScriptRoot
-    $script:UpdateChangelogScript = Join-Path $script:RepoRoot 'Release/Update-Changelog.ps1'
+    $script:RepoRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
+    $script:UpdateChangelogScript = Join-Path $script:RepoRoot 'dev/release/Update-Changelog.ps1'
 }
 
 AfterAll {

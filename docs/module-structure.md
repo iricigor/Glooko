@@ -12,68 +12,7 @@ Glooko/
 ├── Glooko.psm1                 # Module loader
 ├── Glooko.Types.ps1xml         # Custom type definitions
 ├── Glooko.Format.ps1xml        # Custom formatting definitions
-├── build/                      # Build and development scripts
-│   ├── Build.ps1               # Build script
-│   ├── Build-Help.ps1          # Help file generation script
-│   └── Analyze.ps1             # PSScriptAnalyzer runner
-├── config/                     # Configuration files
-│   ├── PesterConfig.ps1        # Pester configuration for core tests (with code coverage)
-│   ├── PesterConfig.Other.ps1  # Pester configuration for other tests (no code coverage)
-│   └── PSScriptAnalyzerSettings.psd1  # PSScriptAnalyzer configuration
-├── assets/                     # Module assets
-│   └── Glooko.ico              # Module icon
-├── en-US/                      # XML help files
-│   └── Glooko-help.xml         # External MAML help for all exported functions
-├── Public/                     # Public functions (exported)
-│   ├── Import-GlookoCSV.ps1    # Main CSV import function
-│   ├── Import-GlookoFolder.ps1 # Folder import with dataset consolidation
-│   ├── Import-GlookoZip.ps1    # Zip file import and processing
-│   └── Export-GlookoZipToXlsx.ps1  # Zip to Excel conversion
-├── Private/                    # Private functions (internal use only)
-│   ├── Expand-GlookoMetadata.ps1  # Metadata parsing helper
-│   └── Merge-GlookoDatasets.ps1   # Dataset consolidation helper
-├── Tests/                      # Pester test files
-│   ├── Import-GlookoCSV.Tests.ps1
-│   ├── Import-GlookoFolder.Tests.ps1
-│   ├── Import-GlookoZip.Tests.ps1
-│   ├── Export-GlookoZipToXlsx.Tests.ps1
-│   ├── Expand-GlookoMetadata.Tests.ps1
-│   ├── Merge-GlookoDatasets.Tests.ps1
-│   ├── Glooko.Dataset.Tests.ps1  # Type and formatting tests
-│   ├── Build.Tests.ps1         # Module structure validation
-│   ├── Get-ModuleChecksum.Tests.ps1  # Checksum calculation tests
-│   ├── Verify-ModuleChecksum.Tests.ps1  # Checksum verification tests
-│   ├── PSScriptAnalyzer.Tests.ps1  # Code quality tests
-│   ├── Publish-ModuleDryRun.Tests.ps1  # Dry run publishing tests
-│   ├── Publish-ModuleToGallery.Tests.ps1  # Publishing tests
-│   ├── Update-Changelog.Tests.ps1  # Changelog automation tests
-│   ├── Test-ChangelogVersion.Tests.ps1  # Changelog verification tests
-│   ├── Publish-ModuleDryRun.Tests.ps1
-│   ├── Publish-ModuleToGallery.Tests.ps1
-│   ├── Helpers/                # Test helper functions
-│   │   ├── TestHelpers.ps1
-│   │   ├── New-TestCSVFile.ps1
-│   │   ├── New-TestFolder.ps1
-│   │   └── New-TestZipFile.ps1
-│   └── Fixtures/               # Test data files
-├── docs/                       # Additional documentation
-│   ├── alternative-import-methods.md
-│   ├── automated-changelog.md # Automated changelog updates guide
-│   ├── help-generation.md      # Help file generation guide
-│   ├── module-structure.md     # This file
-│   ├── testing.md              # Testing documentation
-│   ├── badge-setup.md          # Badge configuration guide
-│   ├── release-process.md      # Release and publishing guide
-│   ├── functions/              # Function documentation
-│   │   ├── import-glookocsv.md
-│   │   ├── import-glookofolder.md
-│   │   ├── import-glookozip.md
-│   │   └── export-glookozip-to-xlsx.md
-│   └── help/                   # platyPS markdown help files
-│       ├── Import-GlookoCSV.md
-│       ├── Import-GlookoFolder.md
-│       ├── Import-GlookoZip.md
-│       └── Export-GlookoZipToXlsx.md
+├── .gitignore                  # Git ignore patterns
 ├── .github/                    # GitHub automation
 │   ├── scripts/
 │   │   ├── Install-ModuleVerbose.ps1  # Reusable function to install PowerShell modules
@@ -85,18 +24,78 @@ Glooko/
 │       ├── build.yml           # Build module artifacts
 │       ├── release.yml         # Release to PowerShell Gallery
 │       └── update-changelog.yml # Automated changelog updates
-├── Release/                    # Release automation scripts
-│   ├── Create-ReleaseArtifact.ps1
-│   ├── Create-ReleaseSummary.ps1
-│   ├── Download-BuildArtifact.ps1
-│   ├── Get-ModuleChecksum.ps1    # Calculate module runtime checksum
-│   ├── Publish-ModuleDryRun.ps1
-│   ├── Publish-ModuleToGallery.ps1
-│   ├── Test-ChangelogVersion.ps1  # Changelog version verification helper
-│   ├── Update-Changelog.ps1    # Automated changelog generation
-│   ├── Verify-BuildArtifact.ps1
-│   └── Verify-ModuleChecksum.ps1  # Verify checksum against published versions
-└── .gitignore                  # Git ignore patterns
+├── Private/                    # Private functions (internal use only)
+│   ├── Expand-GlookoMetadata.ps1  # Metadata parsing helper
+│   └── Merge-GlookoDatasets.ps1   # Dataset consolidation helper
+├── Public/                     # Public functions (exported)
+│   ├── Import-GlookoCSV.ps1    # Main CSV import function
+│   ├── Import-GlookoFolder.ps1 # Folder import with dataset consolidation
+│   ├── Import-GlookoZip.ps1    # Zip file import and processing
+│   └── Export-GlookoZipToXlsx.ps1  # Zip to Excel conversion
+├── dev/                        # Development, build, and test infrastructure
+│   ├── build/                  # Build and development scripts
+│   │   ├── Build.ps1           # Build script
+│   │   ├── Build-Help.ps1      # Help file generation script
+│   │   └── Analyze.ps1         # PSScriptAnalyzer runner
+│   ├── config/                 # Configuration files
+│   │   ├── PesterConfig.ps1    # Pester configuration for core tests (with code coverage)
+│   │   ├── PesterConfig.Other.ps1  # Pester configuration for other tests (no code coverage)
+│   │   └── PSScriptAnalyzerSettings.psd1  # PSScriptAnalyzer configuration
+│   ├── release/                # Release automation scripts
+│   │   ├── Create-ReleaseArtifact.ps1
+│   │   ├── Create-ReleaseSummary.ps1
+│   │   ├── Download-BuildArtifact.ps1
+│   │   ├── Get-ModuleChecksum.ps1    # Calculate module runtime checksum
+│   │   ├── Publish-ModuleDryRun.ps1
+│   │   ├── Publish-ModuleToGallery.ps1
+│   │   ├── Test-ChangelogVersion.ps1  # Changelog version verification helper
+│   │   ├── Update-Changelog.ps1    # Automated changelog generation
+│   │   ├── Verify-BuildArtifact.ps1
+│   │   └── Verify-ModuleChecksum.ps1  # Verify checksum against published versions
+│   └── tests/                  # Pester test files
+│       ├── Import-GlookoCSV.Tests.ps1
+│       ├── Import-GlookoFolder.Tests.ps1
+│       ├── Import-GlookoZip.Tests.ps1
+│       ├── Export-GlookoZipToXlsx.Tests.ps1
+│       ├── Expand-GlookoMetadata.Tests.ps1
+│       ├── Merge-GlookoDatasets.Tests.ps1
+│       ├── Glooko.Dataset.Tests.ps1  # Type and formatting tests
+│       ├── Build.Tests.ps1     # Module structure validation
+│       ├── Get-ModuleChecksum.Tests.ps1  # Checksum calculation tests
+│       ├── Verify-ModuleChecksum.Tests.ps1  # Checksum verification tests
+│       ├── PSScriptAnalyzer.Tests.ps1  # Code quality tests
+│       ├── Publish-ModuleDryRun.Tests.ps1  # Dry run publishing tests
+│       ├── Publish-ModuleToGallery.Tests.ps1  # Publishing tests
+│       ├── Update-Changelog.Tests.ps1  # Changelog automation tests
+│       ├── Test-ChangelogVersion.Tests.ps1  # Changelog verification tests
+│       ├── Helpers/            # Test helper functions
+│       │   ├── TestHelpers.ps1
+│       │   ├── New-TestCSVFile.ps1
+│       │   ├── New-TestFolder.ps1
+│       │   └── New-TestZipFile.ps1
+│       └── Fixtures/           # Test data files
+├── docs/                       # Additional documentation
+│   ├── alternative-import-methods.md
+│   ├── automated-changelog.md  # Automated changelog updates guide
+│   ├── help-generation.md      # Help file generation guide
+│   ├── module-structure.md     # This file
+│   ├── testing.md              # Testing documentation
+│   ├── badge-setup.md          # Badge configuration guide
+│   ├── release-process.md      # Release and publishing guide
+│   ├── assets/                 # Documentation assets
+│   │   └── Glooko.ico          # Module icon
+│   ├── functions/              # Function documentation
+│   │   ├── import-glookocsv.md
+│   │   ├── import-glookofolder.md
+│   │   ├── import-glookozip.md
+│   │   └── export-glookozip-to-xlsx.md
+│   └── help/                   # platyPS markdown help files
+│       ├── Import-GlookoCSV.md
+│       ├── Import-GlookoFolder.md
+│       ├── Import-GlookoZip.md
+│       └── Export-GlookoZipToXlsx.md
+└── en-US/                      # XML help files
+    └── Glooko-help.xml         # External MAML help for all exported functions
 ```
 
 ## Key Components
@@ -127,7 +126,7 @@ Functions in the `Private/` folder are internal helper functions used by public 
 The module includes XML help files for all exported functions:
 - **en-US/Glooko-help.xml** - External MAML help file that provides comprehensive help accessible via `Get-Help`
 - **docs/help/** - platyPS-formatted markdown files generated from comment-based help
-- **build/Build-Help.ps1** - Script to regenerate help files from comment-based help using platyPS
+- **dev/build/Build-Help.ps1** - Script to regenerate help files from comment-based help using platyPS
 
 For more information about help file generation and maintenance, see [Help Generation Documentation](help-generation.md).
 ### Type and Format Files
@@ -140,21 +139,21 @@ These files are automatically loaded when the module is imported via the `TypesT
 ### Tests
 The module uses Pester 5.x for comprehensive testing. Tests are split into two groups:
 
-**Core Tests** (`config/PesterConfig.ps1`):
+**Core Tests** (`dev/config/PesterConfig.ps1`):
 - Tests for module and Public/Private functions
 - Runs on both Linux and Windows
 - Includes code coverage metrics
 
-**Other Tests** (`config/PesterConfig.Other.ps1`):
+**Other Tests** (`dev/config/PesterConfig.Other.ps1`):
 - Tests for build scripts, publishing tools, and utilities
 - Runs on Linux only
 - No code coverage (focused on internal/dev tools)
 
-Test files are organized alongside the code they test in the `Tests/` folder.
+Test files are organized in the `dev/tests/` folder.
 
 ### Code Quality
 The module uses PSScriptAnalyzer to ensure code quality and adherence to PowerShell best practices:
-- **config/PSScriptAnalyzerSettings.psd1** - Configuration file with rules and exclusions
-- **build/Analyze.ps1** - Script to run PSScriptAnalyzer with custom settings
+- **dev/config/PSScriptAnalyzerSettings.psd1** - Configuration file with rules and exclusions
+- **dev/build/Analyze.ps1** - Script to run PSScriptAnalyzer with custom settings
 - **.github/workflows/analyze.yml** - Dedicated CI workflow for code quality checks on Public/, Private/, and Glooko.psm1
-- **Tests/PSScriptAnalyzer.Tests.ps1** - Automated tests to ensure code quality in CI/CD
+- **dev/tests/PSScriptAnalyzer.Tests.ps1** - Automated tests to ensure code quality in CI/CD

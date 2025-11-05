@@ -27,7 +27,7 @@ jobs:
       run: |
         $ErrorActionPreference = 'Stop'
         Write-Host "Building Glooko module..."
-        ./build/Build.ps1 -Verbose
+        ./dev/build/Build.ps1 -Verbose
     
     - name: Display build information
       shell: pwsh
@@ -85,7 +85,7 @@ jobs:
       shell: pwsh
       run: |
         Set-Location $env:GITHUB_WORKSPACE
-        ./config/PesterConfig.ps1
+        ./dev/config/PesterConfig.ps1
         
         if ($LASTEXITCODE -ne 0) {
           Write-Error "Tests failed with exit code $LASTEXITCODE"
@@ -95,8 +95,8 @@ jobs:
     - name: Extract Test Statistics
       shell: pwsh
       run: |
-        if (Test-Path "Tests/TestResults.xml") {
-          [xml]$results = Get-Content "Tests/TestResults.xml"
+        if (Test-Path "dev/tests/TestResults.xml") {
+          [xml]$results = Get-Content "dev/tests/TestResults.xml"
           $total = [int]$results.testsuites.tests
           $failures = [int]$results.testsuites.failures
           $errors = [int]$results.testsuites.errors
@@ -126,8 +126,8 @@ jobs:
       with:
         name: daily-test-results-linux
         path: |
-          Tests/TestResults.xml
-          Tests/CodeCoverage.xml
+          dev/tests/TestResults.xml
+          dev/tests/CodeCoverage.xml
         retention-days: 7
 
   daily-test-windows:
@@ -148,7 +148,7 @@ jobs:
       shell: pwsh
       run: |
         Set-Location $env:GITHUB_WORKSPACE
-        ./config/PesterConfig.ps1
+        ./dev/config/PesterConfig.ps1
         
         if ($LASTEXITCODE -ne 0) {
           Write-Error "Tests failed with exit code $LASTEXITCODE"
@@ -158,8 +158,8 @@ jobs:
     - name: Extract Test Statistics
       shell: pwsh
       run: |
-        if (Test-Path "Tests/TestResults.xml") {
-          [xml]$results = Get-Content "Tests/TestResults.xml"
+        if (Test-Path "dev/tests/TestResults.xml") {
+          [xml]$results = Get-Content "dev/tests/TestResults.xml"
           $total = [int]$results.testsuites.tests
           $failures = [int]$results.testsuites.failures
           $errors = [int]$results.testsuites.errors
@@ -174,6 +174,6 @@ jobs:
       with:
         name: daily-test-results-windows
         path: |
-          Tests/TestResults.xml
-          Tests/CodeCoverage.xml
+          dev/tests/TestResults.xml
+          dev/tests/CodeCoverage.xml
         retention-days: 7

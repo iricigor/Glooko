@@ -108,7 +108,7 @@ Glooko/
 
 ```powershell
 # Run all tests with coverage
-./config/PesterConfig.ps1
+./dev/config/PesterConfig.ps1
 
 # Run specific test file
 Invoke-Pester -Path ./Tests/Import-GlookoCSV.Tests.ps1
@@ -121,10 +121,10 @@ Invoke-Pester -Path ./Tests/ -Output Detailed
 
 ```powershell
 # Run PSScriptAnalyzer on module code
-./build/Analyze.ps1 -Path Public,Private,Glooko.psm1
+./dev/build/Analyze.ps1 -Path Public,Private,Glooko.psm1
 
 # Auto-fix issues where possible
-./build/Analyze.ps1 -Fix
+./dev/build/Analyze.ps1 -Fix
 ```
 
 ## How to Contribute
@@ -281,7 +281,7 @@ Always run tests before submitting:
 
 ```powershell
 # Run all tests with coverage
-./config/PesterConfig.ps1
+./dev/config/PesterConfig.ps1
 
 # Ensure all tests pass
 # Ensure code coverage meets minimum 75%
@@ -334,10 +334,10 @@ Always run tests before submitting:
 3. **Test your changes**:
    ```powershell
    # Run tests
-   ./config/PesterConfig.ps1
+   ./dev/config/PesterConfig.ps1
    
    # Run code analysis
-   ./build/Analyze.ps1
+   ./dev/build/Analyze.ps1
    ```
 
 4. **Commit your changes**:

@@ -1,8 +1,8 @@
 BeforeAll {
     # Store original location
     $script:OriginalLocation = Get-Location
-    $script:RepoRoot = Split-Path -Parent $PSScriptRoot
-    $script:BuildScript = Join-Path $script:RepoRoot 'build' 'Build.ps1'
+    $script:RepoRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
+    $script:BuildScript = Join-Path $script:RepoRoot 'dev' 'build' 'Build.ps1'
 }
 
 AfterAll {
@@ -20,7 +20,7 @@ Describe 'Build.ps1' {
         # Create minimal module structure for testing
         New-Item -Path (Join-Path $script:TestDir 'Public') -ItemType Directory | Out-Null
         New-Item -Path (Join-Path $script:TestDir 'Private') -ItemType Directory | Out-Null
-        New-Item -Path (Join-Path $script:TestDir 'build') -ItemType Directory | Out-Null
+        New-Item -Path (Join-Path $script:TestDir 'dev' 'build') -ItemType Directory -Force | Out-Null
         
         # Create test files
         Set-Content -Path (Join-Path $script:TestDir 'Glooko.psm1') -Value '# Test module'
@@ -42,8 +42,8 @@ Describe 'Build.ps1' {
 }
 "@ | Set-Content -Path $manifestPath
         
-        # Copy the build script to test directory build folder
-        Copy-Item -Path $script:BuildScript -Destination (Join-Path $script:TestDir 'build') -Force
+        # Copy the build script to test directory dev/build folder
+        Copy-Item -Path $script:BuildScript -Destination (Join-Path $script:TestDir 'dev' 'build') -Force
         
         # Change to test directory
         Set-Location $script:TestDir
@@ -58,19 +58,19 @@ Describe 'Build.ps1' {
     Context 'First build' {
         
         It 'Should create BuildOutput directory' {
-            ./build/Build.ps1
+            ./dev/build/Build.ps1
             
             Test-Path './BuildOutput' | Should -Be $true
         }
         
         It 'Should create version file' {
-            ./build/Build.ps1
+            ./dev/build/Build.ps1
             
             Test-Path './.version' | Should -Be $true
         }
         
         It 'Should start with build number 0' {
-            ./build/Build.ps1
+            ./dev/build/Build.ps1
             
             $version = Get-Content './.version' | ConvertFrom-Json
             $version.BuildNumber | Should -Be 0
@@ -78,7 +78,7 @@ Describe 'Build.ps1' {
         }
         
         It 'Should copy all runtime files' {
-            ./build/Build.ps1
+            ./dev/build/Build.ps1
             
             Test-Path './BuildOutput/Glooko.psd1' | Should -Be $true
             Test-Path './BuildOutput/Glooko.psm1' | Should -Be $true
@@ -88,14 +88,14 @@ Describe 'Build.ps1' {
         }
         
         It 'Should update module manifest version' {
-            ./build/Build.ps1
+            ./dev/build/Build.ps1
             
             $manifest = Import-PowerShellDataFile -Path './BuildOutput/Glooko.psd1'
             $manifest.ModuleVersion | Should -Be '1.0.0'
         }
         
         It 'Should create BuildInfo.json' {
-            ./build/Build.ps1
+            ./dev/build/Build.ps1
             
             Test-Path './BuildOutput/BuildInfo.json' | Should -Be $true
             
@@ -109,10 +109,10 @@ Describe 'Build.ps1' {
     Context 'Build number increment' {
         
         It 'Should increment build number on subsequent builds' {
-            ./build/Build.ps1
+            ./dev/build/Build.ps1
             $version1 = Get-Content './.version' | ConvertFrom-Json
             
-            ./build/Build.ps1
+            ./dev/build/Build.ps1
             $version2 = Get-Content './.version' | ConvertFrom-Json
             
             $version2.BuildNumber | Should -Be ($version1.BuildNumber + 1)
@@ -128,7 +128,7 @@ Describe 'Build.ps1' {
                 BuildNumber = 5
             } | ConvertTo-Json | Set-Content './.version'
             
-            ./build/Build.ps1
+            ./dev/build/Build.ps1
             
             $version = Get-Content './.version' | ConvertFrom-Json
             $version.BuildNumber | Should -Be 6
@@ -153,7 +153,7 @@ Describe 'Build.ps1' {
             $content = $content -replace "ModuleVersion = '1.0'", "ModuleVersion = '1.1'"
             Set-Content -Path $manifestPath -Value $content
             
-            ./build/Build.ps1
+            ./dev/build/Build.ps1
             
             $version = Get-Content './.version' | ConvertFrom-Json
             $version.BuildNumber | Should -Be 0
@@ -167,7 +167,7 @@ Describe 'Build.ps1' {
         It 'Should fail if module manifest is missing' {
             Remove-Item './Glooko.psd1' -Force
             
-            { ./build/Build.ps1 -ErrorAction Stop } | Should -Throw '*Module manifest not found*'
+            { ./dev/build/Build.ps1 -ErrorAction Stop } | Should -Throw '*Module manifest not found*'
         }
         
         It 'Should fail if module version is not in major.minor format' {
@@ -177,14 +177,14 @@ Describe 'Build.ps1' {
             $content = $content -replace "ModuleVersion = '1.0'", "ModuleVersion = '1.0.0'"
             Set-Content -Path $manifestPath -Value $content
             
-            { ./build/Build.ps1 -ErrorAction Stop } | Should -Throw '*major.minor format*'
+            { ./dev/build/Build.ps1 -ErrorAction Stop } | Should -Throw '*major.minor format*'
         }
     }
     
     Context 'Custom output path' {
         
         It 'Should create artifact in custom output path' {
-            ./build/Build.ps1 -OutputPath './CustomOutput'
+            ./dev/build/Build.ps1 -OutputPath './CustomOutput'
             
             Test-Path './CustomOutput' | Should -Be $true
             Test-Path './CustomOutput/Glooko.psd1' | Should -Be $true

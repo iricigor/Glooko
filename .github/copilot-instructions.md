@@ -16,8 +16,8 @@ This is a PowerShell module for CSV data processing utilities, specifically desi
   - `TestHelpers.ps1`: Shared test utilities
   - `Fixtures/`: Test data files
 - **docs/**: Documentation files
-- **build/**: Build and development scripts
-- **config/**: Configuration files
+- **dev/**: Development, build, test, and release infrastructure
+
 - **Glooko.psm1**: Root module file that imports all functions
 - **Glooko.psd1**: Module manifest with metadata and exports
 

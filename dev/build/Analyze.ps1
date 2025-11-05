@@ -59,8 +59,8 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 try {
-    # Get the repository root (one level up from build folder)
-    $RepoRoot = Split-Path -Parent $PSScriptRoot
+    # Get the repository root (two levels up from dev/build folder)
+    $RepoRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
     Write-Verbose "Repository root: $RepoRoot"
 
     # Check if PSScriptAnalyzer is available
@@ -71,8 +71,8 @@ try {
 
     Import-Module PSScriptAnalyzer -Force
 
-    # Settings file in config folder
-    $SettingsFile = Join-Path $RepoRoot 'config' 'PSScriptAnalyzerSettings.psd1'
+    # Settings file in dev/config folder
+    $SettingsFile = Join-Path $RepoRoot 'dev' 'config' 'PSScriptAnalyzerSettings.psd1'
     
     # Build parameters for Invoke-ScriptAnalyzer
     $analyzerParams = @{

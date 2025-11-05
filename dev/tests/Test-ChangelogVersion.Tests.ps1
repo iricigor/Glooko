@@ -1,10 +1,10 @@
 BeforeAll {
     # Store original location
     $script:OriginalLocation = Get-Location
-    $script:RepoRoot = Split-Path -Parent $PSScriptRoot
+    $script:RepoRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
     
     # Import the function under test
-    . (Join-Path $script:RepoRoot 'Release/Test-ChangelogVersion.ps1')
+    . (Join-Path $script:RepoRoot 'dev/release/Test-ChangelogVersion.ps1')
 }
 
 AfterAll {

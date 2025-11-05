@@ -214,7 +214,7 @@ Install-Module -Name PSScriptAnalyzer -Force -SkipPublisherCheck
 
 #### PSScriptAnalyzer Configuration
 
-The analyzer uses settings defined in `config/PSScriptAnalyzerSettings.psd1`. The following rules are excluded with detailed rationale:
+The analyzer uses settings defined in `dev/config/PSScriptAnalyzerSettings.psd1`. The following rules are excluded with detailed rationale:
 
 - **`PSAvoidTrailingWhitespace`** - This is a formatting issue better handled by editor settings (e.g., `.editorconfig`, VS Code format-on-save). Enforcing it in the analyzer would create noise without adding security or functional value.
 

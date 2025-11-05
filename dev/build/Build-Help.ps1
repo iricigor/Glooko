@@ -33,13 +33,13 @@
 [CmdletBinding()]
 param(
     [Parameter()]
-    [string]$ModulePath = (Join-Path (Split-Path -Parent $PSScriptRoot) 'Glooko.psd1'),
+    [string]$ModulePath = (Join-Path (Split-Path -Parent (Split-Path -Parent $PSScriptRoot)) 'Glooko.psd1'),
 
     [Parameter()]
-    [string]$MarkdownPath = (Join-Path (Split-Path -Parent $PSScriptRoot) 'docs' 'help'),
+    [string]$MarkdownPath = (Join-Path (Split-Path -Parent (Split-Path -Parent $PSScriptRoot)) 'docs' 'help'),
 
     [Parameter()]
-    [string]$OutputPath = (Join-Path (Split-Path -Parent $PSScriptRoot) 'en-US')
+    [string]$OutputPath = (Join-Path (Split-Path -Parent (Split-Path -Parent $PSScriptRoot)) 'en-US')
 )
 
 Set-StrictMode -Version Latest
