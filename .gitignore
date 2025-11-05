@@ -5,6 +5,8 @@ Tests/CodeCoverage.xml
 # Build output
 BuildOutput/
 .version
+tmp/
+TempBuild/
 
 # PowerShell temporary files
 *.tmp

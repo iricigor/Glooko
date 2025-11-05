@@ -68,7 +68,7 @@ jobs:
         if ("${{ inputs.force_release }}" -eq "true") {
           $forceParam.Force = $true
         }
-        ./Release/Verify-ModuleChecksum.ps1 @forceParam
+        ./Release/Verify-ModuleChecksum.ps1 -ModulePath ./BuildOutput/Glooko @forceParam
     
     - name: Publish to PowerShell Gallery (Dry Run)
       if: inputs.dry_run
