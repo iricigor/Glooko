@@ -39,8 +39,12 @@ Glooko/
 │   ├── Merge-GlookoDatasets.Tests.ps1
 │   ├── Glooko.Dataset.Tests.ps1  # Type and formatting tests
 │   ├── Build.Tests.ps1         # Module structure validation
+│   ├── Get-ModuleChecksum.Tests.ps1  # Checksum calculation tests
+│   ├── Verify-ModuleChecksum.Tests.ps1  # Checksum verification tests
 │   ├── PSScriptAnalyzer.Tests.ps1  # Code quality tests
 │   ├── Update-Changelog.Tests.ps1  # Changelog automation tests
+│   ├── Publish-ModuleDryRun.Tests.ps1
+│   ├── Publish-ModuleToGallery.Tests.ps1
 │   ├── Helpers/                # Test helper functions
 │   │   ├── TestHelpers.ps1
 │   │   ├── New-TestCSVFile.ps1
@@ -80,10 +84,12 @@ Glooko/
 │   ├── Create-ReleaseArtifact.ps1
 │   ├── Create-ReleaseSummary.ps1
 │   ├── Download-BuildArtifact.ps1
+│   ├── Get-ModuleChecksum.ps1    # Calculate module runtime checksum
 │   ├── Publish-ModuleDryRun.ps1
 │   ├── Publish-ModuleToGallery.ps1
 │   ├── Update-Changelog.ps1    # Automated changelog generation
-│   └── Verify-BuildArtifact.ps1
+│   ├── Verify-BuildArtifact.ps1
+│   └── Verify-ModuleChecksum.ps1  # Verify checksum against published versions
 └── .gitignore                  # Git ignore patterns
 ```
 
