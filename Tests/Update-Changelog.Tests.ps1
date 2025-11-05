@@ -475,7 +475,8 @@ All notable changes to this project will be documented in this file.
             $result = Update-ChangelogFile -ChangelogPath $script:TestChangelog -NewEntries $entries
             
             # Extract the order of version headers from the result
-            $versionHeaders = [regex]::Matches($result, '## \[(\d+\.\d+\.\d+)\]') | ForEach-Object { $_.Groups[1].Value }
+            # Match both two-part (1.0) and three-part (1.0.1) version formats
+            $versionHeaders = [regex]::Matches($result, '## \[(\d+\.\d+(?:\.\d+)?)\]') | ForEach-Object { $_.Groups[1].Value }
             
             # The versions should appear in descending order: 1.10.0, then 1.9.0, then 1.2.0
             $versionHeaders[0] | Should -Be '1.10.0'
@@ -487,7 +488,7 @@ All notable changes to this project will be documented in this file.
             # Verify the script uses [version] cast for sorting
             $scriptContent = Get-Content $script:UpdateChangelogScript -Raw
             
-            # Check that version sorting is used on line 238 (major.minor keys)
+            # Check that version sorting is used for major.minor keys
             $scriptContent | Should -Match 'Sort-Object\s+\{\s*\[version\]\$_\s*\}\s+-Descending'
         }
     }
