@@ -283,16 +283,19 @@ function Update-ChangelogFile {
         # Use the latest full version instead of just major.minor
         $firstVersion = ($latestVersions | Sort-Object { [version]$_ } -Descending | Select-Object -First 1)
         if ($firstVersion) {
-            # Update [Unreleased] link if it exists, otherwise add it
+            # Build list of new links to add
+            $newLinks = @()
+            
+            # Update or add [Unreleased] link
             $linkPattern = "\[Unreleased\]: https://github\.com/.+?/compare/v(.+?)\.\.\.HEAD"
             if ($newContent -match $linkPattern) {
                 $newContent = $newContent -replace $linkPattern, "[Unreleased]: https://github.com/$Repository/compare/v$firstVersion...HEAD"
             } else {
-                # Add [Unreleased] link at the end if it doesn't exist
-                $newContent = $newContent.TrimEnd() + "`n`n[Unreleased]: https://github.com/$Repository/compare/v$firstVersion...HEAD"
+                # Add [Unreleased] link
+                $newLinks += "[Unreleased]: https://github.com/$Repository/compare/v$firstVersion...HEAD"
             }
             
-            # Add release tag links for all new versions at the end of the file
+            # Add release tag links for all new versions
             # Wrap in @() to ensure $versions is always an array, even if empty.
             # This prevents "Count property not found" errors in strict mode.
             $versions = @($latestVersions | Sort-Object { [version]$_ } -Descending)
@@ -300,9 +303,13 @@ function Update-ChangelogFile {
                 $linkLine = "[$version]: https://github.com/$Repository/releases/tag/v$version"
                 
                 if ($newContent -notmatch [regex]::Escape($linkLine)) {
-                    # Append at the end of the file
-                    $newContent = $newContent.TrimEnd() + "`n$linkLine"
+                    $newLinks += $linkLine
                 }
+            }
+            
+            # Append all new links at once
+            if ($newLinks.Count -gt 0) {
+                $newContent = $newContent.TrimEnd() + "`n" + ($newLinks -join "`n")
             }
         }
         
