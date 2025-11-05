@@ -68,7 +68,7 @@ jobs:
         commit-message: 'docs: update CHANGELOG.md with recent releases'
         branch: changelog-update-${{ github.run_number }}
         delete-branch: true
-        title: 'Update CHANGELOG.md with recent releases'
+        title: 'Update CHANGELOG.md with ${{ steps.update.outputs.versions }}'
         body: |
           ## Automated Changelog Update
           
