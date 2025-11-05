@@ -285,25 +285,16 @@ function Update-ChangelogFile {
             $linkPattern = "\[Unreleased\]: https://github\.com/.+?/compare/v(.+?)\.\.\.HEAD"
             $newContent = $newContent -replace $linkPattern, "[Unreleased]: https://github.com/$Repository/compare/v$firstVersion...HEAD"
             
-            # Add version comparison links
+            # Add release tag links for all new versions
             # Wrap in @() to ensure $versions is always an array, even if empty.
             # This prevents "Count property not found" errors in strict mode.
             $versions = @($latestVersions | Sort-Object { [version]$_ } -Descending)
-            for ($i = 0; $i -lt $versions.Count - 1; $i++) {
-                $current = $versions[$i]
-                $previous = $versions[$i + 1]
-                $linkLine = "[$current]: https://github.com/$Repository/compare/v$previous...v$current"
+            foreach ($version in $versions) {
+                $linkLine = "[$version]: https://github.com/$Repository/releases/tag/v$version"
                 
                 if ($newContent -notmatch [regex]::Escape($linkLine)) {
                     $newContent = $newContent -replace "(\[Unreleased\]: .+)", "`$1`n$linkLine"
                 }
-            }
-            
-            # Add link for the oldest new version
-            $oldestVersion = $versions[-1]
-            $linkLine = "[$oldestVersion]: https://github.com/$Repository/releases/tag/v$oldestVersion"
-            if ($newContent -notmatch [regex]::Escape($linkLine)) {
-                $newContent = $newContent -replace "(\[Unreleased\]: .+)", "`$1`n$linkLine"
             }
         }
         

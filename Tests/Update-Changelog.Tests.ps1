@@ -415,7 +415,24 @@ All notable changes to this project will be documented in this file.
             
             # Links should reference full versions
             $result | Should -Match '\[Unreleased\]: https://github\.com/iricigor/Glooko/compare/v1\.0\.15\.\.\.HEAD'
+            # Only the latest version from each major.minor group should have a release tag link
             $result | Should -Match '\[1\.0\.15\]: https://github\.com/iricigor/Glooko/releases/tag/v1\.0\.15'
+        }
+        
+        It 'Should add release tag links for each version section header' {
+            # When multiple versions are in different major.minor groups, each gets its own section and link
+            $entries = @(
+                @{ Version = '1.0.14'; Date = '2025-11-03'; Title = 'Fix one'; PRLink = ' ([#107](https://example.com))'; Category = 'Fixed' }
+                @{ Version = '1.1.15'; Date = '2025-11-03'; Title = 'Fix two'; PRLink = ' ([#108](https://example.com))'; Category = 'Fixed' }
+                @{ Version = '2.0.16'; Date = '2025-11-03'; Title = 'Fix three'; PRLink = ' ([#109](https://example.com))'; Category = 'Fixed' }
+            )
+            
+            $result = Update-ChangelogFile -ChangelogPath $script:TestChangelog -NewEntries $entries
+            
+            # Each major.minor group gets one section header and one release tag link
+            $result | Should -Match '\[2\.0\.16\]: https://github\.com/iricigor/Glooko/releases/tag/v2\.0\.16'
+            $result | Should -Match '\[1\.1\.15\]: https://github\.com/iricigor/Glooko/releases/tag/v1\.1\.15'
+            $result | Should -Match '\[1\.0\.14\]: https://github\.com/iricigor/Glooko/releases/tag/v1\.0\.14'
         }
     }
     
