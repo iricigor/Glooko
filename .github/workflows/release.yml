@@ -12,6 +12,11 @@ on:
         required: false
         type: boolean
         default: false
+      force_release:
+        description: 'Force release even if module checksum matches published version'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -55,6 +60,15 @@ jobs:
     - name: Verify build artifact
       shell: pwsh
       run: ./Release/Verify-BuildArtifact.ps1 -OutputEnvFile $env:GITHUB_ENV
+    
+    - name: Verify module checksum
+      shell: pwsh
+      run: |
+        $forceParam = @{}
+        if ("${{ inputs.force_release }}" -eq "true") {
+          $forceParam.Force = $true
+        }
+        ./Release/Verify-ModuleChecksum.ps1 @forceParam
     
     - name: Publish to PowerShell Gallery (Dry Run)
       if: inputs.dry_run

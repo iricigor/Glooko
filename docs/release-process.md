@@ -78,6 +78,7 @@ The release workflow can only be triggered manually by the repository owner (iri
 4. Configure the release options:
    - **Version**: Leave empty to publish the latest build artifact, or specify a version (e.g., `1.0.0`) to publish a specific artifact
    - **Dry run**: Check this to perform a test run without actually publishing to PowerShell Gallery
+   - **Force release**: Check this to bypass checksum verification (see [Checksum Verification](#checksum-verification) below)
 
 ### Release Options
 
@@ -176,6 +177,21 @@ If the module verification step fails:
 - Check the build workflow logs for any issues
 - Ensure all required files are included in the build artifact
 - Verify the module manifest is valid
+
+#### Checksum Verification Fails
+
+If the checksum verification step fails with "CHECKSUM MATCH FOUND":
+- **Review the changes**: Verify that you actually made code changes to the module runtime files
+- **Check what changed**: Compare your changes to the published version to understand what (if anything) is different
+- **If code hasn't changed**: Consider whether a new release is necessary
+- **If only version changed**: This is expected - the checksum prevents duplicate releases with only version bumps
+- **If metadata changed**: Use the **Force release** option to publish the new metadata
+- **If you need to override**: Use the **Force release** option, but ensure you understand why the checksum matched
+
+To use Force release:
+1. Re-run the workflow
+2. Check the **Force release** checkbox
+3. Complete the release as normal
 
 #### Publishing Fails
 
