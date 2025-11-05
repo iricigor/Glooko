@@ -5,10 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html) using major.minor version format.
 
-## [Unreleased]
+## [1.0.32] - 2025-11-05
+
+### Added
+- Add changelog verification to release process ([#128](https://github.com/iricigor/Glooko/pull/128))
+- Add module checksum verification to prevent duplicate releases ([#129](https://github.com/iricigor/Glooko/pull/129))
+- Add external MAML help files for module cmdlets using platyPS ([#125](https://github.com/iricigor/Glooko/pull/125))
+- Add custom type and formatting for Import-Glooko* command outputs ([#126](https://github.com/iricigor/Glooko/pull/126))
+- Add changelog verification to release process ([#128](https://github.com/iricigor/Glooko/pull/128))
+
+### Changed
+- Split tests into core and other workflows ([#127](https://github.com/iricigor/Glooko/pull/127))
 
 ### Documentation
-- Clarify release process order: prepare changelog PR → release to PS Gallery → merge changelog PR (prevents version mismatch due to auto-incrementing builds)
+- docs: clarify release process order - release BEFORE merging changelog PR ([#124](https://github.com/iricigor/Glooko/pull/124))
 
 ## [1.0.25] - 2025-11-04
 
@@ -49,22 +59,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Module requires PowerShell 7.0 or later (not compatible with Windows PowerShell 5.1)
 - Released under MIT License
 
+[1.0.32]: https://github.com/iricigor/Glooko/releases/tag/v1.0.32
 [1.0.25]: https://github.com/iricigor/Glooko/releases/tag/v1.0.25
 [1.0.7]: https://github.com/iricigor/Glooko/releases/tag/v1.0.7
 
-## [1.0.32] - 2025-11-05
 
-### Added
-- Add changelog verification to release process ([#128](https://github.com/iricigor/Glooko/pull/128))
-- Add module checksum verification to prevent duplicate releases ([#129](https://github.com/iricigor/Glooko/pull/129))
-- Add external MAML help files for module cmdlets using platyPS ([#125](https://github.com/iricigor/Glooko/pull/125))
-- Add custom type and formatting for Import-Glooko* command outputs ([#126](https://github.com/iricigor/Glooko/pull/126))
-- Add changelog verification to release process ([#128](https://github.com/iricigor/Glooko/pull/128))
-
-### Changed
-- Split tests into core and other workflows ([#127](https://github.com/iricigor/Glooko/pull/127))
-- Build 1.0.26
-
-### Documentation
-- docs: clarify release process order - release BEFORE merging changelog PR ([#124](https://github.com/iricigor/Glooko/pull/124))
 
