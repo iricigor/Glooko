@@ -82,7 +82,7 @@ function Get-GlookoDataset {
                 }
                 
                 Write-Verbose "Checking dataset: $datasetName"
-                $datasetName -eq $Name
+                $datasetName -ieq $Name
             }
             
             if (-not $matchedDatasets) {
