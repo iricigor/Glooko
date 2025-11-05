@@ -167,7 +167,7 @@ Describe 'Build.ps1' {
         It 'Should fail if module manifest is missing' {
             Remove-Item './Glooko.psd1' -Force
             
-            { ./Build.ps1 -ErrorAction Stop } | Should -Throw '*Module manifest not found*'
+            { ./build/Build.ps1 -ErrorAction Stop } | Should -Throw '*Module manifest not found*'
         }
         
         It 'Should fail if module version is not in major.minor format' {
@@ -177,7 +177,7 @@ Describe 'Build.ps1' {
             $content = $content -replace "ModuleVersion = '1.0'", "ModuleVersion = '1.0.0'"
             Set-Content -Path $manifestPath -Value $content
             
-            { ./Build.ps1 -ErrorAction Stop } | Should -Throw '*major.minor format*'
+            { ./build/Build.ps1 -ErrorAction Stop } | Should -Throw '*major.minor format*'
         }
     }
     
