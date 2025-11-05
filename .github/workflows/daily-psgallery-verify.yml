@@ -68,6 +68,9 @@ jobs:
       run: |
         Write-Host "Testing core module functionality..."
         
+        # Import the module
+        Import-Module -Name Glooko -Force
+        
         # Create test CSV file
         $testCsvPath = Join-Path ([System.IO.Path]::GetTempPath()) "test-glooko.csv"
         $csvContent = @'
@@ -169,6 +172,9 @@ jobs:
       shell: pwsh
       run: |
         Write-Host "Testing core module functionality..."
+        
+        # Import the module
+        Import-Module -Name Glooko -Force
         
         # Create test CSV file
         $testCsvPath = Join-Path ([System.IO.Path]::GetTempPath()) "test-glooko.csv"
