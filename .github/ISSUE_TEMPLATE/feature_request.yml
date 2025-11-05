@@ -1,7 +1,7 @@
 name: Feature Request
 description: Suggest a new feature for the Glooko PowerShell module
 title: "[FEATURE]: "
-labels: ["enhancement"]
+labels: ["💡 enhancement"]
 body:
   - type: markdown
     attributes:
