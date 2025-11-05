@@ -10,6 +10,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Documentation
 - Clarify release process order: prepare changelog PR → release to PS Gallery → merge changelog PR (prevents version mismatch due to auto-incrementing builds)
 
+
+## [1.0.39] - 2025-11-05
+
+### Added
+- Add version numbers to changelog update PR titles ([#145](https://github.com/iricigor/Glooko/pull/145))
+- Add changelog verification to release process ([#128](https://github.com/iricigor/Glooko/pull/128))
+- Add module checksum verification to prevent duplicate releases ([#129](https://github.com/iricigor/Glooko/pull/129))
+- Add external MAML help files for module cmdlets using platyPS ([#125](https://github.com/iricigor/Glooko/pull/125))
+- Add custom type and formatting for Import-Glooko* command outputs ([#126](https://github.com/iricigor/Glooko/pull/126))
+- Add version numbers to changelog update PR titles ([#145](https://github.com/iricigor/Glooko/pull/145))
+
+### Changed
+- Split tests into core and other workflows ([#127](https://github.com/iricigor/Glooko/pull/127))
+- Build 1.0.26
+
+### Fixed
+- Fix release workflow to skip build number 0 artifacts from PR builds ([#143](https://github.com/iricigor/Glooko/pull/143))
+- Fix changelog ordering: insert new versions after [Unreleased], not at EOF ([#140](https://github.com/iricigor/Glooko/pull/140))
+- Fix changelog ordering: insert new versions after [Unreleased], not at EOF ([#140](https://github.com/iricigor/Glooko/pull/140))
+- Fix module import missing in daily PS Gallery verification test step ([#138](https://github.com/iricigor/Glooko/pull/138))
+- Fix changelog version sorting and add release tag links ([#136](https://github.com/iricigor/Glooko/pull/136))
+- Fix release pipeline: Pass correct module path to checksum verification ([#135](https://github.com/iricigor/Glooko/pull/135))
+
+### Documentation
+- docs: clarify release process order - release BEFORE merging changelog PR ([#124](https://github.com/iricigor/Glooko/pull/124))
+
 ## [1.0.25] - 2025-11-04
 
 ### Added
@@ -51,3 +77,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [1.0.25]: https://github.com/iricigor/Glooko/releases/tag/v1.0.25
 [1.0.7]: https://github.com/iricigor/Glooko/releases/tag/v1.0.7
+[Unreleased]: https://github.com/iricigor/Glooko/compare/v1.0.39...HEAD
+[1.0.39]: https://github.com/iricigor/Glooko/releases/tag/v1.0.39
