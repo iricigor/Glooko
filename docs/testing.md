@@ -136,6 +136,31 @@ The test suite covers all public and private functions:
   - ✅ Data integrity preservation
   - ✅ Verbose output verification
 
+- **Get-GlookoCGMStats** - Basic CGM data analysis
+  - ✅ In-range statistics calculation (below/in/above)
+  - ✅ Percentage calculations
+  - ✅ Date grouping functionality
+  - ✅ Custom threshold support
+  - ✅ Custom glucose column name support
+  - ✅ Pipeline input support
+  - ✅ Boundary value handling
+  - ✅ Error handling for empty inputs
+  - ✅ Verbose output verification
+
+- **Get-GlookoCGMStatsExtended** - Extended CGM data analysis
+  - ✅ Flexible 3-category or 5-category analysis
+  - ✅ UseVeryLowHigh switch to enable/disable very low and very high categories
+  - ✅ Percentage calculations with rounding
+  - ✅ Date grouping functionality
+  - ✅ Date filtering with Days parameter
+  - ✅ Date filtering with StartDate/EndDate
+  - ✅ Custom threshold support for all categories
+  - ✅ Custom glucose column name support
+  - ✅ Pipeline input support
+  - ✅ Boundary value handling
+  - ✅ Error handling for empty inputs and invalid filters
+  - ✅ Verbose output verification
+
 ### Private Functions
 - **Expand-GlookoMetadata** - Metadata parsing helper
   - ✅ Metadata extraction from CSV first row
