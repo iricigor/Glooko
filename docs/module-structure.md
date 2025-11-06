@@ -66,6 +66,7 @@ Glooko/
 │       ├── Expand-GlookoMetadata.Tests.ps1
 │       ├── Merge-GlookoDatasets.Tests.ps1
 │       ├── Glooko.Dataset.Tests.ps1  # Type and formatting tests
+│       ├── MockData.Tests.ps1    # Mock data validation tests
 │       ├── Build.Tests.ps1     # Module structure validation
 │       ├── Get-ModuleChecksum.Tests.ps1  # Checksum calculation tests
 │       ├── Verify-ModuleChecksum.Tests.ps1  # Checksum verification tests
@@ -82,7 +83,15 @@ Glooko/
 │       └── Fixtures/           # Test data files
 │           ├── sample-data.csv
 │           ├── test-data01.csv
-│           └── cgm-sample.csv         # CGM test data
+│           ├── cgm-sample.csv         # CGM test data
+│           └── MockData/       # Realistic mock datasets for analysis
+│               ├── README.md   # Mock data documentation
+│               ├── cgm_data_1.csv       # Synthetic CGM data
+│               ├── cgm_data_2.csv       # Real research CGM data (Broll et al.)
+│               ├── insulin_data_1.csv   # Synthetic insulin data
+│               ├── alarms_data_1.csv    # Synthetic alarms data
+│               ├── carbs_data_1.csv     # Synthetic carbs data
+│               └── bg_data_1.csv        # Synthetic blood glucose data
 ├── docs/                       # Additional documentation
 │   ├── alternative-import-methods.md
 │   ├── automated-changelog.md  # Automated changelog updates guide

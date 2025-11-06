@@ -7,10 +7,12 @@ $PesterConfig.Run.Path = @(
     'dev/tests/Import-GlookoCSV.Tests.ps1',
     'dev/tests/Import-GlookoFolder.Tests.ps1',
     'dev/tests/Import-GlookoZip.Tests.ps1',
+    'dev/tests/Get-GlookoDataset.Tests.ps1',
     'dev/tests/Export-GlookoZipToXlsx.Tests.ps1',
     'dev/tests/Expand-GlookoMetadata.Tests.ps1',
     'dev/tests/Merge-GlookoDatasets.Tests.ps1',
-    'dev/tests/Glooko.Dataset.Tests.ps1'
+    'dev/tests/Glooko.Dataset.Tests.ps1',
+    'dev/tests/MockData.Tests.ps1'
 )
 $PesterConfig.TestResult.Enabled = $true
 $PesterConfig.TestResult.OutputPath = 'dev/tests/TestResults.xml'
