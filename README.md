@@ -133,6 +133,15 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **[Nightscout](https://nightscout.github.io/)** - Open-source platform for collecting, storing, and visualizing CGM data
 - **[Glooko.com](https://glooko.com/)** - Official Glooko platform (this module is not affiliated with Glooko, Inc.)
 
+### PowerShell Modules Used
+
+This project uses the following PowerShell modules for development, testing, and functionality:
+
+- **[Pester](https://github.com/pester/Pester)** by [@nohwnd](https://github.com/nohwnd) - Testing framework for PowerShell
+- **[PSScriptAnalyzer](https://github.com/PowerShell/PSScriptAnalyzer)** by [@PowerShell](https://github.com/PowerShell) - Static code checker for PowerShell scripts and modules
+- **[ImportExcel](https://github.com/dfinke/ImportExcel)** by [@dfinke](https://github.com/dfinke) - PowerShell module to import/export Excel spreadsheets without Excel
+- **[platyPS](https://github.com/PowerShell/platyPS)** by [@PowerShell](https://github.com/PowerShell) - Markdown-based help file generation for PowerShell modules
+
 ### Data Sources
 
 The mock data in this repository includes:
