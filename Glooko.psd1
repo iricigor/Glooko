@@ -58,7 +58,7 @@
             IconUri = 'https://raw.githubusercontent.com/iricigor/Glooko/main/docs/assets/Glooko.ico'
 
             # ReleaseNotes of this module
-            ReleaseNotes = 'v1.1: Added Get-GlookoDataset function to filter datasets by name. See CHANGELOG.md for detailed release notes: https://github.com/iricigor/Glooko/blob/main/CHANGELOG.md'
+            ReleaseNotes = 'v1.1: Added Get-GlookoDataset function to filter datasets by name and CGM data analysis functions for glucose statistics. See CHANGELOG.md for detailed release notes: https://github.com/iricigor/Glooko/blob/main/CHANGELOG.md'
         }
     }
 
