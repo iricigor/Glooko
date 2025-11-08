@@ -49,6 +49,44 @@ Invoke-Pester -Path .\Tests\
 Invoke-Pester -Path .\Tests\ -Output Detailed
 ```
 
+## Mock Data for Testing and Analysis
+
+The repository includes realistic mock datasets in `dev/tests/Fixtures/MockData/` for testing and demonstration purposes. These datasets are **completely synthetic** and do not represent any real patient data.
+
+### Available Mock Datasets
+
+- **`cgm_data_1.csv`** - Continuous Glucose Monitoring data (288 readings, 24 hours)
+- **`insulin_data_1.csv`** - Insulin delivery records (basal and bolus doses)
+- **`alarms_data_1.csv`** - Device alerts and alarms
+- **`carbs_data_1.csv`** - Carbohydrate intake logging
+- **`bg_data_1.csv`** - Fingerstick blood glucose readings
+
+### Using Mock Data
+
+```powershell
+# Import mock data folder
+$mockDataPath = "dev/tests/Fixtures/MockData"
+$allData = Import-GlookoFolder -Path $mockDataPath
+
+# Get specific dataset
+$cgmData = $allData | Get-GlookoDataset -Name "cgm"
+
+# Analyze CGM data
+$cgmData | Measure-Object -Property "Glucose Value (mg/dL)" -Average -Minimum -Maximum
+```
+
+For complete documentation on mock data structure, usage examples, and data characteristics, see the [Mock Data README](../dev/tests/Fixtures/MockData/README.md).
+
+### Mock Data Tests
+
+The test suite includes comprehensive validation for mock data:
+- **MockData.Tests.ps1** - Validates all mock data files can be imported correctly
+  - ✅ File existence checks
+  - ✅ Data structure validation
+  - ✅ Column header verification
+  - ✅ Realistic value range checks
+  - ✅ Dataset filtering with Get-GlookoDataset
+
 ## Test Coverage
 
 The test suite covers all public and private functions:
@@ -86,6 +124,42 @@ The test suite covers all public and private functions:
   - ✅ Multiple dataset worksheets
   - ✅ Error handling for invalid inputs
   - ✅ Output file creation verification
+
+- **Get-GlookoDataset** - Filter datasets by name and return data
+  - ✅ Basic filtering by dataset name
+  - ✅ Exact matching (no wildcard support)
+  - ✅ Case-insensitive matching
+  - ✅ Pipeline input support
+  - ✅ Fallback to FullName when Dataset is null
+  - ✅ Multiple dataset consolidation
+  - ✅ Error handling for empty inputs
+  - ✅ Data integrity preservation
+  - ✅ Verbose output verification
+
+- **Get-GlookoCGMStats** - Basic CGM data analysis
+  - ✅ In-range statistics calculation (below/in/above)
+  - ✅ Percentage calculations
+  - ✅ Date grouping functionality
+  - ✅ Custom threshold support
+  - ✅ Custom glucose column name support
+  - ✅ Pipeline input support
+  - ✅ Boundary value handling
+  - ✅ Error handling for empty inputs
+  - ✅ Verbose output verification
+
+- **Get-GlookoCGMStatsExtended** - Extended CGM data analysis
+  - ✅ Flexible 3-category or 5-category analysis
+  - ✅ UseVeryLowHigh switch to enable/disable very low and very high categories
+  - ✅ Percentage calculations with rounding
+  - ✅ Date grouping functionality
+  - ✅ Date filtering with Days parameter
+  - ✅ Date filtering with StartDate/EndDate
+  - ✅ Custom threshold support for all categories
+  - ✅ Custom glucose column name support
+  - ✅ Pipeline input support
+  - ✅ Boundary value handling
+  - ✅ Error handling for empty inputs and invalid filters
+  - ✅ Verbose output verification
 
 ### Private Functions
 - **Expand-GlookoMetadata** - Metadata parsing helper

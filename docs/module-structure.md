@@ -31,6 +31,9 @@ Glooko/
 │   ├── Import-GlookoCSV.ps1    # Main CSV import function
 │   ├── Import-GlookoFolder.ps1 # Folder import with dataset consolidation
 │   ├── Import-GlookoZip.ps1    # Zip file import and processing
+│   ├── Get-GlookoDataset.ps1   # Filter datasets by name and return data
+│   ├── Get-GlookoCGMStats.ps1  # Basic CGM data analysis (in range statistics)
+│   ├── Get-GlookoCGMStatsExtended.ps1  # Extended CGM analysis with date filtering
 │   └── Export-GlookoZipToXlsx.ps1  # Zip to Excel conversion
 ├── dev/                        # Development, build, and test infrastructure
 │   ├── build/                  # Build and development scripts
@@ -56,10 +59,14 @@ Glooko/
 │       ├── Import-GlookoCSV.Tests.ps1
 │       ├── Import-GlookoFolder.Tests.ps1
 │       ├── Import-GlookoZip.Tests.ps1
+│       ├── Get-GlookoDataset.Tests.ps1
+│       ├── Get-GlookoCGMStats.Tests.ps1        # Basic CGM analysis tests
+│       ├── Get-GlookoCGMStatsExtended.Tests.ps1 # Extended CGM analysis tests
 │       ├── Export-GlookoZipToXlsx.Tests.ps1
 │       ├── Expand-GlookoMetadata.Tests.ps1
 │       ├── Merge-GlookoDatasets.Tests.ps1
 │       ├── Glooko.Dataset.Tests.ps1  # Type and formatting tests
+│       ├── MockData.Tests.ps1    # Mock data validation tests
 │       ├── Build.Tests.ps1     # Module structure validation
 │       ├── Get-ModuleChecksum.Tests.ps1  # Checksum calculation tests
 │       ├── Verify-ModuleChecksum.Tests.ps1  # Checksum verification tests
@@ -74,6 +81,17 @@ Glooko/
 │       │   ├── New-TestFolder.ps1
 │       │   └── New-TestZipFile.ps1
 │       └── Fixtures/           # Test data files
+│           ├── sample-data.csv
+│           ├── test-data01.csv
+│           ├── cgm-sample.csv         # CGM test data
+│           └── MockData/       # Realistic mock datasets for analysis
+│               ├── README.md   # Mock data documentation
+│               ├── cgm_data_1.csv       # Synthetic CGM data
+│               ├── cgm_data_2.csv       # Real research CGM data (Broll et al.)
+│               ├── insulin_data_1.csv   # Synthetic insulin data
+│               ├── alarms_data_1.csv    # Synthetic alarms data
+│               ├── carbs_data_1.csv     # Synthetic carbs data
+│               └── bg_data_1.csv        # Synthetic blood glucose data
 ├── docs/                       # Additional documentation
 │   ├── alternative-import-methods.md
 │   ├── automated-changelog.md  # Automated changelog updates guide
@@ -88,6 +106,9 @@ Glooko/
 │   │   ├── import-glookocsv.md
 │   │   ├── import-glookofolder.md
 │   │   ├── import-glookozip.md
+│   │   ├── get-glookodataset.md
+│   │   ├── get-glookocgmstats.md     # Basic CGM analysis docs
+│   │   ├── get-glookocgmstatsextended.md  # Extended CGM analysis docs
 │   │   └── export-glookozip-to-xlsx.md
 │   └── help/                   # platyPS markdown help files
 │       ├── Import-GlookoCSV.md
