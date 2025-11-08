@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1] - 2025-11-08
+
 ### Added
 - **`Get-GlookoDailyAnalysis`** - New function to provide comprehensive daily analysis of CGM and insulin data
   - Groups data by day of week (Monday-Sunday)
@@ -16,10 +18,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Supports pipeline input from Import-GlookoZip or separate CGM and insulin data parameters
   - Includes comprehensive test coverage
   - Full documentation in docs/functions/get-glookodailyanalysis.md
-
-## [1.1] - 2025-11-05
-
-### Added
 - **`Get-GlookoCGMStats`** - New function to analyze CGM data with basic statistics (below range, in range, above range)
   - Provides counts and percentages for each category
   - Groups results by date for day-by-day analysis
@@ -30,8 +28,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Date range filtering with StartDate, EndDate, or Days parameters
   - Fully customizable thresholds for all categories
   - Default ranges: Very Low < 3.0, Low 3.0-3.9, In Range 4.0-10.0, High 10.1-13.9, Very High >= 14.0 mmol/L
-- Comprehensive test coverage for both CGM analysis functions
-- Documentation for new functions in docs/functions/
+- **`Get-GlookoDataset`** - New function to filter and retrieve specific datasets from Glooko data
+- **`Get-Correlation`** - Private helper function for statistical correlation calculations
+- Mock data fixtures for testing and examples
+- Comprehensive test coverage for all new functions (78.15% overall coverage)
+- Full documentation in docs/functions/ for all new functions
 
 ### Changed
 - Updated module version to 1.1
@@ -101,7 +102,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Module requires PowerShell 7.0 or later (not compatible with Windows PowerShell 5.1)
 - Released under MIT License
 
+[Unreleased]: https://github.com/iricigor/Glooko/compare/v1.1...HEAD
+[1.1]: https://github.com/iricigor/Glooko/releases/tag/v1.1
+[1.0.39]: https://github.com/iricigor/Glooko/releases/tag/v1.0.39
 [1.0.25]: https://github.com/iricigor/Glooko/releases/tag/v1.0.25
 [1.0.7]: https://github.com/iricigor/Glooko/releases/tag/v1.0.7
-[Unreleased]: https://github.com/iricigor/Glooko/compare/v1.0.39...HEAD
-[1.0.39]: https://github.com/iricigor/Glooko/releases/tag/v1.0.39
