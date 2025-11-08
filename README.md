@@ -72,10 +72,19 @@ For more import options including using Install-GitModule, see [Alternative Impo
 
 This module provides the following functions:
 
+### Data Obtaining Functions
+
 - **`Import-GlookoCSV`** - Imports CSV data while skipping the first row, see [detailed documentation](docs/functions/import-glookocsv.md).
 - **`Import-GlookoFolder`** - Imports all CSV files from a specified folder using Import-GlookoCSV, see [detailed documentation](docs/functions/import-glookofolder.md).
 - **`Import-GlookoZip`** - Imports data from a Glooko zip file by extracting and processing CSV files, see [detailed documentation](docs/functions/import-glookozip.md).
+- **`Get-GlookoDataset`** - Filters datasets by name and returns only their data, making it easy to work with specific dataset types like 'cgm' or 'alarms', see [detailed documentation](docs/functions/get-glookodataset.md).
 - **`Export-GlookoZipToXlsx`** - Converts a Glooko zip file to an Excel (XLSX) file with a Summary worksheet as the first tab, followed by each dataset in a separate worksheet, see [detailed documentation](docs/functions/export-glookozip-to-xlsx.md).
+
+### Data Analysis Functions
+
+- **`Get-GlookoCGMStats`** - Analyzes CGM data and provides basic statistics (below range, in range, above range) grouped by date with counts and percentages, see [detailed documentation](docs/functions/get-glookocgmstats.md).
+- **`Get-GlookoCGMStatsExtended`** - Provides flexible CGM analysis supporting both 3-category (low/in range/high) and 5-category (very low/low/in range/high/very high) analysis with date range filtering options, see [detailed documentation](docs/functions/get-glookocgmstatsextended.md).
+- **`Get-GlookoDailyAnalysis`** - Analyzes CGM and insulin data grouped by day of week (Monday-Sunday) and workday vs weekend, with daily insulin dosages, percentages, and correlation analysis, see [detailed documentation](docs/functions/get-glookodailyanalysis.md).
 
 ### Getting Help
 
@@ -100,6 +109,9 @@ For information about help file generation, see [Help Generation Documentation](
 # Import a Glooko zip file
 $data = Import-GlookoZip -Path "C:\data\export.zip"
 
+# Get data from a specific dataset (e.g., CGM data)
+$cgmData = $data | Get-GlookoDataset -Name "cgm"
+
 # Or convert directly to Excel
 Export-GlookoZipToXlsx -Path "C:\data\export.zip"
 # Creates C:\data\export.xlsx with:
@@ -117,8 +129,33 @@ For a detailed list of changes, see the [CHANGELOG.md](CHANGELOG.md) file.
 
 ## License
 
-
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+## Links
+
+### Related Projects and Resources
+
+- **[Awesome-CGM](https://github.com/IrinaStatsLab/Awesome-CGM)** - Curated list of publicly available Continuous Glucose Monitoring (CGM) datasets for research
+- **[GlucoBench](https://github.com/IrinaStatsLab/GlucoBench)** - Benchmark datasets and tasks for glucose prediction with machine learning
+- **[iglu R Package](https://github.com/irinagain/iglu)** - R package for interpreting blood glucose data (Broll et al., 2021)
+- **[Nightscout](https://nightscout.github.io/)** - Open-source platform for collecting, storing, and visualizing CGM data
+- **[Glooko.com](https://glooko.com/)** - Official Glooko platform (this module is not affiliated with Glooko, Inc.)
+
+### PowerShell Modules Used
+
+This project uses the following PowerShell modules for development, testing, and functionality:
+
+- **[Pester](https://github.com/pester/Pester)** by [@nohwnd](https://github.com/nohwnd) - Testing framework for PowerShell
+- **[PSScriptAnalyzer](https://github.com/PowerShell/PSScriptAnalyzer)** by [@PowerShell](https://github.com/PowerShell) - Static code checker for PowerShell scripts and modules
+- **[ImportExcel](https://github.com/dfinke/ImportExcel)** by [@dfinke](https://github.com/dfinke) - PowerShell module to import/export Excel spreadsheets without Excel
+- **[platyPS](https://github.com/PowerShell/platyPS)** by [@PowerShell](https://github.com/PowerShell) - Markdown-based help file generation for PowerShell modules
+
+### Data Sources
+
+The mock data in this repository includes:
+- **Synthetic data**: Manually created realistic diabetes datasets
+- **Research data**: Adapted from the [iglu dataset](https://github.com/irinagain/iglu) (Broll et al., GPL-2 license) distributed via [GlucoBench](https://github.com/IrinaStatsLab/GlucoBench)
+
+For complete information about mock data sources, licenses, and attribution, see the [Mock Data README](dev/tests/Fixtures/MockData/README.md).
 
 

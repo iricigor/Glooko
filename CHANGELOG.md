@@ -5,6 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html) using major.minor version format.
 
+## [Unreleased]
+
+### Added
+- **`Get-GlookoDailyAnalysis`** - New function to provide comprehensive daily analysis of CGM and insulin data
+  - Groups data by day of week (Monday-Sunday)
+  - Categorizes days as workday vs weekend
+  - Calculates daily insulin dosages (basal, bolus, total) with percentages
+  - Calculates correlation between in-range CGM percentage and insulin values
+  - Supports pipeline input from Import-GlookoZip or separate CGM and insulin data parameters
+  - Includes comprehensive test coverage
+  - Full documentation in docs/functions/get-glookodailyanalysis.md
+
+## [1.1] - 2025-11-05
+
+### Added
+- **`Get-GlookoCGMStats`** - New function to analyze CGM data with basic statistics (below range, in range, above range)
+  - Provides counts and percentages for each category
+  - Groups results by date for day-by-day analysis
+  - Supports customizable low and high thresholds
+  - Default ranges: Below < 4.0, In Range 4.0-10.0, Above > 10.0 mmol/L
+- **`Get-GlookoCGMStatsExtended`** - New function for extended CGM analysis with detailed statistics
+  - Five categories: Very Low, Low, In Range, High, Very High
+  - Date range filtering with StartDate, EndDate, or Days parameters
+  - Fully customizable thresholds for all categories
+  - Default ranges: Very Low < 3.0, Low 3.0-3.9, In Range 4.0-10.0, High 10.1-13.9, Very High >= 14.0 mmol/L
+- Comprehensive test coverage for both CGM analysis functions
+- Documentation for new functions in docs/functions/
+
+### Changed
+- Updated module version to 1.1
+- Updated README.md to include new CGM analysis functions
+- Updated module manifest with new release notes
+
 ## [1.0.39] - 2025-11-05
 
 ### Added
