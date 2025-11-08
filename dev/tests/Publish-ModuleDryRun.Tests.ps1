@@ -52,7 +52,7 @@ Get-ChildItem -Path $PSScriptRoot/Public/*.ps1 | ForEach-Object {
         Copy-Item -Path $helperScript -Destination $script:TestDir -Force
         
         # Create a minimal CHANGELOG.md with the test version to pass changelog verification
-        # Place it one level up from TestDir since Test-ChangelogVersion looks for ../CHANGELOG.md
+        # Place it two levels up from TestDir since Test-ChangelogVersion looks for ../../CHANGELOG.md
         $changelogContent = @'
 # Changelog
 
@@ -61,7 +61,7 @@ Get-ChildItem -Path $PSScriptRoot/Public/*.ps1 | ForEach-Object {
 ### Added
 - Test version for testing
 '@
-        $changelogPath = Join-Path (Split-Path $script:TestDir -Parent) 'CHANGELOG.md'
+        $changelogPath = Join-Path (Split-Path (Split-Path $script:TestDir -Parent) -Parent) 'CHANGELOG.md'
         Set-Content -Path $changelogPath -Value $changelogContent
         
         # Change to test directory

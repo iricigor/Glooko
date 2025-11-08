@@ -1,5 +1,10 @@
 # Pester 5.x Configuration for Glooko Module - Other Tests (Build, Publishing, Utilities)
 
+# Disable ANSI colors to prevent invalid XML characters in test results (Linux issue)
+if ($PSStyle) {
+    $PSStyle.OutputRendering = 'PlainText'
+}
+
 $PesterConfig = New-PesterConfiguration
 
 # Test Discovery - Only other functionality tests
