@@ -11,7 +11,7 @@ function Test-ChangelogVersion {
         The version to check for in the changelog (e.g., "1.0.25").
     
     .PARAMETER ChangelogPath
-        Path to the CHANGELOG.md file. Defaults to ../CHANGELOG.md relative to the script.
+        Path to the CHANGELOG.md file. Defaults to ../../CHANGELOG.md relative to the script.
     
     .EXAMPLE
         Test-ChangelogVersion -Version "1.0.25"
@@ -27,7 +27,7 @@ function Test-ChangelogVersion {
         [string]$Version,
         
         [Parameter()]
-        [string]$ChangelogPath = (Join-Path $PSScriptRoot '..' 'CHANGELOG.md')
+        [string]$ChangelogPath = (Join-Path $PSScriptRoot '..' '..' 'CHANGELOG.md')
     )
     
     Write-Verbose "Checking if CHANGELOG.md contains version $Version"

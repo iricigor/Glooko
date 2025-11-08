@@ -266,4 +266,35 @@ Describe 'Test-ChangelogVersion' {
             $verboseOutput -join "`n" | Should -Match 'Version 1.0.25 not found in changelog'
         }
     }
+    
+    Context 'Default path resolution' {
+        
+        It 'Should find CHANGELOG.md at repository root when using default path' {
+            # This test verifies the default path works from the script's location (dev/release/)
+            # The script should look for CHANGELOG.md at ../../CHANGELOG.md from dev/release/
+            
+            # Get the actual CHANGELOG.md from the repository root
+            $actualChangelogPath = Join-Path $script:RepoRoot 'CHANGELOG.md'
+            
+            # The changelog should exist
+            $actualChangelogPath | Should -Exist
+            
+            # Re-import the function to ensure we're using the updated version with correct default path
+            . (Join-Path $script:RepoRoot 'dev/release/Test-ChangelogVersion.ps1')
+            
+            # Test with a version that exists in the real changelog (1.1.3)
+            # Don't specify ChangelogPath to test the default path resolution
+            $result = Test-ChangelogVersion -Version '1.1.3'
+            $result | Should -Be $true
+        }
+        
+        It 'Should return false for non-existent version when using default path' {
+            # Re-import the function to ensure we're using the updated version
+            . (Join-Path $script:RepoRoot 'dev/release/Test-ChangelogVersion.ps1')
+            
+            # Test with a version that doesn't exist
+            $result = Test-ChangelogVersion -Version '99.99.99'
+            $result | Should -Be $false
+        }
+    }
 }
