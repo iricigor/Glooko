@@ -288,38 +288,11 @@ function Get-GlookoDailyAnalysis {
                 $basalPercentValues = @($validResults | ForEach-Object { $_.BasalPercent })
                 $bolusPercentValues = @($validResults | ForEach-Object { $_.BolusPercent })
                 
-                # Simple correlation function
-                function Get-Correlation {
-                    param($x, $y)
-                    
-                    if ($x.Count -lt 2 -or $y.Count -lt 2) { return 0 }
-                    
-                    $n = $x.Count
-                    $sumX = ($x | Measure-Object -Sum).Sum
-                    $sumY = ($y | Measure-Object -Sum).Sum
-                    $sumXY = 0
-                    $sumX2 = 0
-                    $sumY2 = 0
-                    
-                    for ($i = 0; $i -lt $n; $i++) {
-                        $sumXY += $x[$i] * $y[$i]
-                        $sumX2 += $x[$i] * $x[$i]
-                        $sumY2 += $y[$i] * $y[$i]
-                    }
-                    
-                    $numerator = ($n * $sumXY) - ($sumX * $sumY)
-                    $denominator = [math]::Sqrt((($n * $sumX2) - ($sumX * $sumX)) * (($n * $sumY2) - ($sumY * $sumY)))
-                    
-                    if ($denominator -eq 0) { return 0 }
-                    
-                    return [math]::Round($numerator / $denominator, 3)
-                }
-                
-                $correlationBasal = Get-Correlation -x $inRangeValues -y $basalValues
-                $correlationBolus = Get-Correlation -x $inRangeValues -y $bolusValues
-                $correlationTotal = Get-Correlation -x $inRangeValues -y $totalValues
-                $correlationBasalPercent = Get-Correlation -x $inRangeValues -y $basalPercentValues
-                $correlationBolusPercent = Get-Correlation -x $inRangeValues -y $bolusPercentValues
+                $correlationBasal = Get-Correlation -X $inRangeValues -Y $basalValues
+                $correlationBolus = Get-Correlation -X $inRangeValues -Y $bolusValues
+                $correlationTotal = Get-Correlation -X $inRangeValues -Y $totalValues
+                $correlationBasalPercent = Get-Correlation -X $inRangeValues -Y $basalPercentValues
+                $correlationBolusPercent = Get-Correlation -X $inRangeValues -Y $bolusPercentValues
                 
                 # Add correlation information to each result
                 foreach ($result in $results) {
