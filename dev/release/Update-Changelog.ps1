@@ -382,7 +382,7 @@ try {
     }
     
     # Update the changelog
-    $changelogPath = Join-Path $PSScriptRoot ".." "CHANGELOG.md"
+    $changelogPath = Join-Path $PSScriptRoot ".." ".." "CHANGELOG.md"
     $updatedContent = Update-ChangelogFile -ChangelogPath $changelogPath -NewEntries $entries -DryRun:$DryRun
     
     if ($OutputFile) {
