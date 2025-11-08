@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.1.3] - 2025-11-08
 
+Version 1.1 is adding a functions which helps user perform data analysis 
+
 ### Added
 - **`Get-GlookoDailyAnalysis`** - New function to provide comprehensive daily analysis of CGM and insulin data
   - Groups data by day of week (Monday-Sunday)
