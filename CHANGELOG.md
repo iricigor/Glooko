@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [1.1.3] - 2025-11-08
+
+### Changed
+- Improve ReleaseNotes in psd1 with concise CHANGELOG summary ([#168](https://github.com/iricigor/Glooko/pull/168))
+
+### Fixed
+- Fix Update-Changelog.ps1 path resolution to repository root ([#172](https://github.com/iricigor/Glooko/pull/172))
+- Fix cache key mismatch preventing build version auto-increment ([#170](https://github.com/iricigor/Glooko/pull/170))
+- Fix Update-Changelog.ps1 path resolution to repository root ([#172](https://github.com/iricigor/Glooko/pull/172))
+
+## [1.0.42] - 2025-11-05
+
+### Changed
+- Reorganize repository structure: consolidate folders and optimize root directory (10→5 folders) ([#147](https://github.com/iricigor/Glooko/pull/147))
+
+### Fixed
+- Fix automatic issue labeling after label rename ([#151](https://github.com/iricigor/Glooko/pull/151))
+- Fix automatic issue labeling after label rename ([#151](https://github.com/iricigor/Glooko/pull/151))
+
 ## [1.1] - 2025-11-08
 
 ### Added
@@ -102,8 +122,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Module requires PowerShell 7.0 or later (not compatible with Windows PowerShell 5.1)
 - Released under MIT License
 
-[Unreleased]: https://github.com/iricigor/Glooko/compare/v1.1...HEAD
+[Unreleased]: https://github.com/iricigor/Glooko/compare/v1.1.3...HEAD
 [1.1]: https://github.com/iricigor/Glooko/releases/tag/v1.1
 [1.0.39]: https://github.com/iricigor/Glooko/releases/tag/v1.0.39
 [1.0.25]: https://github.com/iricigor/Glooko/releases/tag/v1.0.25
 [1.0.7]: https://github.com/iricigor/Glooko/releases/tag/v1.0.7
+[1.1.3]: https://github.com/iricigor/Glooko/releases/tag/v1.1.3
+[1.0.42]: https://github.com/iricigor/Glooko/releases/tag/v1.0.42
