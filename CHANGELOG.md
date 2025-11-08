@@ -5,7 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html) using major.minor version format.
 
-## [1.2] - 2025-11-05
+## [1.2] - 2025-11-08
+
+### Added
+- **`Get-GlookoDailyAnalysis`** - New function to provide comprehensive daily analysis of CGM and insulin data
+  - Groups data by day of week (Monday-Sunday)
+  - Categorizes days as workday vs weekend
+  - Calculates daily insulin dosages (basal, bolus, total) with percentages
+  - Calculates correlation between in-range CGM percentage and insulin values
+  - Supports pipeline input from Import-GlookoZip or separate CGM and insulin data parameters
+  - Includes comprehensive test coverage
+  - Full documentation in docs/functions/get-glookodailyanalysis.md
+
+### Changed
+- Updated module version to 1.2
+- Updated README.md to include new daily analysis function
+- Updated module manifest with new release notes
+
+## [1.1] - 2025-11-05
 
 ### Added
 - **`Get-GlookoCGMStats`** - New function to analyze CGM data with basic statistics (below range, in range, above range)
@@ -22,7 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documentation for new functions in docs/functions/
 
 ### Changed
-- Updated module version to 1.2
+- Updated module version to 1.1
 - Updated README.md to include new CGM analysis functions
 - Updated module manifest with new release notes
 
