@@ -79,7 +79,7 @@ jobs:
       uses: actions/cache/save@v4
       with:
         path: .version
-        key: version-${{ github.ref_name }}-${{ env.VERSION }}
+        key: version-${{ github.ref_name }}
     
     - name: Update build badge
       uses: schneegans/dynamic-badges-action@v1.7.0
