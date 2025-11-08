@@ -72,11 +72,16 @@ For more import options including using Install-GitModule, see [Alternative Impo
 
 This module provides the following functions:
 
+### Data Obtaining Functions
+
 - **`Import-GlookoCSV`** - Imports CSV data while skipping the first row, see [detailed documentation](docs/functions/import-glookocsv.md).
 - **`Import-GlookoFolder`** - Imports all CSV files from a specified folder using Import-GlookoCSV, see [detailed documentation](docs/functions/import-glookofolder.md).
 - **`Import-GlookoZip`** - Imports data from a Glooko zip file by extracting and processing CSV files, see [detailed documentation](docs/functions/import-glookozip.md).
 - **`Get-GlookoDataset`** - Filters datasets by name and returns only their data, making it easy to work with specific dataset types like 'cgm' or 'alarms', see [detailed documentation](docs/functions/get-glookodataset.md).
 - **`Export-GlookoZipToXlsx`** - Converts a Glooko zip file to an Excel (XLSX) file with a Summary worksheet as the first tab, followed by each dataset in a separate worksheet, see [detailed documentation](docs/functions/export-glookozip-to-xlsx.md).
+
+### Data Analysis Functions
+
 - **`Get-GlookoCGMStats`** - Analyzes CGM data and provides basic statistics (below range, in range, above range) grouped by date with counts and percentages, see [detailed documentation](docs/functions/get-glookocgmstats.md).
 - **`Get-GlookoCGMStatsExtended`** - Provides flexible CGM analysis supporting both 3-category (low/in range/high) and 5-category (very low/low/in range/high/very high) analysis with date range filtering options, see [detailed documentation](docs/functions/get-glookocgmstatsextended.md).
 - **`Get-GlookoDailyAnalysis`** - Analyzes CGM and insulin data grouped by day of week (Monday-Sunday) and workday vs weekend, with daily insulin dosages, percentages, and correlation analysis, see [detailed documentation](docs/functions/get-glookodailyanalysis.md).

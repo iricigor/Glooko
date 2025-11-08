@@ -3,7 +3,7 @@
     RootModule = 'Glooko.psm1'
 
     # Version number of this module.
-    ModuleVersion = '1.2'
+    ModuleVersion = '1.1'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Core')
@@ -58,7 +58,7 @@
             IconUri = 'https://raw.githubusercontent.com/iricigor/Glooko/main/docs/assets/Glooko.ico'
 
             # ReleaseNotes of this module
-            ReleaseNotes = 'v1.2: Added Get-GlookoDailyAnalysis function for daily CGM and insulin analysis by day of week with correlations. See CHANGELOG.md for detailed release notes: https://github.com/iricigor/Glooko/blob/main/CHANGELOG.md'
+            ReleaseNotes = 'v1.1: Added Get-GlookoDataset function to filter datasets by name and CGM data analysis functions for glucose statistics. See CHANGELOG.md for detailed release notes: https://github.com/iricigor/Glooko/blob/main/CHANGELOG.md'
         }
     }
 

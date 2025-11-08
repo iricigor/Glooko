@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html) using major.minor version format.
 
-## [1.2] - 2025-11-08
+## [Unreleased]
 
 ### Added
 - **`Get-GlookoDailyAnalysis`** - New function to provide comprehensive daily analysis of CGM and insulin data
@@ -16,11 +16,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Supports pipeline input from Import-GlookoZip or separate CGM and insulin data parameters
   - Includes comprehensive test coverage
   - Full documentation in docs/functions/get-glookodailyanalysis.md
-
-### Changed
-- Updated module version to 1.2
-- Updated README.md to include new daily analysis function
-- Updated module manifest with new release notes
 
 ## [1.1] - 2025-11-05
 
